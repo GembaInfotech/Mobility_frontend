@@ -1,0 +1,209 @@
+import React from "react";
+import {
+  DatePicker,
+  Radio,
+  Upload,
+  Select,
+  InputGroup,
+  Input,
+} from "components/ui";
+import { Field } from "formik";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/bootstrap.css";
+import { postApi, getApi } from "services/CommonService";
+import { APIS, LIST_DATA_API_TYPE } from "constants/api.constant";
+import debounce from "lodash/debounce";
+import AsyncSelect from "react-select/async";
+import { FORM_GENDER_CONSANT, IS_PATINET } from "../patientConstant";
+import { PasswordInput } from "components/shared";
+import { DATE_FORMAT } from "constants/app.constant";
+import { formatAsSSN } from "utils/hasPermission";
+
+const MixComponent = ({
+  id,
+  field,
+  setFieldValue,
+  values,
+  errors,
+  touched,
+}) => {
+  const loadSelectOption = (inputValue, resolve) => {
+    if (field.name === "state") {
+      getApi(APIS.GET_CODE, { type: 4, search: inputValue }).then((result) => {
+        const filter = result?.data?.data.map((item) => {
+          let option = {
+            label: item?.name,
+            value: item?._id,
+          };
+          return option;
+        });
+        resolve(filter);
+      });
+    }
+    if (field.name === "deviceType") {
+      getApi(APIS.GET_CODE, { type: 2, search: inputValue }).then((result) => {
+        const filter = result?.data?.data.map((item) => {
+          let option = {
+            label: item?.name,
+            value: item?._id,
+          };
+          return option;
+        });
+        resolve(filter);
+      });
+    }
+    if (field.apiType === "insurance") {
+      getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.INSURANCES, search: inputValue }).then((result) => {
+        const filter = result?.data?.data.map((item) => {
+          let option = {
+            label: item?.name,
+            value: item?._id,
+          };
+          return option;
+        });
+        resolve(filter);
+      });
+    }
+  };
+  const loadoptions = debounce(loadSelectOption, 300);
+
+  return (
+    <>
+      {field.component === "datepicker" && (
+        <>
+          <DatePicker
+            inputtable
+            selected={new Date(values?.[field.name])}
+            name={field.name}
+            inputFormat={DATE_FORMAT}
+            defaultValue={new Date(values?.[field.name])}
+            value={new Date(values?.[field.name])}
+            onChange={(date) => setFieldValue(field.name, date)}
+          />
+        </>
+      )}
+      {field.component === "radio" && (
+        <>
+          {FORM_GENDER_CONSANT.map((g, i) => {
+            return (
+              <Radio
+                className="mr-4"
+                name="gender"
+                value={g.value}
+                onChange={(date) => setFieldValue(field.name, date)}
+                checked={g.value === values?.[field.name] ? true : false}
+              >
+                {g.label}
+              </Radio>
+            );
+          })}
+        </>
+      )}
+      {field.component === "patientRadio" && (
+        <>
+          {IS_PATINET.map((g, i) => {
+            return (
+              <Radio
+                className="mr-4 mt-3"
+                name="simpleRadioExample1"
+                value={g.value}
+                onChange={(date) => setFieldValue(field.name, date)}
+                checked={g.value === values?.[field.name] ? true : false}
+              >
+                {g.label}
+              </Radio>
+            );
+          })}
+        </>
+      )}
+
+      {field.component === "phoneNumber" && (
+        <PhoneInput
+          inputStyle={{ width: "369px", padding: "11px 14px 11px 60px" }}
+          enableSearch={true}
+          country={"us"}
+          countryCodeEditable
+          value={`${values?.[field.name]}`}
+          onChange={(phone, country) => {
+            setFieldValue(field.name, phone);
+            setFieldValue(field.countryCode, country?.dialCode);
+          }}
+        />
+      )}
+      {field.component === "upload" && (
+        <InputGroup className="mb-4">
+          <Input value={values[field.name]} />
+          <Upload
+            uploadLimit={1}
+            showList={false}
+            accept={["image/jpeg", "image/png"]}
+            name={field.name}
+            onChange={(imgs) => {
+              let payload = new FormData();
+
+              for (let i = 0; i < imgs?.length; i++) {
+                payload.append("image", imgs[i]);
+              }
+
+              postApi(APIS.UPLOAD_IMAGE, payload).then((res) => {
+                let files = [];
+
+                if (res?.data?.length) {
+                  files = [...files, ...res?.data];
+                } else {
+                  files = [...files, res?.data];
+                }
+
+                setFieldValue(field.name, files[0]?.original);
+              });
+            }}
+          />
+        </InputGroup>
+      )}
+      {field.component === "asyncSelect" && (
+        <>
+          <Field
+            closeMenuOnSelect={true}
+            component={Select}
+            autoComplete="off"
+            placeholder={field.placeholder}
+            defaultOptions
+            cacheOptions
+            loadOptions={loadoptions}
+            componentAs={AsyncSelect}
+            name={field.name}
+            value={values?.[field.name]}
+            onChange={(event) => {
+              setFieldValue(field.name, event);
+            }}
+          />
+        </>
+      )}
+      {field.component === "password" && !id && (
+        <Field
+          autoComplete="off"
+          name="password"
+          placeholder="Password"
+          component={PasswordInput}
+        />
+      )}
+      {field.component === "ssn" && (
+        <>
+          <Field
+            autoComplete="off"
+            name="ssn"
+            placeholder="SSN"
+            maxlength={9}
+            component={Input}
+            onChange={(e) =>
+              setFieldValue(field.name, formatAsSSN(e.target.value))
+            }
+            value={values?.[field.name]}
+          />
+          {console.log(values?.[field.name])}
+        </>
+      )}
+    </>
+  );
+};
+export default MixComponent;
