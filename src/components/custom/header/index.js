@@ -3,6 +3,8 @@ import { Button, Select, DatePicker } from "components/ui";
 import TableSearchBar from "components/ui/TableSearchBar";
 import { GrPowerReset } from "react-icons/gr";
 import { getApi } from "services/CommonService";
+import { Input } from 'components/ui';
+
 import { APIS } from "constants/api.constant";
 import { debounce } from "lodash";
 import AsyncSelect from "react-select/async";
@@ -124,6 +126,20 @@ const FilterSection = ({
                 dateFormat={DATE_FORMAT}
               />
             )}
+            {filter.component === "input" && (
+  <Input
+    size="sm"
+    className={filter.className}
+    placeholder={filter.placeholder}
+    value={filterValue[filter?.filterKey]}
+    onChange={(e) => {
+      setFilterValue({
+        ...filterValue,
+        [filter?.filterKey]: e.target.value,
+      });
+    }}
+  />
+)}
           </React.Fragment>
         );
       })}

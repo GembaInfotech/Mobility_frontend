@@ -96,6 +96,12 @@ const FILTER_CONSTANT = [
     filterKey: "dob",
   },
   {
+    component: "input",
+    placeholder: "Mobile Number",
+    className: "mb-4 w-56",
+    filterKey: "mobile",
+  },
+  {
     component: "resetButton",
     label: "Reset",
     icon: <GrPowerReset />,
@@ -157,6 +163,7 @@ const PatientManagement = () => {
       search,
       status: filterValue?.status ? filterValue?.status?.value : null,
       patientDob: filterValue?.dob ? dayjs(filterValue.dob).format("MM/DD/YYYY") : null,
+      mobile: filterValue?.mobile ? filterValue.mobile : null,  
       skip: limit * (page - 1),
     })
       .then((res) => {
