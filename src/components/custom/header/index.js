@@ -1,11 +1,13 @@
 import React from "react";
-import { Button, Select } from "components/ui";
+import { Button, Select, DatePicker } from "components/ui";
 import TableSearchBar from "components/ui/TableSearchBar";
 import { GrPowerReset } from "react-icons/gr";
 import { getApi } from "services/CommonService";
 import { APIS } from "constants/api.constant";
 import { debounce } from "lodash";
 import AsyncSelect from "react-select/async";
+import { DATE_FORMAT } from 'constants/app.constant';
+
 
 const ButtonSection = ({ buttonMenu, buttonClick }) => {
   return (
@@ -43,12 +45,13 @@ const FilterSection = ({
     });
   };
   const loadStays = debounce(loadStaysOption, 300);
+
   return (
-    <div className="md:flex  gap-4 w-full">
+    <div className="md:flex gap-4 w-full">
       <TableSearchBar placeholder={searchPlaceholder} onChange={(query) => setSearch(query)} />
       {FilterMenu?.map((filter, i) => {
         return (
-          <>
+          <React.Fragment key={i}>
             {filter.component === "select" && (
               <Select
                 autoComplete="off"
@@ -103,12 +106,31 @@ const FilterSection = ({
                 }}
               />
             )}
-          </>
+            {filter.component === "datePicker" && (
+              <DatePicker
+                selected={filterValue[filter?.filterKey]}
+                onChange={(date) => {
+                  setFilterValue({
+                    ...filterValue,
+                    [filter?.filterKey]: date,
+                  });
+                }}
+                size="sm"
+                placeholder={`Filter by Patient DOB`}
+
+                name="patientDob"
+                className={filter.className}
+                placeholderText={filter.placeholder}
+                dateFormat={DATE_FORMAT}
+              />
+            )}
+          </React.Fragment>
         );
       })}
     </div>
   );
 };
+
 
 const Header = ({
   buttonMenu,

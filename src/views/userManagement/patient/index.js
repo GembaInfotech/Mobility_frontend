@@ -6,7 +6,7 @@ import { getApi, postApi } from "services/CommonService";
 import { APIS, LIST_DATA_API_TYPE } from "constants/api.constant";
 import { toast, Notification, Avatar } from "components/ui";
 import ActionColumn from "components/custom/actionColumn";
-import { AiFillDelete, AiOutlineFile } from "react-icons/ai";
+import { AiFillDelete} from "react-icons/ai";
 import ConfirmationContent from "components/custom/ConfirmationContent";
 import Header from "components/custom/header";
 import { HiOutlinePlusCircle } from "react-icons/hi";
@@ -82,13 +82,6 @@ const BUTTON_CONSTANT = [
 ];
 
 const FILTER_CONSTANT = [
-  // {
-  //   component: "select",
-  //   options: REGISTERED_SOURCE,
-  //   className: "mb-4 w-56	",
-  //   placeholder: "Registered Source Type",
-  //   filterKey: "registeredSourceType",
-  // },
   {
     component: "select",
     options: ACTIVE_STATUS_OPTONS,
@@ -97,13 +90,20 @@ const FILTER_CONSTANT = [
     filterKey: "status",
   },
   {
+    component: "datePicker",
+    placeholder: "DOB",
+    className: "mb-4 w-56",
+    filterKey: "dob",
+  },
+  {
     component: "resetButton",
     label: "Reset",
     icon: <GrPowerReset />,
     className: "mb-4",
-    filterKey: { status: "", search: "" },
+    filterKey: { status: "", dob: null, search: "" },
   },
 ];
+
 
 const PatientManagement = () => {
   const [loading, setLoading] = useState(true);
@@ -152,10 +152,11 @@ const PatientManagement = () => {
 
   useEffect(() => {
     getApi(APIS.LIST_DATA, {
-      type : LIST_DATA_API_TYPE.PATIENTS,
+      type: LIST_DATA_API_TYPE.PATIENTS,
       limit,
       search,
       status: filterValue?.status ? filterValue?.status?.value : null,
+      patientDob: filterValue?.dob ? dayjs(filterValue.dob).format("MM/DD/YYYY") : null,
       skip: limit * (page - 1),
     })
       .then((res) => {
@@ -164,6 +165,7 @@ const PatientManagement = () => {
       })
       .finally(() => setLoading(false));
   }, [search, page, limit, refresh, filterValue]);
+  
 
   const onActionHandle = (e, key, row) => {
     if (key === TABLE_ACTION_KEYS.DELETE) {
@@ -239,7 +241,7 @@ const PatientManagement = () => {
         const row = props.row.original;
         return (
           <div className="flex items-center ">
-            {dayjs(row?.dob).format("DD MMM YYYY")}
+            {dayjs(row?.dob).format("MM/DD/YYYY")}
           </div>
         );
       },
