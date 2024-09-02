@@ -3,13 +3,12 @@ import { Button, Select, DatePicker } from "components/ui";
 import TableSearchBar from "components/ui/TableSearchBar";
 import { GrPowerReset } from "react-icons/gr";
 import { getApi } from "services/CommonService";
-import { Input } from 'components/ui';
+import { Input } from "components/ui";
 
 import { APIS } from "constants/api.constant";
 import { debounce } from "lodash";
 import AsyncSelect from "react-select/async";
-import { DATE_FORMAT } from 'constants/app.constant';
-
+import { DATE_FORMAT } from "constants/app.constant";
 
 const ButtonSection = ({ buttonMenu, buttonClick }) => {
   return (
@@ -37,7 +36,7 @@ const FilterSection = ({
   setFilterValue,
   filterValue,
   asyncApiType,
-  searchPlaceholder
+  searchPlaceholder,
 }) => {
   const loadStaysOption = (inputValue, resolve) => {
     getApi(asyncApiType === 1 ? APIS.GET_USERS : APIS.GET_CATEGORIES, {
@@ -50,7 +49,10 @@ const FilterSection = ({
 
   return (
     <div className="md:flex gap-4 w-full">
-      <TableSearchBar placeholder={searchPlaceholder} onChange={(query) => setSearch(query)} />
+      <TableSearchBar
+        placeholder={searchPlaceholder}
+        onChange={(query) => setSearch(query)}
+      />
       {FilterMenu?.map((filter, i) => {
         return (
           <React.Fragment key={i}>
@@ -110,6 +112,8 @@ const FilterSection = ({
             )}
             {filter.component === "datePicker" && (
               <DatePicker
+              inputtable
+              clearable={true}
                 selected={filterValue[filter?.filterKey]}
                 onChange={(date) => {
                   setFilterValue({
@@ -119,7 +123,6 @@ const FilterSection = ({
                 }}
                 size="sm"
                 placeholder={`Filter by Patient DOB`}
-
                 name="patientDob"
                 className={filter.className}
                 placeholderText={filter.placeholder}
@@ -127,26 +130,25 @@ const FilterSection = ({
               />
             )}
             {filter.component === "input" && (
-  <Input
-    size="sm"
-    className={filter.className}
-    placeholder={filter.placeholder}
-    value={filterValue[filter?.filterKey]}
-    onChange={(e) => {
-      setFilterValue({
-        ...filterValue,
-        [filter?.filterKey]: e.target.value,
-      });
-    }}
-  />
-)}
+              <Input
+                size="sm"
+                className={filter.className}
+                placeholder={filter.placeholder}
+                value={filterValue[filter?.filterKey]}
+                onChange={(e) => {
+                  setFilterValue({
+                    ...filterValue,
+                    [filter?.filterKey]: e.target.value,
+                  });
+                }}
+              />
+            )}
           </React.Fragment>
         );
       })}
     </div>
   );
 };
-
 
 const Header = ({
   buttonMenu,
