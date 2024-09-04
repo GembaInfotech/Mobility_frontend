@@ -26,10 +26,18 @@ import ActiveInActiveCheckbox from 'components/custom/activeCheckbox';
 import hasPermisson, { ACCESS, MODULE, newColumn } from 'utils/hasPermission';
 
 const typeObjHandler = (code) => {
-  if (code === 1) {
+  if (code === '1') {
     return { label: 'Lcodes', value: 1 };
   } else {
     return { label: 'icd', value: 2 };
+  }
+};
+
+const groupObjHandler = (code) => {
+  if (code === '1') {
+    return { label: 'Consumables', value: 1 };
+  } else {
+    return { label: 'Manufacture', value: 2 };
   }
 };
 
@@ -76,6 +84,12 @@ const FILTER_CONSTANT = [
     className: 'mb-4 w-40	',
     placeholder: 'Code Type',
     filterKey: 'codeType',
+  },
+  {
+    component: 'input',
+    className: 'mb-4 w-40	',
+    placeholder: 'CreatedBy',
+    filterKey: 'createdBy',
   },
   {
     component: 'resetButton',
@@ -148,6 +162,8 @@ const Codes = () => {
     if (key === TABLE_ACTION_KEYS.EDIT) {
       setSelectedData({
         id: row?._id,
+        material: row?.material,
+        group: groupObjHandler(row?.group),
         code: row?.code,
         description: row?.description,
         type: typeObjHandler(row?.type),
@@ -177,13 +193,14 @@ const Codes = () => {
         const row = props?.row?.original;
         return row?.description ? row?.description : '-';
       },
+      // accessor: 'description',
     },
     {
       Header: 'Type',
       accessor: 'type',
       Cell: (props) => {
         const type = props.row.original.type;
-        if (type === 1) {
+        if (type === '1') {
           return 'Lcodes';
         }
         return 'icd';
@@ -193,12 +210,16 @@ const Codes = () => {
       Header: 'Group',
       accessor: 'group',
       Cell: (props) => {
-        const type = props.row.original.type;
-        if (type === 1) {
+        const group = props.row.original.group;
+        if (group === '1') {
           return 'Consumables';
         }
         return 'Manufacture';
       },
+    },
+    {
+      Header: 'CreatedBy',
+      accessor: (row) => row.createdBy ? row.createdBy?.name: "-",
     },
     {
       Header: 'Active',
@@ -264,7 +285,7 @@ const Codes = () => {
   const onConfirmClick = () => {
     let toastMessage;
     const payload = {
-      type: LIST_DATA_API_TYPE.CODES,
+      type: LIST_DATA_API_TYPE.MATERIALS,
       id: selectedData?.id,
     }
     if (activeConfirm) {
