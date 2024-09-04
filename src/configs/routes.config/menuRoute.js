@@ -142,6 +142,26 @@ const menuRoute = [
       header: "Patient Management",
     },
   },
+  {
+    key: "apps.inventory.items",
+    path: `${APP_PREFIX_PATH}/inventory/items`,
+    component: React.lazy(() => import("views/inventory/items")),
+    authority: [ADMIN, USER],
+    show: () => hasPermisson(MODULE.LOCATIONS, ACCESS.READ),
+    meta: {
+      header: "Items Add",
+    },
+  },
+  {
+    key: "apps.inventory.location",
+    path: `${APP_PREFIX_PATH}/inventory/location`,
+    component: React.lazy(() => import("views/inventory/location")),
+    authority: [ADMIN, USER],
+    show: () => hasPermisson(MODULE.LOCATIONS, ACCESS.READ),
+    meta: {
+      header: "Location Companies",
+    },
+  },
   // {
   //   key: "appsMenu.userManagement.staff",
   //   path: `${APP_PREFIX_PATH}/userManagement/staff`,

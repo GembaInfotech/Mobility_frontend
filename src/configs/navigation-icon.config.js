@@ -24,6 +24,7 @@ import {
   HiOutlineShare,
   HiOutlineVariable,
   HiOutlineCode,
+  HiOutlineArchive,
 } from "react-icons/hi";
 import { AiOutlineHome, AiTwotoneContacts } from "react-icons/ai";
 import { FaInfoCircle } from "react-icons/fa";
@@ -58,6 +59,7 @@ const navigationIcon = {
   changeLog: <HiOutlineCode />,
   homeSvg: <AiOutlineHome />,
   contact: <FaInfoCircle />,
+  inventory: <HiOutlineArchive />,
 };
 
 export default navigationIcon;
