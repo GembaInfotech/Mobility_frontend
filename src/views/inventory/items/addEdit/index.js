@@ -56,6 +56,7 @@ const schema = Yup.object().shape({
 });
 
 const initialValues = {
+  material: "",
   Group: "",
   code: "",
   description: "",
@@ -68,14 +69,18 @@ const AddEditCodes = ({ editData, show, onClose, refreshPage }) => {
 
   //// SUBMIT TAGS HANDLER///////
 
-  const onSubmit = ({ code, id, description, type }) => {
+  const onSubmit = ({ material, code, id, description, type, group }) => {
     setLoading(true);
     let payload = {
+      material,
       code,
       description,
       type: type?.value?.toString(),
-      modelType: LIST_DATA_API_TYPE.CODES,
+      group: group?.value?.toString(),
+      modelType: LIST_DATA_API_TYPE.MATERIALS,
     };
+
+    console.log(payload)
 
     if (id) {
       payload.id = id;

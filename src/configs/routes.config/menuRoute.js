@@ -149,7 +149,7 @@ const menuRoute = [
     authority: [ADMIN, USER],
     show: () => hasPermisson(MODULE.LOCATIONS, ACCESS.READ),
     meta: {
-      header: "Items Add",
+      header: "Add Material",
     },
   },
   {

@@ -168,6 +168,10 @@ const Codes = () => {
       accessor: 'code',
     },
     {
+      Header: 'Material Name',
+      accessor: 'material',
+    },
+    {
       Header: 'Description',
       Cell: (props) => {
         const row = props?.row?.original;
