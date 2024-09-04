@@ -64,7 +64,7 @@ const BUTTON_CONSTANT = [
   //   icon: <HiOutlineUpload />,
   // },
   {
-    label: 'Add Items',
+    label: 'Add Material',
     key: TABLE_ACTION_KEYS.ADD,
     icon: <HiOutlinePlusCircle />,
   },
@@ -123,7 +123,7 @@ const Codes = () => {
   useEffect(() => {
     setLoading(true);
     const payload = {
-      type: LIST_DATA_API_TYPE.CODES,
+      type: LIST_DATA_API_TYPE.MATERIALS,
       limit,
       search,
       skip: limit * (page - 1),

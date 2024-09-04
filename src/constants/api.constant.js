@@ -12,6 +12,7 @@ export const LIST_DATA_API_TYPE = {
   ADMINS: 7,
   PRESCRIPTIONS: 8,
   MATERIALS: 9,
+  INVENTORY:10
 }
 
 export const APIS = {

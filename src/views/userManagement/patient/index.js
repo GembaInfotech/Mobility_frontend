@@ -92,13 +92,13 @@ const FILTER_CONSTANT = [
   {
     component: "datePicker",
     placeholder: "DOB",
-    className: "mb-4 w-56",
+    className: "mb-4 w-64",
     filterKey: "dob",
   },
   {
     component: "input",
     placeholder: "Mobile Number",
-    className: "mb-4 w-56",
+    className: "mb-4 w-40",
     filterKey: "mobile",
   },
   {

@@ -37,7 +37,7 @@ const ACTION_CONSTANT = [
 const BUTTON_CONSTANT = hasPermisson(MODULE.LOCATIONS, ACCESS.WRITE)
   ? [
       {
-        label: 'Add Location',
+        label: 'Add Inventory',
         key: TABLE_ACTION_KEYS.ADD,
         icon: <HiOutlinePlusCircle />,
       },
@@ -100,6 +100,14 @@ const Locations = () => {
     {
       Header: 'name',
       accessor: 'name',
+    },
+    {
+      Header: 'Address',
+      accessor: 'address',
+    },
+    {
+      Header: 'Store Manager',
+      accessor: 'storeManager',
     },
     {
       Header: 'Active',

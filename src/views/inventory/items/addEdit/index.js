@@ -90,7 +90,7 @@ const AddEditCodes = ({ editData, show, onClose, refreshPage }) => {
       .then(() => {
         onClose();
         refreshPage();
-        toast.push(<Notification type="success">Code saved!</Notification>);
+        toast.push(<Notification type="success">Material saved!</Notification>);
       })
       .finally(() => setLoading(false));
   };

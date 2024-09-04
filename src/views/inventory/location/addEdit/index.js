@@ -17,7 +17,7 @@ import { AiOutlineSave, AiOutlineCloseCircle } from "react-icons/ai";
 
 const DrawerFooter = ({ editData, onCancel, onSave, isLoading }) => {
   return (
-    <div className="text-right w-full">
+    <div className="w-full text-right">
       <Button
         className="mr-2"
         onClick={onCancel}
@@ -41,21 +41,27 @@ const DrawerFooter = ({ editData, onCancel, onSave, isLoading }) => {
 
 const Schema = Yup.object().shape({
   name: Yup.string().required("Required"),
+  address: Yup.string().required("Required"), // Validation for address
+  storeManager: Yup.string().required("Required"), // Validation for store manager
 });
 
 const initialValues = {
   name: "",
+  address: "", // Initial value for address
+  storeManager: "", // Initial value for store manager
 };
 
 const AddEditDeviceType = ({ editData, show, onClose, refreshPage }) => {
   const formRef = useRef();
   const [loading, setLoading] = useState(false);
 
-  const onSubmit = ({ name, id }) => {
+  const onSubmit = ({ name, address, storeManager, id }) => {
     setLoading(true);
     const payload = {
       name,
-      modelType : LIST_DATA_API_TYPE.LOCATIONS
+      address, 
+      storeManager,
+      modelType: LIST_DATA_API_TYPE.INVENTORY
     };
 
     if (id) {
@@ -98,11 +104,11 @@ const AddEditDeviceType = ({ editData, show, onClose, refreshPage }) => {
           onSubmit={onSubmit}
           enableReinitialize
         >
-          {({ errors, touched, setFieldValue, values }) => (
+          {({ errors, touched }) => (
             <Form className="p-5">
               <FormContainer>
                 <FormItem
-                  label="Location"
+                  label="Inventory Name"
                   invalid={errors?.name && touched?.name}
                   errorMessage={errors?.name}
                 >
@@ -111,6 +117,32 @@ const AddEditDeviceType = ({ editData, show, onClose, refreshPage }) => {
                     autoComplete="off"
                     name="name"
                     placeholder="Enter Name"
+                    component={Input}
+                  />
+                </FormItem>
+                <FormItem
+                  label="Address"
+                  invalid={errors?.address && touched?.address}
+                  errorMessage={errors?.address}
+                >
+                  <Field
+                    type="text"
+                    autoComplete="off"
+                    name="address"
+                    placeholder="Enter Address"
+                    component={Input}
+                  />
+                </FormItem>
+                <FormItem
+                  label="Store Manager"
+                  invalid={errors?.storeManager && touched?.storeManager}
+                  errorMessage={errors?.storeManager}
+                >
+                  <Field
+                    type="text"
+                    autoComplete="off"
+                    name="storeManager"
+                    placeholder="Enter Store Manager"
                     component={Input}
                   />
                 </FormItem>

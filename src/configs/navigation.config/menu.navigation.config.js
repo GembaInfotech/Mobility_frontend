@@ -162,7 +162,7 @@ const appsNavigationConfig = [
           {
             key: 'appsMenu.inventory',
             path: `${APP_PREFIX_PATH}/inventory/location`,
-            title: 'Add Location',
+            title: 'Add Inventory',
             icon: 'crm',
             type: NAV_ITEM_TYPE_ITEM,
             authority: [ADMIN, USER],
@@ -172,7 +172,7 @@ const appsNavigationConfig = [
           {
             key: 'appsMenu.inventory.',
             path: `${APP_PREFIX_PATH}/inventory/items`,
-            title: 'Add New Items',
+            title: 'Add New Materials',
             icon: 'crm',
             type: NAV_ITEM_TYPE_ITEM,
             authority: [ADMIN, USER],
