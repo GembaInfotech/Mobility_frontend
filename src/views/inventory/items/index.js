@@ -6,6 +6,7 @@ import { DataTable } from 'components/shared';
 import { toast, Notification } from 'components/ui';
 import { HiOutlinePlusCircle, HiDocumentDownload, HiOutlineUpload } from 'react-icons/hi';
 import AddEditCodes from './addEdit';
+import AddStocks from './addStocks'
 import ActionColumn from 'components/custom/actionColumn';
 import { AiFillDelete } from 'react-icons/ai';
 import Header from 'components/custom/header';
@@ -47,6 +48,12 @@ const CODE_TYPE = [
 ];
 
 const ACTION_CONSTANT = [
+  {
+    label: '+Stocks',
+    // icon: <HiOutlinePlusCircle />,
+    key: TABLE_ACTION_KEYS.VIEW,
+    show: () => hasPermisson(MODULE.CODES, ACCESS.WRITE),
+  },
   {
     label: 'Edit',
     key: TABLE_ACTION_KEYS.EDIT,
@@ -121,6 +128,7 @@ const Codes = () => {
   const [limit, setLimit] = useState(10);
   const [search, setSearch] = useState('');
   const [drawer, setDrawer] = useState(false);
+  const [drawerStock, setDrawerStock] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [selectedData, setSelectedData] = useState('');
   const [openModal, setOpenModal] = useState(false);
@@ -176,6 +184,9 @@ const Codes = () => {
         id: row?._id,
       });
       setOpenModal(true);
+    }
+    if (key === TABLE_ACTION_KEYS.VIEW) {
+      setDrawerStock(true);
     }
   };
 
@@ -356,6 +367,15 @@ const Codes = () => {
         refreshPage={refreshPage}
         editData={selectedData}
       />
+
+       <AddStocks
+        show={drawerStock}
+        onClose={onDrawerClose}
+        refreshPage={refreshPage}
+        editData={selectedData}
+      />
+
+
 
       <ConfirmationContent
         isOpen={openModal}
