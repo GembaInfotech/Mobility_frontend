@@ -162,6 +162,16 @@ const menuRoute = [
       header: "Location Companies",
     },
   },
+  {
+    key: "apps.inventory.inventoryDetail",
+    path: `${APP_PREFIX_PATH}/inventory/inventoryDetail/:id`,
+    component: React.lazy(() => import("views/inventory/inventoryDetail")),
+    authority: [ADMIN, USER],
+    show: () => hasPermisson(MODULE.INVENTORY, ACCESS.READ),
+    meta: {
+      header: "Inventory Details",
+    },
+  },
   // {
   //   key: "appsMenu.userManagement.staff",
   //   path: `${APP_PREFIX_PATH}/userManagement/staff`,

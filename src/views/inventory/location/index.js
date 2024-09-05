@@ -20,7 +20,6 @@ import {
 import ActiveInActiveCheckbox from 'components/custom/activeCheckbox';
 import hasPermisson, { ACCESS, MODULE, newColumn } from 'utils/hasPermission';
 import { useNavigate } from 'react-router-dom';
-import { APP_PREFIX_PATH } from 'constants/route.constant';
 
 const ACTION_CONSTANT = [
   {
@@ -33,6 +32,11 @@ const ACTION_CONSTANT = [
     key: TABLE_ACTION_KEYS.DELETE,
     toolTip: 'Delete',
     show: () => hasPermisson(MODULE.LOCATIONS, ACCESS.DELETE),
+  },
+  {
+    label: 'View',
+    key: TABLE_ACTION_KEYS.VIEW,
+    show: () => hasPermisson(MODULE.LOCATIONS, ACCESS.WRITE),
   },
 ];
 
@@ -99,8 +103,8 @@ const Locations = () => {
       });
       setOpenModal(true);
     }
-    if (key === 'view') { // Add a new action key for viewing details
-      navigate(`${APP_PREFIX_PATH}/inventory/inventoryDetail`); // Pass the data ID as a URL param
+    if (key === TABLE_ACTION_KEYS.VIEW) {
+      navigate(`/app/inventory/inventoryDetail/${row?._id}`); 
     }
   };
 
@@ -138,14 +142,7 @@ const Locations = () => {
         <ActionColumn
           row={props.row.original}
           onActionHandle={onActionHandle}
-          actionsMenu={[
-            ...ACTION_CONSTANT,
-            {
-              label: 'View', // Add new 'View' option
-              key: 'view',
-              show: () => true,
-            },
-          ]}
+          actionsMenu={ACTION_CONSTANT}
         />
       ),
     }

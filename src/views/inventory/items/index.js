@@ -181,6 +181,10 @@ const Codes = () => {
 
   const columns = [
     {
+      Header: 'MaterialNo',
+      accessor: (row) => row.materialNo? row.materialNo: "-"
+    },
+    {
       Header: 'Code',
       accessor: 'code',
     },
