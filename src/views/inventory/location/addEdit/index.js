@@ -73,7 +73,7 @@ const AddEditDeviceType = ({ editData, show, onClose, refreshPage }) => {
         onClose();
         refreshPage();
         toast.push(
-          <Notification type="success">Location saved!</Notification>
+          <Notification type="success">Inventory saved!</Notification>
         );
       })
       .finally(() => setLoading(false));

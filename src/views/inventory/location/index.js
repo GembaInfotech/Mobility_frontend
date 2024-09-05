@@ -19,6 +19,8 @@ import {
 } from 'constants/app.constant';
 import ActiveInActiveCheckbox from 'components/custom/activeCheckbox';
 import hasPermisson, { ACCESS, MODULE, newColumn } from 'utils/hasPermission';
+import { useNavigate } from 'react-router-dom';
+import { APP_PREFIX_PATH } from 'constants/route.constant';
 
 const ACTION_CONSTANT = [
   {
@@ -63,11 +65,12 @@ const Locations = () => {
   const [openModal, setOpenModal] = useState(false);
   const [activeConfirm, setActiveConfirm] = useState(false);
   const refreshPage = () => setRefresh((prev) => !prev);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setLoading(true);
     getApi(APIS.LIST_DATA, {
-      type: LIST_DATA_API_TYPE.LOCATIONS,
+      type: LIST_DATA_API_TYPE.INVENTORY,
       limit,
       search,
       skip: limit * (page - 1),
@@ -85,6 +88,8 @@ const Locations = () => {
       setSelectedData({
         id: row?._id,
         name: row?.name,
+        address: row?.address,
+        storeManager: row?.storeManager,
       });
       setDrawer(true);
     }
@@ -93,6 +98,9 @@ const Locations = () => {
         id: row?._id,
       });
       setOpenModal(true);
+    }
+    if (key === 'view') { // Add a new action key for viewing details
+      navigate(`${APP_PREFIX_PATH}/inventory/inventoryDetail`); // Pass the data ID as a URL param
     }
   };
 
@@ -130,7 +138,14 @@ const Locations = () => {
         <ActionColumn
           row={props.row.original}
           onActionHandle={onActionHandle}
-          actionsMenu={ACTION_CONSTANT}
+          actionsMenu={[
+            ...ACTION_CONSTANT,
+            {
+              label: 'View', // Add new 'View' option
+              key: 'view',
+              show: () => true,
+            },
+          ]}
         />
       ),
     }
@@ -156,7 +171,7 @@ const Locations = () => {
   const onConfirmClick = () => {
     let toastMessage;
     const payload = {
-      type: LIST_DATA_API_TYPE.LOCATIONS,
+      type: LIST_DATA_API_TYPE.INVENTORY,
       id: selectedData?.id,
     }
     if (activeConfirm) {
