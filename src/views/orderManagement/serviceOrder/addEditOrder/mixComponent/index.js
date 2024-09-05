@@ -45,7 +45,7 @@ const MixComponent = ({ field, setFieldValue, values, errors, touched,onChange }
             style={{
               display: field?.isDisable ? 'none' : 'block',
             }}
-            placeholder={'YYYY-MM-DD'}
+            placeholder={'MM/DD/YYYY'}
             // minDate={field.minDate || null}
             // defaultMonth={field.minDate || null}
           />

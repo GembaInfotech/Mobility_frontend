@@ -35,7 +35,7 @@ const Log = () => {
 				{logs.map(log => (
 					<div className="mb-8" key={log.id}>
 						<div className="mb-4 font-semibold uppercase">
-							{dayjs.unix(log.date).format('dddd, DD MMMM')}
+							{dayjs.unix(log.date).format('MM/DD/YYYY')}
 						</div>
 						<Timeline>
 							{

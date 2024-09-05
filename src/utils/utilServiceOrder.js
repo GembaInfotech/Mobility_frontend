@@ -58,7 +58,7 @@ export const infoHandler = (value, key, allStaff, allData, codeKey) => {
     }
     if (key === 'date') {
       if (value !== null) {
-        return dayjs(value).format('DD MMM YYYY');
+        return dayjs(value).format('MM/DD/YYYY');
       } else {
         return '-';
       }

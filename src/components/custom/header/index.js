@@ -122,7 +122,7 @@ const FilterSection = ({
                   });
                 }}
                 size="sm"
-                placeholder={`Patient DOB (YYYY/MM/DD)`}
+                placeholder={`Patient DOB (MM/DD/YYYY)`}
                 name="patientDob"
                 className={filter.className}
                 placeholderText={filter.placeholder}

@@ -9,7 +9,7 @@ const Format = () => {
 		<div className="flex flex-col gap-4">
 			<div>
 				<div className="mb-1 font-semibold text-sm">Input format:</div>
-				<DatePicker inputFormat="MMM, DD YYYY" defaultValue={date} />
+				<DatePicker inputFormat="MM/DD/YYYY" defaultValue={date} />
 			</div>
 			<div>
 				<div className="mb-1 font-semibold text-sm">Inner label format:</div>

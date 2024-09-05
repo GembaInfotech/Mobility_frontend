@@ -7,7 +7,7 @@ import BasePicker from "./BasePicker";
 import { useConfig } from "../ConfigProvider";
 import capitalize from "../utils/capitalize";
 
-const DEFAULT_INPUT_FORMAT = "YYYY-MM-DD";
+const DEFAULT_INPUT_FORMAT = "MM/DD/YYYY";
 
 const DatePicker = forwardRef((props, ref) => {
   const {

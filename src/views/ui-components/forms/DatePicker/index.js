@@ -243,7 +243,7 @@ const demoApi = [
 			{
 				propName: 'inputFormat',
 				type: `<code>string</code>`,
-				default: `<code>'YYYY-MM-DD'</code>`,
+				default: `<code>'MM/DD/YYYY'</code>`,
 				desc: 'DatePicker Input display format'
 			},
 			{
@@ -488,7 +488,7 @@ const demoApi = [
 			{
 				propName: 'inputFormat',
 				type: `<code>string</code>`,
-				default: `<code>'YYYY-MM-DD'</code>`,
+				default: `<code>'MM/DD/YYYY'</code>`,
 				desc: 'DatePickerRange Input display format'
 			},
 			{
@@ -739,7 +739,7 @@ const demoApi = [
 			{
 				propName: 'inputFormat',
 				type: `<code>string</code>`,
-				default: `<code>'YYYY-MM-DD'</code>`,
+				default: `<code>'MM/DD/YYYY'</code>`,
 				desc: 'DateTimepicker Input display format'
 			},
 			{

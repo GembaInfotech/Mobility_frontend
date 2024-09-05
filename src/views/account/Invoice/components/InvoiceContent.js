@@ -62,7 +62,7 @@ const InvoiceContent = () => {
 						<div className="my-4">
 							<div className="mb-2">
 								<h4>Invoice #{data.id}</h4>
-								<span>Date: {dayjs.unix(data.dateTime).format('dddd, DD MMMM, YYYY')}</span>
+								<span>Date: {dayjs.unix(data.dateTime).format('MM/DD/YYYY')}</span>
 							</div>
 							<h6>{data.recipient}</h6>
 							<div className="mt-4 flex">

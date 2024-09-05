@@ -140,6 +140,7 @@ const Codes = () => {
       type: LIST_DATA_API_TYPE.MATERIALS,
       limit,
       search,
+      createdBy: filterValue?.createdBy ? filterValue.createdBy : null,
       skip: limit * (page - 1),
     };
     if (filterValue?.codeType !== '') {
@@ -166,7 +167,7 @@ const Codes = () => {
         group: groupObjHandler(row?.group),
         code: row?.code,
         description: row?.description,
-        type: typeObjHandler(row?.type),
+        type: typeObjHandler(row?.type), 
       });
       setDrawer(true);
     }
