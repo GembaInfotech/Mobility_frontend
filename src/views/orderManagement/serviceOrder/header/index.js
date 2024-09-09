@@ -21,6 +21,8 @@ const FilterSection = ({
   setSelectedDate,
   filterPatientDob,
   setFilterPatientDob,
+  filterNad,
+  setFilterNad,
 }) => {
   const loadPatientsOption = (inputValue, resolve) => {
     getApi(APIS.LIST_DATA, { type : LIST_DATA_API_TYPE.PATIENTS,
@@ -105,13 +107,26 @@ const FilterSection = ({
           setSelectedDate({ ...selectedDate, endDate: moment(date).format(DATE_FORMAT) })
         }
       />
+      <DatePicker
+        clearable={false}
+        className=""
+        placeholder="Filter By NAD"
+        size="sm"
+        name="nad"
+        inputFormat={DATE_FORMAT}
+        value={filterNad}
+        onChange={(date) =>
+          setFilterNad(moment(date).format(DATE_FORMAT))
+        }
+      />
       <Button
         size="sm"
         onClick={() => {
           setFilterPatientDob(null);
           setFilterValue('');
           setFilterPatientId('');
-          setSelectedDate({ startDate: null, endDate: null });
+          setSelectedDate({ startDate: null, endDate: null});
+          setFilterNad(null)
           navigate('/app/orderManagement/service-order');
         }}
         icon={<GrPowerReset />}
@@ -134,6 +149,8 @@ const Header = ({
   setSelectedDate,
   filterPatientDob,
   setFilterPatientDob,
+  filterNad,
+  setFilterNad,
 }) => {
   const ButtonSection = ({buttonClick, buttonMenu}) => {
     return (
@@ -172,6 +189,8 @@ const Header = ({
           filtervalue={filtervalue}
           setFilterPatientId={setFilterPatientId}
           filterPatientId={filterPatientId}
+          setFilterNad={setFilterNad}
+          filterNad={filterNad}
         />
       </div>
     </>

@@ -83,6 +83,7 @@ const ServiceOrder = () => {
   });
   const [filterPatientId, setFilterPatientId] = useState("");
   const [filterPatientDob, setFilterPatientDob] = useState("");
+  const [filterNad, setFilterNad] = useState("");
   const [selectedData, setSelectedData] = useState("");
   const [refresh, setRefresh] = useState(false);
   const [openExportModal, setOpenExportModal] = useState(false);
@@ -112,6 +113,9 @@ const ServiceOrder = () => {
       payload.startDate = selectedDate?.startDate;
       payload.endDate = selectedDate?.endDate;
     }
+
+    if(filterNad && filterNad !== "") payload.nad = filterNad
+
     getApi(APIS.GET_SERVICE_ORDER, payload)
       .then((res) => {
         setTableData(res?.data?.data);
@@ -416,6 +420,8 @@ const ServiceOrder = () => {
         setSelectedDate={setSelectedDate}
         setFilterPatientDob={setFilterPatientDob}
         filterPatientDob={filterPatientDob}
+        setFilterNad={setFilterNad}
+        filterNad={filterNad}
       />
       <AdaptableCard className="h-full" bodyClass="h-full">
         <DataTable
