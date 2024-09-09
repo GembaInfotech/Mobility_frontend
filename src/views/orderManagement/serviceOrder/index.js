@@ -130,7 +130,8 @@ const ServiceOrder = () => {
     filterPatientId,
     refresh,
     selectedDate,
-    filterPatientDob
+    filterPatientDob,
+    filterNad
   ]);
 
   const onActionHandle = (e, value, row) => {

@@ -108,6 +108,7 @@ const FilterSection = ({
         }
       />
       <DatePicker
+        inputtable
         clearable={false}
         className=""
         placeholder="Filter By NAD"
