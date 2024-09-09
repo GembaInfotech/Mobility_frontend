@@ -186,6 +186,14 @@ const Codes = () => {
       setOpenModal(true);
     }
     if (key === TABLE_ACTION_KEYS.VIEW) {
+      setSelectedData({
+        id: row?._id,
+        material: row?.material,
+        group: groupObjHandler(row?.group),
+        code: row?.code,
+        description: row?.description,
+        type: typeObjHandler(row?.type), 
+      });
       setDrawerStock(true);
     }
   };
@@ -268,6 +276,11 @@ const Codes = () => {
   const onDrawerClose = () => {
     setSelectedData('');
     setDrawer(false);
+  };
+
+  const onDrawerCloseStock = () => {
+    setSelectedData('');
+    setDrawerStock(false);
   };
 
   const onHeaderButtonClick = (e, key) => {
@@ -370,7 +383,7 @@ const Codes = () => {
 
        <AddStocks
         show={drawerStock}
-        onClose={onDrawerClose}
+        onClose={onDrawerCloseStock}
         refreshPage={refreshPage}
         editData={selectedData}
       />

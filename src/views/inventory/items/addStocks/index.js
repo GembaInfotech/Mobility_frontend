@@ -61,6 +61,8 @@ const initialValues = {
   code: "",
   description: "",
   type: "",
+  location:"",
+  
 };
 
 const AddStock = ({ editData, show, onClose, refreshPage }) => {
@@ -69,7 +71,10 @@ const AddStock = ({ editData, show, onClose, refreshPage }) => {
 
   //// SUBMIT TAGS HANDLER///////
 
-  const onSubmit = ({ material, code, id, description, type, group }) => {
+  const onSubmit = ({ material, code, id, description, type, group, }) => {
+
+    console.log();
+    
     setLoading(true);
     let payload = {
       material,
@@ -112,7 +117,7 @@ const AddStock = ({ editData, show, onClose, refreshPage }) => {
         />
       }
     >
-      {/* <AdaptableCard>
+      <AdaptableCard>
         <Formik
           innerRef={formRef}
           initialValues={editData ? editData : initialValues}
@@ -194,11 +199,20 @@ const AddStock = ({ editData, show, onClose, refreshPage }) => {
                     component={Input}
                   />
                 </FormItem>
+                <FormItem label="Location">
+                  <Field
+                    type="text"
+                    autoComplete="off"
+                    name="location"
+                    placeholder="Enter Location"
+                    component={Input}
+                  />
+                </FormItem>
               </FormContainer>
             </Form>
           )}
         </Formik>
-      </AdaptableCard> */}
+      </AdaptableCard>
     </Drawer>
   );
 };
