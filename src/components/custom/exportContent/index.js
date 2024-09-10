@@ -40,22 +40,25 @@ const ExportContent = ({ type, onDialogClose, isOpen, user, Payload }) => {
       onRequestClose={onDialogClose}
       contentClassName="pb-0 px-0 mt-36 min-w-36"
     >
-      <div className="text-right mt-6">
-        <Button
-          className="ltr:mr-2 rtl:ml-2"
-          variant="plain"
-          onClick={onDialogClose}
-          type="button"
-        >
-          Cancel
-        </Button>
-        <Button 
-          variant="solid" 
-          type="button" 
-          onClick={onSubmit}
-        >
-          Export/Download File
-        </Button>
+      <div className="p-6">
+        <p className="text-md mb-6 font-bold ">Please download the Excel file for the data.</p>
+        <div className="text-right mt-6">
+          {/* <Button
+            className="ltr:mr-2 rtl:ml-2"
+            variant="plain"
+            onClick={onDialogClose}
+            type="button"
+          >
+            Cancel
+          </Button> */}
+          <Button 
+            variant="solid" 
+            type="button" 
+            onClick={onSubmit}
+          >
+            Export/Download File
+          </Button>
+        </div>
       </div>
     </Dialog>
   );
