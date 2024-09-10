@@ -85,9 +85,12 @@ const ServiceOrder = () => {
   const [filterPatientDob, setFilterPatientDob] = useState("");
   const [filterNad, setFilterNad] = useState("");
   const [selectedData, setSelectedData] = useState("");
+  const [payload, setPayload] = useState("");
   const [refresh, setRefresh] = useState(false);
   const [openExportModal, setOpenExportModal] = useState(false);
   const navigate = useNavigate();
+
+
 
   useEffect(() => {
     if (id) {
@@ -104,6 +107,8 @@ const ServiceOrder = () => {
       patientId: filterPatientId && filterPatientId?._id,
       skip: limit * (page - 1),
     };
+
+  setPayload(payload);
 
     if(filterPatientDob && filterPatientDob !== "") payload.patientDob = filterPatientDob
 
@@ -133,6 +138,8 @@ const ServiceOrder = () => {
     filterPatientDob,
     filterNad
   ]);
+
+
 
   const onActionHandle = (e, value, row) => {
     e.preventDefault();
@@ -464,6 +471,7 @@ const ServiceOrder = () => {
       )}
 
       <ExportContent
+        Payload= {payload}
         user={filterPatientId}
         type="1"
         isOpen={openExportModal}

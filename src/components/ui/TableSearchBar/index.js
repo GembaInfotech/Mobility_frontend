@@ -16,9 +16,9 @@ const TableSearchBar = ({ onChange, placeholder }) => {
 
   return (
     <Input
-      className="max-w-md md:w-74 mb-4"
+      className="max-w-md md:w-96 mb-4"
       size="sm"
-      placeholder={placeholder ? `${placeholder}` : 'Search'}
+      placeholder={placeholder ? `${placeholder}` : 'Filter by NAL, LCode, Referring Physician'}
       prefix={<HiOutlineSearch className="text-lg" />}
       onChange={handleInputChange}
     />

@@ -54,6 +54,9 @@ const AddEditAdmins = () => {
   //// SUBMIT TAGS HANDLER///////
 
   const onSubmit = ({ name, id, email, roles, superAdmin }) => {
+
+    // console.log("superAdmin", superAdmin);
+    
     setLoading(true);
     const payload = new FormData();
     payload.append('name', name);
@@ -137,6 +140,8 @@ const AddEditAdmins = () => {
                           name="superAdmin"
                           checked={values?.superAdmin}
                           onChange={(val, ) => {
+                            console.log("checked", val);
+                            
                             setFieldValue('superAdmin', !val);
                           }}
                         />
