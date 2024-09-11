@@ -41,21 +41,21 @@ const DrawerFooter = ({ editData, onCancel, onSave, isLoading }) => {
 };
 
 const Schema = Yup.object().shape({
-  name: Yup.string().required("Required"),
-  address: Yup.string().required("Required"),
-  storeManager: Yup.string().required("Required"),
+  // name: Yup.string().required("Required"),
+  // address: Yup.string().required("Required"),
+  // storeManager: Yup.string().required("Required"),
   location: Yup.string().required("Required"),
   lcode: Yup.string().required("Required"),
-  quantity: Yup.number().required("Required").min(0, "Quantity cannot be negative"), // Add quantity validation
+  quantity: Yup.number().required("Required").min(0, "Quantity cannot be negative"),
 });
 
 const initialValues = {
-  name: "",
-  address: "",
-  storeManager: "",
+  // name: "",
+  // address: "",
+  // storeManager: "",
   location: "",
   lcode: "",
-  quantity: 1, // Initial value for quantity
+  quantity: 0, // Initial value for quantity
 };
 
 const AddEditDeviceType = ({ editData, show, onClose, refreshPage }) => {
@@ -125,9 +125,9 @@ const AddEditDeviceType = ({ editData, show, onClose, refreshPage }) => {
   const onSubmit = ({ name, address, storeManager, location, lcode, quantity, id }) => {
     setLoading(true);
     const payload = {
-      name,
-      address,
-      storeManager,
+      // name,
+      // address,
+      // storeManager,
       location,
       lcode, // Include the selected lcode
       quantity, // Include quantity
@@ -221,9 +221,11 @@ const AddEditDeviceType = ({ editData, show, onClose, refreshPage }) => {
                   invalid={errors?.location && touched?.location}
                   errorMessage={errors?.location}
                 >
-                  <Select
+                  <Field
                     placeholder="Select Location"
                     options={locationOptions}
+                    name= "location"
+                    component={Select}
                     value={locationOptions.find(
                       (option) => option.value === values.location
                     )}
@@ -237,15 +239,17 @@ const AddEditDeviceType = ({ editData, show, onClose, refreshPage }) => {
                   invalid={errors?.lcode && touched?.lcode}
                   errorMessage={errors?.lcode}
                 >
-                  <Select
+                  <Field
                     placeholder="Select Lcode"
-                    options={lcodeOptions} // Dynamically load lcode options filtered by type 1
+                    options={lcodeOptions}
+                    component={Select}
+                    name= "lcode"
                     value={lcodeOptions.find(
                       (option) => option.value === values.lcode
                     )}
                     onChange={(selectedOption) =>
                       setFieldValue("lcode", selectedOption.value)
-                    } // Set lcode value in Formik
+                    }
                   />
                 </FormItem>
                 <FormItem

@@ -91,9 +91,9 @@ const Locations = () => {
     if (key === TABLE_ACTION_KEYS.EDIT) {
       setSelectedData({
         id: row?._id,
-        name: row?.name,
-        address: row?.address,
-        storeManager: row?.storeManager,
+        location: row?.location,
+        lcode: row?.lcode,
+        quantity: row?.quantity,
       });
       setDrawer(true);
     }
@@ -110,16 +110,16 @@ const Locations = () => {
 
   const columns = [
     {
-      Header: 'name',
-      accessor: 'name',
+      Header: 'Location',
+      accessor: 'location',
     },
     {
-      Header: 'Address',
-      accessor: 'address',
+      Header: 'LCode',
+      accessor: 'lcode',
     },
     {
-      Header: 'Store Manager',
-      accessor: 'storeManager',
+      Header: 'Quantity',
+      accessor: 'quantity',
     },
     {
       Header: 'Active',

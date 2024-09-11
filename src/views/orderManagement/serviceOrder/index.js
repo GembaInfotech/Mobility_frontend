@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Header from "./header";
 import { AdaptableCard, DataTable } from "components/shared";
-import useThemeClass from "utils/hooks/useThemeClass";
+// import useThemeClass from "utils/hooks/useThemeClass";
 import { getApi, postApi } from "services/CommonService";
 import { APIS, LIST_DATA_API_TYPE } from "constants/api.constant";
 import { useNavigate, useParams } from "react-router-dom";
@@ -13,7 +13,7 @@ import {
 } from "./serviceConstant";
 import dayjs from "dayjs";
 import { FaPen, FaDownload } from "react-icons/fa";
-import { Tooltip } from "components/ui";
+// import { Tooltip } from "components/ui";
 import {
   CONFIRMATION_OBJ,
   DATE_FORMAT,
@@ -194,45 +194,7 @@ const ServiceOrder = () => {
       </div>
     );
   };
-
-  // const ActionColumn = ({ row, onActionHandle }) => {
-  //   const { textTheme } = useThemeClass();
-  //   const NEW_ACTION_CONSTANT = hasPermisson(MODULE.SERVICEORDER, ACCESS.WRITE)
-  //     ? ACTION_CONSTANT
-  //     : ACTION_CONSTANT.slice(0, ACTION_CONSTANT.length - 5)
-  //   return (
-  //     <div className="flex">
-  //       {NEW_ACTION_CONSTANT?.map((item, i) => {
-  //         return (
-  //           <Tooltip
-  //             key={i}
-  //             title={item?.toolTip}
-  //             visible={item?.toolTip ? true : false}
-  //           >
-  //             {item?.isImage ? (
-  //               <img
-  //                 src={item.label}
-  //                 alt="view Icon"
-  //                 style={{ maxWidth: "15px" }}
-  //                 // h-5 justify-center ml-5 text-blue-400
-  //                 className="cursor-pointer mx-1 ml-1"
-  //                 onClick={(e) => onActionHandle(e, item.key, row)}
-  //               />
-  //             ) : (
-  //               <span
-  //                 className={`${textTheme} cursor-pointer select-none font-semibold ml-1`}
-  //                 onClick={(e) => onActionHandle(e, item.key, row)}
-  //               >
-  //                 {item.label}
-  //               </span>
-  //             )}
-  //           </Tooltip>
-  //         );
-  //       })}
-  //     </div>
-  //   );
-  // };
-
+  
   const onHeaderButtonClick = (e, key) => {
     if (key === TABLE_ACTION_KEYS.ADD) {
       const path = "/app/service-order/add"

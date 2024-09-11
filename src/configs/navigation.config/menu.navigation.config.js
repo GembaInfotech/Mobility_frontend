@@ -148,39 +148,39 @@ const appsNavigationConfig = [
           },
         ],
       },
-      {
-        key: 'appsMenu.inventory',
-        title: 'Inventory',
-        icon: 'inventory',
-        type: NAV_ITEM_TYPE_ITEM,
-        authority: [ADMIN, USER],
-        isVisible: () =>
-          hasPermisson(MODULE.CODES, ACCESS.READ) ||
-          hasPermisson(MODULE.COUPONS, ACCESS.READ) ||
-          hasPermisson(MODULE.TYPESOFDEVICES, ACCESS.READ),
-        subMenu: [
-          {
-            key: 'appsMenu.inventory',
-            path: `${APP_PREFIX_PATH}/inventory/location`,
-            title: 'Add Inventory',
-            icon: 'crm',
-            type: NAV_ITEM_TYPE_ITEM,
-            authority: [ADMIN, USER],
-            isVisible: () => hasPermisson(MODULE.LOCATIONS, ACCESS.READ),
-            subMenu: [],
-          },
-          {
-            key: 'appsMenu.inventory.',
-            path: `${APP_PREFIX_PATH}/inventory/items`,
-            title: 'Add New Materials',
-            icon: 'crm',
-            type: NAV_ITEM_TYPE_ITEM,
-            authority: [ADMIN, USER],
-            isVisible: () => hasPermisson(MODULE.CODES, ACCESS.READ),
-            subMenu: [],
-          },
-        ],
-      },
+      // {
+      //   key: 'appsMenu.inventory',
+      //   title: 'Inventory',
+      //   icon: 'inventory',
+      //   type: NAV_ITEM_TYPE_ITEM,
+      //   authority: [ADMIN, USER],
+      //   isVisible: () =>
+      //     hasPermisson(MODULE.CODES, ACCESS.READ) ||
+      //     hasPermisson(MODULE.COUPONS, ACCESS.READ) ||
+      //     hasPermisson(MODULE.TYPESOFDEVICES, ACCESS.READ),
+      //   subMenu: [
+      //     {
+      //       key: 'appsMenu.inventory',
+      //       path: `${APP_PREFIX_PATH}/inventory/location`,
+      //       title: 'Add Inventory',
+      //       icon: 'crm',
+      //       type: NAV_ITEM_TYPE_ITEM,
+      //       authority: [ADMIN, USER],
+      //       isVisible: () => hasPermisson(MODULE.LOCATIONS, ACCESS.READ),
+      //       subMenu: [],
+      //     },
+      //     {
+      //       key: 'appsMenu.inventory.',
+      //       path: `${APP_PREFIX_PATH}/inventory/items`,
+      //       title: 'Add New Materials',
+      //       icon: 'crm',
+      //       type: NAV_ITEM_TYPE_ITEM,
+      //       authority: [ADMIN, USER],
+      //       isVisible: () => hasPermisson(MODULE.CODES, ACCESS.READ),
+      //       subMenu: [],
+      //     },
+      //   ],
+      // },
     ],
   },
 ];
