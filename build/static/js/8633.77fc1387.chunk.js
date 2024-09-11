@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunknasp=self.webpackChunknasp||[]).push([[8633],{48633:function(e,s,a){e.exports=a.p+"static/media/ChoroplethQuantize.da499fedb08c216c19ec.md"}}]);

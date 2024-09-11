@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunknasp=self.webpackChunknasp||[]).push([[4661],{4661:function(a,s,e){a.exports=e.p+"static/media/CustomIndicator.90d06e4e50c3abaa01a7.md"}}]);

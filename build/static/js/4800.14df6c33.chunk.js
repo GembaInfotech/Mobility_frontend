@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunknasp=self.webpackChunknasp||[]).push([[4800],{74800:function(a,c,s){a.exports=s.p+"static/media/BasicWorldMap.968aeecf0c49c3a7adc1.md"}}]);
