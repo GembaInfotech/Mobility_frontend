@@ -23,6 +23,7 @@ import {
 } from "constants/app.constant";
 import ExportContent from "components/custom/exportContent";
 import { IMAGES } from "assets/icon";
+import ActionColumn from "components/custom/actionColumn";
 import hasPermisson, {
   ACCESS,
   MODULE,
@@ -32,37 +33,42 @@ import ConfirmationContent from "components/custom/ConfirmationContent";
 import Notification from "components/template/Notification";
 
 const ACTION_CONSTANT = [
-  { label: <FaPen />, key: PAGE_KEY.VIEW, toolTip: "View/Edit" },
-  { label: <FaDownload />, key: PAGE_KEY.DOWNLOAD, toolTip: "Download Forms" },
+  { label: <FaPen />, key: PAGE_KEY.VIEW, toolTip: "View/Edit", show: () => hasPermisson(MODULE.SERVICEORDER, ACCESS.WRITE) },
+  { label: <FaDownload />, key: PAGE_KEY.DOWNLOAD, toolTip: "Download Forms", show: () => hasPermisson(MODULE.SERVICEORDER, ACCESS.READ) },
   {
     label: IMAGES.EXPORT,
     key: PAGE_KEY.MEDICAL_NECESSITY,
     isImage: true,
     toolTip: "Medical Necessity",
+    show: () => hasPermisson(MODULE.SERVICEORDER, ACCESS.READ),
   },
   {
     label: IMAGES.RECEIPT,
     key: PAGE_KEY.DELIVERY_RECEIPT,
     isImage: true,
     toolTip: "Delivery Receipt",
+    show: () => hasPermisson(MODULE.SERVICEORDER, ACCESS.READ),
   },
   {
     label: <AiFillDelete style={{ fontSize: "1rem" }} />,
     key: PAGE_KEY.DELETE,
     toolTip: "Delete",
+    show: () => hasPermisson(MODULE.SERVICEORDER, ACCESS.DELETE),
   },
 ];
 
 const BUTTON_CONSTANT = [
   {
-    label: "Add Prescription",
-    key: TABLE_ACTION_KEYS.ADD,
-    icon: <AiFillFileAdd />,
-  },
-  {
     label: "Export Excel",
     key: TABLE_ACTION_KEYS.EXPORT,
     icon: <AiOutlineFile />,
+    show: () => hasPermisson(MODULE.SERVICEORDER, ACCESS.READ),
+  },
+  {
+    label: "Add Prescription",
+    key: TABLE_ACTION_KEYS.ADD,
+    icon: <AiFillFileAdd />,
+    // show: () => hasPermisson(MODULE.SERVICEORDER, ACCESS.WRITE),
   },
 ];
 
@@ -189,43 +195,43 @@ const ServiceOrder = () => {
     );
   };
 
-  const ActionColumn = ({ row, onActionHandle }) => {
-    const { textTheme } = useThemeClass();
-    const NEW_ACTION_CONSTANT = hasPermisson(MODULE.SERVICEORDER, ACCESS.WRITE)
-      ? ACTION_CONSTANT
-      : ACTION_CONSTANT.slice(0, 5);
-    return (
-      <div className="flex">
-        {NEW_ACTION_CONSTANT?.map((item, i) => {
-          return (
-            <Tooltip
-              key={i}
-              title={item?.toolTip}
-              visible={item?.toolTip ? true : false}
-            >
-              {item?.isImage ? (
-                <img
-                  src={item.label}
-                  alt="view Icon"
-                  style={{ maxWidth: "15px" }}
-                  // h-5 justify-center ml-5 text-blue-400
-                  className="cursor-pointer mx-1 ml-1"
-                  onClick={(e) => onActionHandle(e, item.key, row)}
-                />
-              ) : (
-                <span
-                  className={`${textTheme} cursor-pointer select-none font-semibold ml-1`}
-                  onClick={(e) => onActionHandle(e, item.key, row)}
-                >
-                  {item.label}
-                </span>
-              )}
-            </Tooltip>
-          );
-        })}
-      </div>
-    );
-  };
+  // const ActionColumn = ({ row, onActionHandle }) => {
+  //   const { textTheme } = useThemeClass();
+  //   const NEW_ACTION_CONSTANT = hasPermisson(MODULE.SERVICEORDER, ACCESS.WRITE)
+  //     ? ACTION_CONSTANT
+  //     : ACTION_CONSTANT.slice(0, ACTION_CONSTANT.length - 5)
+  //   return (
+  //     <div className="flex">
+  //       {NEW_ACTION_CONSTANT?.map((item, i) => {
+  //         return (
+  //           <Tooltip
+  //             key={i}
+  //             title={item?.toolTip}
+  //             visible={item?.toolTip ? true : false}
+  //           >
+  //             {item?.isImage ? (
+  //               <img
+  //                 src={item.label}
+  //                 alt="view Icon"
+  //                 style={{ maxWidth: "15px" }}
+  //                 // h-5 justify-center ml-5 text-blue-400
+  //                 className="cursor-pointer mx-1 ml-1"
+  //                 onClick={(e) => onActionHandle(e, item.key, row)}
+  //               />
+  //             ) : (
+  //               <span
+  //                 className={`${textTheme} cursor-pointer select-none font-semibold ml-1`}
+  //                 onClick={(e) => onActionHandle(e, item.key, row)}
+  //               >
+  //                 {item.label}
+  //               </span>
+  //             )}
+  //           </Tooltip>
+  //         );
+  //       })}
+  //     </div>
+  //   );
+  // };
 
   const onHeaderButtonClick = (e, key) => {
     if (key === TABLE_ACTION_KEYS.ADD) {
@@ -404,6 +410,7 @@ const ServiceOrder = () => {
         <ActionColumn
           row={props.row.original}
           onActionHandle={onActionHandle}
+          actionsMenu={ACTION_CONSTANT}
         />
       ),
     },
@@ -417,7 +424,11 @@ const ServiceOrder = () => {
         </h3>
       )}
       <Header
-        buttonMenu={BUTTON_CONSTANT}
+       buttonMenu={
+          hasPermisson(MODULE.SERVICEORDER, ACCESS.WRITE)
+            ? BUTTON_CONSTANT
+            : BUTTON_CONSTANT.slice(0, BUTTON_CONSTANT.length - 1)
+        }
         buttonClick={onHeaderButtonClick}
         setSearch={setSearch}
         filtervalue={filtervalue}

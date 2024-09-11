@@ -334,7 +334,7 @@ const PatientManagement = () => {
         buttonMenu={
           hasPermisson(MODULE.PATIENT, ACCESS.WRITE)
             ? BUTTON_CONSTANT
-            : [BUTTON_CONSTANT?.[1]]
+            : BUTTON_CONSTANT.slice(0, BUTTON_CONSTANT.length - 1)
         }
         FilterMenu={FILTER_CONSTANT}
         setSearch={setSearch}
