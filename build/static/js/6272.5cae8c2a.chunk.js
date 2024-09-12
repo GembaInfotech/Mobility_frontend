@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunknasp=self.webpackChunknasp||[]).push([[6272],{16272:function(a,e,s){a.exports=s.p+"static/media/DropdownItemVariant.0d05b6f910178e7ca460.md"}}]);
