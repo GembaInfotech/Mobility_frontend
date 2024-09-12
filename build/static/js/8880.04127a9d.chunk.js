@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunknasp=self.webpackChunknasp||[]).push([[8880],{8880:(a,e,p)=>{a.exports=p.p+"static/media/EuropeMapWithGraticule.fb36f01a7df453b27cdf.md"}}]);

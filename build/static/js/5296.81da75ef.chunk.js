@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunknasp=self.webpackChunknasp||[]).push([[5296],{65296:(e,s,c)=>{e.exports=c.p+"static/media/HeaderFooter.df3136d49cecc60747c9.md"}}]);

@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunknasp=self.webpackChunknasp||[]).push([[9546],{9546:(e,s,a)=>{e.exports=a.p+"static/media/Resizable.e269aed99ef6f90c509e.md"}}]);

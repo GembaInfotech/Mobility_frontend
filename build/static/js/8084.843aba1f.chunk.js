@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunknasp=self.webpackChunknasp||[]).push([[8084],{55546:function(s,e,a){s.exports=a.p+"static/media/Trigger.c26fdd4480895b297aff.md"}}]);

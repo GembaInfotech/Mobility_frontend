@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunknasp=self.webpackChunknasp||[]).push([[6697],{46697:function(e,s,a){e.exports=a.p+"static/media/Basic.3474ee812e214dd74693.md"}}]);
