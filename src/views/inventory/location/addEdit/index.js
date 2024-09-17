@@ -1,6 +1,5 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import { AdaptableCard } from "components/shared";
-import Select from "components/ui/Select";
 import {
   Button,
   Drawer,
@@ -12,13 +11,13 @@ import {
 } from "components/ui";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { postApi, getApi } from "services/CommonService";
+import { postApi } from "services/CommonService";
 import { APIS, LIST_DATA_API_TYPE } from "constants/api.constant";
 import { AiOutlineSave, AiOutlineCloseCircle } from "react-icons/ai";
 
 const DrawerFooter = ({ editData, onCancel, onSave, isLoading }) => {
   return (
-    <div className="w-full text-right">
+    <div className="text-right w-full">
       <Button
         className="mr-2"
         onClick={onCancel}
@@ -41,97 +40,22 @@ const DrawerFooter = ({ editData, onCancel, onSave, isLoading }) => {
 };
 
 const Schema = Yup.object().shape({
-  // name: Yup.string().required("Required"),
-  // address: Yup.string().required("Required"),
-  // storeManager: Yup.string().required("Required"),
-  location: Yup.string().required("Required"),
-  lcode: Yup.string().required("Required"),
-  quantity: Yup.number().required("Required").min(0, "Quantity cannot be negative"),
+  name: Yup.string().required("Required"),
 });
 
 const initialValues = {
-  // name: "",
-  // address: "",
-  // storeManager: "",
-  location: "",
-  lcode: "",
-  quantity: 0, // Initial value for quantity
+  name: "",
 };
 
 const AddEditDeviceType = ({ editData, show, onClose, refreshPage }) => {
   const formRef = useRef();
   const [loading, setLoading] = useState(false);
-  const [locationOptions, setLocationOptions] = useState([]);
-  const [lcodeOptions, setLcodeOptions] = useState([]);
 
-  // Fetch registered locations and lcodes from the backend
-  useEffect(() => {
-    if (show) {
-      // Fetch locations
-      getApi(APIS.LIST_DATA, {
-        type: LIST_DATA_API_TYPE.LOCATIONS,
-      })
-        .then((res) => {
-          if (res && res.data && res.data.data) {
-            const locations = res.data.data.map((location) => ({
-              label: location.name,
-              value: location._id,
-            }));
-            setLocationOptions(locations);
-          } else {
-            toast.push(
-              <Notification type="error">No locations found!</Notification>
-            );
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching locations: ", error);
-          toast.push(
-            <Notification type="error">Failed to load locations</Notification>
-          );
-        });
-
-      // Fetch lcodes
-      getApi(APIS.LIST_DATA, {
-        type: LIST_DATA_API_TYPE.CODES,
-      })
-        .then((res) => {
-          if (res && res.data && res.data.data) {
-            console.log(res);
-            const lcodes = Array.isArray(res.data.data)
-              ? res.data.data
-                  .filter((item) => item.type === 1) // Filter by type 1
-                  .map((item) => ({
-                    label: item.code, // Use code for display
-                    value: item._id, // Use _id as value
-                  }))
-              : [];
-            setLcodeOptions(lcodes);
-          } else {
-            toast.push(
-              <Notification type="error">No lcodes found!</Notification>
-            );
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching lcodes: ", error);
-          toast.push(
-            <Notification type="error">Failed to load lcodes</Notification>
-          );
-        });
-    }
-  }, [show]);
-
-  const onSubmit = ({ name, address, storeManager, location, lcode, quantity, id }) => {
+  const onSubmit = ({ name, id }) => {
     setLoading(true);
     const payload = {
-      // name,
-      // address,
-      // storeManager,
-      location,
-      lcode, // Include the selected lcode
-      quantity, // Include quantity
-      modelType: LIST_DATA_API_TYPE.INVENTORY,
+      name,
+      modelType : LIST_DATA_API_TYPE.INVLOCATION
     };
 
     if (id) {
@@ -143,7 +67,7 @@ const AddEditDeviceType = ({ editData, show, onClose, refreshPage }) => {
         onClose();
         refreshPage();
         toast.push(
-          <Notification type="success">Inventory saved!</Notification>
+          <Notification type="success">Location saved!</Notification>
         );
       })
       .finally(() => setLoading(false));
@@ -177,8 +101,8 @@ const AddEditDeviceType = ({ editData, show, onClose, refreshPage }) => {
           {({ errors, touched, setFieldValue, values }) => (
             <Form className="p-5">
               <FormContainer>
-                {/* <FormItem
-                  label="Inventory Name"
+                <FormItem
+                  label="Location"
                   invalid={errors?.name && touched?.name}
                   errorMessage={errors?.name}
                 >
@@ -189,97 +113,6 @@ const AddEditDeviceType = ({ editData, show, onClose, refreshPage }) => {
                     placeholder="Enter Name"
                     component={Input}
                   />
-                </FormItem>
-                <FormItem
-                  label="Address"
-                  invalid={errors?.address && touched?.address}
-                  errorMessage={errors?.address}
-                >
-                  <Field
-                    type="text"
-                    autoComplete="off"
-                    name="address"
-                    placeholder="Enter Address"
-                    component={Input}
-                  />
-                </FormItem>
-                <FormItem
-                  label="Store Manager"
-                  invalid={errors?.storeManager && touched?.storeManager}
-                  errorMessage={errors?.storeManager}
-                >
-                  <Field
-                    type="text"
-                    autoComplete="off"
-                    name="storeManager"
-                    placeholder="Enter Store Manager"
-                    component={Input}
-                  />
-                </FormItem> */}
-                <FormItem
-                  label="Location"
-                  invalid={errors?.location && touched?.location}
-                  errorMessage={errors?.location}
-                >
-                  <Field
-                    placeholder="Select Location"
-                    options={locationOptions}
-                    name= "location"
-                    component={Select}
-                    value={locationOptions.find(
-                      (option) => option.value === values.location
-                    )}
-                    onChange={(selectedOption) =>
-                      setFieldValue("location", selectedOption.value)
-                    }
-                  />
-                </FormItem>
-                <FormItem
-                  label="Lcode"
-                  invalid={errors?.lcode && touched?.lcode}
-                  errorMessage={errors?.lcode}
-                >
-                  <Field
-                    placeholder="Select Lcode"
-                    options={lcodeOptions}
-                    component={Select}
-                    name= "lcode"
-                    value={lcodeOptions.find(
-                      (option) => option.value === values.lcode
-                    )}
-                    onChange={(selectedOption) =>
-                      setFieldValue("lcode", selectedOption.value)
-                    }
-                  />
-                </FormItem>
-                <FormItem
-                  label="Quantity"
-                  invalid={errors?.quantity && touched?.quantity}
-                  errorMessage={errors?.quantity}
-                >
-                  <div className="flex items-center">
-                    <Button
-                      type="button"
-                      onClick={() => setFieldValue("quantity", Math.max(0, values.quantity - 1))}
-                      className="mr-2"
-                    >
-                      -
-                    </Button>
-                    <Field
-                      type="number"
-                      name="quantity"
-                      min="0"
-                      component={Input}
-                      className="text-center"
-                    />
-                    <Button
-                      type="button"
-                      onClick={() => setFieldValue("quantity", values.quantity + 1)}
-                      className="ml-2"
-                    >
-                      +
-                    </Button>
-                  </div>
                 </FormItem>
               </FormContainer>
             </Form>

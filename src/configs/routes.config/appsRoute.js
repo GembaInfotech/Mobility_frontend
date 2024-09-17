@@ -29,6 +29,16 @@ const appsRoute = [
 
   },
   {
+    key: "appsAccount.addEdStockes",
+    path: `${APP_PREFIX_PATH}/stockEntry/add`,
+    component: React.lazy(() =>
+      import("views/inventory/stockEntry/addEdit")
+    ),
+    authority: [ADMIN, USER],
+    show: () => hasPermisson(MODULE.STOCKENTRY, ACCESS.WRITE),
+
+  },
+  {
     key: "apps.addSubUser",
     path: `${APP_PREFIX_PATH}/sub-user/add`,
     component: React.lazy(() => import("views/subUsers/addEdit")),
@@ -56,6 +66,15 @@ const appsRoute = [
     ),
     authority: [ADMIN, USER],
     show: () => hasPermisson(MODULE.PATIENT, ACCESS.WRITE),
+  },
+  {
+    key: "appsAccount.addEdStokes",
+    path: `${APP_PREFIX_PATH}/stockEntry/edit/:id`,
+    component: React.lazy(() =>
+      import("views/inventory/stockEntry/addEdit")
+    ),
+    authority: [ADMIN, USER],
+    show: () => hasPermisson(MODULE.STOCKENTRY, ACCESS.WRITE),
   },
   {
     key: "appsAccount.addProvider",

@@ -48,12 +48,12 @@ const CODE_TYPE = [
 ];
 
 const ACTION_CONSTANT = [
-  {
-    label: '+Stocks',
-    // icon: <HiOutlinePlusCircle />,
-    key: TABLE_ACTION_KEYS.VIEW,
-    show: () => hasPermisson(MODULE.CODES, ACCESS.WRITE),
-  },
+  // {
+  //   label: '+Stocks',
+  //   // icon: <HiOutlinePlusCircle />,
+  //   key: TABLE_ACTION_KEYS.VIEW,
+  //   show: () => hasPermisson(MODULE.CODES, ACCESS.WRITE),
+  // },
   {
     label: 'Edit',
     key: TABLE_ACTION_KEYS.EDIT,
@@ -176,6 +176,7 @@ const Codes = () => {
         code: row?.code,
         description: row?.description,
         type: typeObjHandler(row?.type), 
+        uom: row?.uom,
       });
       setDrawer(true);
     }
@@ -200,7 +201,7 @@ const Codes = () => {
 
   const columns = [
     {
-      Header: 'MaterialNo',
+      Header: 'Material Code',
       accessor: (row) => row.materialNo? row.materialNo: "-"
     },
     {
@@ -228,6 +229,14 @@ const Codes = () => {
           return 'Lcodes';
         }
         return 'icd';
+      },
+    },
+    {
+      Header: 'UOM',
+      accessor: 'uom',
+      Cell: (props) => {
+        const uom = props.row.original.uom; // Access the 'uom' object correctly
+        return uom && uom.name ? uom.name : "-"; // Display 'uomName.name' or '-' if not available
       },
     },
     {

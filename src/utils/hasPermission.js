@@ -28,6 +28,7 @@ export const MODULE = {
   USERFEEDBACK: "users-feedback",
   CONTACTQUERIES: "contact-queries",
   NOTIFICATION: "notification",
+  STOCKENTRY: "stock-entry"
 };
 /**
  *

@@ -163,15 +163,26 @@ const menuRoute = [
     },
   },
   {
-    key: "apps.inventory.inventoryDetail",
-    path: `${APP_PREFIX_PATH}/inventory/inventoryDetail/:id`,
-    component: React.lazy(() => import("views/inventory/inventoryDetail")),
+    key: "apps.inventory.stockEntry",
+    path: `${APP_PREFIX_PATH}/inventory/stockEntry`,
+    component: React.lazy(() => import("views/inventory/stockEntry")),
     authority: [ADMIN, USER],
-    show: () => hasPermisson(MODULE.INVENTORY, ACCESS.READ),
+    show: () => hasPermisson(MODULE.STOCKENTRY, ACCESS.READ),
     meta: {
-      header: "Inventory Details",
+      header: "Stock Entry",
     },
-  },
+  }, 
+  // {
+  //   key: "apps.inventory.inventoryDetail",
+  //   path: `${APP_PREFIX_PATH}/inventory/inventoryDetail/:id`,
+  //   component: React.lazy(() => import("views/inventory/inventoryDetail")),
+  //   authority: [ADMIN, USER],
+  //   show: () => hasPermisson(MODULE.INVENTORY, ACCESS.READ),
+  //   meta: {
+  //     header: "Inventory Details",
+  //   },
+  // },
+  //
   // {
   //   key: "appsMenu.userManagement.staff",
   //   path: `${APP_PREFIX_PATH}/userManagement/staff`,

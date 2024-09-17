@@ -12,13 +12,16 @@ export const LIST_DATA_API_TYPE = {
   ADMINS: 7,
   PRESCRIPTIONS: 8,
   MATERIALS: 9,
-  INVENTORY:10
+  INVENTORY:10,
+  UOM:11,
+  INVLOCATION:12,
 }
 
 export const APIS = {
   ADD_EDIT_ADMINS: 'admin/addEditAdmins',
   ADD_EDIT_PHYSICIANS: 'admin/addEditPhysician',
   ADD_EDIT_INSURANCE: 'admin/addEditInsurance',
+  ADD_EDIT_STOCKENTRY: 'admin/addEditStockEntry',
   GET_ADMINS: 'admin/listAdmins',
   UPLOAD_IMAGE: 'api/uploadImage',
   DELETE_IMAGE: 'api/deleteImageBucket',

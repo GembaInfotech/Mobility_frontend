@@ -19,31 +19,25 @@ import {
 } from 'constants/app.constant';
 import ActiveInActiveCheckbox from 'components/custom/activeCheckbox';
 import hasPermisson, { ACCESS, MODULE, newColumn } from 'utils/hasPermission';
-import { useNavigate } from 'react-router-dom';
 
 const ACTION_CONSTANT = [
   {
     label: 'Edit',
     key: TABLE_ACTION_KEYS.EDIT,
-    show: () => hasPermisson(MODULE.LOCATIONS, ACCESS.WRITE),
+    show: () => hasPermisson(MODULE.INVLOCATION, ACCESS.WRITE),
   },
   {
     label: <AiFillDelete style={{ fontSize: '1.2rem' }} />,
     key: TABLE_ACTION_KEYS.DELETE,
     toolTip: 'Delete',
-    show: () => hasPermisson(MODULE.LOCATIONS, ACCESS.DELETE),
-  },
-  {
-    label: 'View',
-    key: TABLE_ACTION_KEYS.VIEW,
-    show: () => hasPermisson(MODULE.LOCATIONS, ACCESS.WRITE),
+    show: () => hasPermisson(MODULE.INVLOCATION, ACCESS.DELETE),
   },
 ];
 
-const BUTTON_CONSTANT = hasPermisson(MODULE.LOCATIONS, ACCESS.WRITE)
+const BUTTON_CONSTANT = hasPermisson(MODULE.INVLOCATION, ACCESS.WRITE)
   ? [
       {
-        label: 'Add Inventory',
+        label: 'Add Location',
         key: TABLE_ACTION_KEYS.ADD,
         icon: <HiOutlinePlusCircle />,
       },
@@ -69,12 +63,11 @@ const Locations = () => {
   const [openModal, setOpenModal] = useState(false);
   const [activeConfirm, setActiveConfirm] = useState(false);
   const refreshPage = () => setRefresh((prev) => !prev);
-  const navigate = useNavigate();
 
   useEffect(() => {
     setLoading(true);
     getApi(APIS.LIST_DATA, {
-      type: LIST_DATA_API_TYPE.INVENTORY,
+      type: LIST_DATA_API_TYPE.INVLOCATION,
       limit,
       search,
       skip: limit * (page - 1),
@@ -91,9 +84,7 @@ const Locations = () => {
     if (key === TABLE_ACTION_KEYS.EDIT) {
       setSelectedData({
         id: row?._id,
-        location: row?.location,
-        lcode: row?.lcode,
-        quantity: row?.quantity,
+        name: row?.name,
       });
       setDrawer(true);
     }
@@ -103,23 +94,16 @@ const Locations = () => {
       });
       setOpenModal(true);
     }
-    if (key === TABLE_ACTION_KEYS.VIEW) {
-      navigate(`/app/inventory/inventoryDetail/${row?._id}`); 
-    }
   };
 
   const columns = [
     {
-      Header: 'Location',
-      accessor: 'location',
+      Header: 'Location ID',
+      accessor: 'locationNo',
     },
     {
-      Header: 'LCode',
-      accessor: 'lcode',
-    },
-    {
-      Header: 'Quantity',
-      accessor: 'quantity',
+      Header: 'name',
+      accessor: 'name',
     },
     {
       Header: 'Active',
@@ -168,7 +152,7 @@ const Locations = () => {
   const onConfirmClick = () => {
     let toastMessage;
     const payload = {
-      type: LIST_DATA_API_TYPE.INVENTORY,
+      type: LIST_DATA_API_TYPE.INVLOCATION,
       id: selectedData?.id,
     }
     if (activeConfirm) {
@@ -196,7 +180,7 @@ const Locations = () => {
       />
       <AdaptableCard className="h-full" bodyClass="h-full">
         <DataTable
-          columns={newColumn(columns, MODULE.LOCATIONS, 1)}
+          columns={newColumn(columns, MODULE.INVLOCATION, 1)}
           isCursor={false}
           data={deviceType}
           loading={loading}
