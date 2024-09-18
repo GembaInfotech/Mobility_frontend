@@ -115,13 +115,13 @@ const AddEditStockes = ({ onClose, refreshPage }) => {
     setLoading(true);
     const payload = {
       materialId: values.materialNo,
-      stockType: values.stockType?.value.toString(),
+      stockType: values.stockType?.value,
       quantity: values.quantity,
-      wareouseId: values.sourceWareHouse,
+      warehouseId: values.sourceWareHouse,
       targetWareHouse: values.targetWareHouse,
       uomId: values.uomId,
       availableQuantity: values.availableQuantity,
-      type:LIST_DATA_API_TYPE.INVENTORY
+      modelType:LIST_DATA_API_TYPE.STOCK_ENTRY,
     };
 
     console.log(payload)
