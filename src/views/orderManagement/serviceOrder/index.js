@@ -92,6 +92,7 @@ const ServiceOrder = () => {
   const [filterNad, setFilterNad] = useState("");
   const [ filterNalId, setFilterNalId] = useState("");
   const [ filterPhysicianId, setFilterPhysicianId] = useState("");
+  const [ filterLcodeId, setFilterLcodeId] = useState("");
   const [selectedData, setSelectedData] = useState("");
   const [payload, setPayload] = useState("");
   const [refresh, setRefresh] = useState(false);
@@ -116,6 +117,7 @@ const ServiceOrder = () => {
       patientId: filterPatientId && filterPatientId?._id,
       nalId: filterNalId._id,
       physicianId: filterPhysicianId._id,
+      lcodeId: filterLcodeId._id,
       skip: limit * (page - 1),
     };
 
@@ -148,6 +150,7 @@ const ServiceOrder = () => {
     filterPatientId,
     filterNalId,
     filterPhysicianId,
+    filterLcodeId,
     refresh,
     selectedDate,
     filterPatientDob,
@@ -407,8 +410,10 @@ const ServiceOrder = () => {
         setFilterPatientId={setFilterPatientId}
         setFilterNalId = {setFilterNalId}
         setFilterPhysicianId = {setFilterPhysicianId}
+        setFilterLcodeId={setFilterLcodeId}
         filterPatientId={filterPatientId}
         filterPhysicianId = {filterPhysicianId}
+        filterLcode={filterLcodeId}
         filterNalId = {filterNalId}
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}

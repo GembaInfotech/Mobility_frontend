@@ -21,6 +21,8 @@ const FilterSection = ({
   filterNalId,
   setFilterPhysicianId,
   filterPhysicianId,
+  filterLcodeId,
+  setFilterLcodeId,
   selectedDate,
   setSelectedDate,
   filterPatientDob,
@@ -28,10 +30,7 @@ const FilterSection = ({
   filterNad,
   setFilterNad,
 }) => {
-
-
   console.log("filterPhysicianIddddd", filterPhysicianId?._id);
-  
 
   const loadPatientsOption = (inputValue, resolve) => {
     getApi(APIS.LIST_DATA, {
@@ -47,7 +46,7 @@ const FilterSection = ({
       type: LIST_DATA_API_TYPE.LOCATIONS,
       search: inputValue,
     }).then((res) => {
-      console.log(res); // Log the response to see available NAL options
+      // console.log(res); // Log the response to see available NAL options
       resolve(res?.data?.data);
     });
   };
@@ -57,19 +56,27 @@ const FilterSection = ({
       type: LIST_DATA_API_TYPE.PHYSICIANS,
       search: inputValue,
     }).then((res) => {
-      console.log(res); // Log the response to see available NAL options
+      // console.log(res); // Log the response to see available NAL options
       resolve(res?.data?.data);
     });
   };
 
+  const loadLcodeOption = (inputValue, resolve) => {
+    getApi(APIS.LIST_DATA, {
+      type: LIST_DATA_API_TYPE.CODES,
+      search: inputValue,
+    }).then((res) => {
+      const filteredData = res?.data?.data?.filter(item => item.code.startsWith('L'));
+      resolve(filteredData);
+    });
+  };
 
+  const loadLcode = debounce(loadLcodeOption, 300);
   const loadPhysician = debounce(loadPhysicianOption, 300);
   const loadNal = debounce(loadNalOption, 300);
   const loadStays = debounce(loadPatientsOption, 300);
   const navigate = useNavigate();
 
-
-  
   return (
     <div className="grid grid-cols-3 gap-4 mb-5">
       <TableSearchBar onChange={(query) => setSearch(query)} />
@@ -122,22 +129,39 @@ const FilterSection = ({
         }}
       />
 
-<AsyncSelect
-  autoComplete="off"
-  placeholder="Filter by Referring Physician"
-  defaultOptions
-  cacheOptions
-  size="sm"
-  className="mb-4"
-  value={filterPhysicianId} 
-  loadOptions={loadPhysician}
-  getOptionLabel={(v) => `${v?.name || ""}`} 
-  getOptionValue={(v) => v?._id} 
-  onChange={(selectedPhysician) => {
-    console.log("Selected Physician:", selectedPhysician);
-    setFilterPhysicianId(selectedPhysician);
-  }}
-/>
+      <AsyncSelect
+        autoComplete="off"
+        placeholder="Filter by Referring Physician"
+        defaultOptions
+        cacheOptions
+        size="sm"
+        className="mb-4"
+        value={filterPhysicianId}
+        loadOptions={loadPhysician}
+        getOptionLabel={(v) => `${v?.name || ""}`}
+        getOptionValue={(v) => v?._id}
+        onChange={(selectedPhysician) => {
+          console.log("Selected Physician:", selectedPhysician);
+          setFilterPhysicianId(selectedPhysician);
+        }}
+      />
+
+      <AsyncSelect
+        autoComplete="off"
+        placeholder="Filter by LCode"
+        defaultOptions
+        cacheOptions
+        size="sm"
+        className="mb-4"
+        value={filterLcodeId}
+        loadOptions={loadLcode}
+        getOptionLabel={(v) => `${v?.code || ""}`}
+        getOptionValue={(v) => v?._id}
+        onChange={(selectedLcode) => {
+          console.log("Selected Lcode:", selectedLcode);
+          setFilterLcodeId(selectedLcode);
+        }}
+      />
 
       <DatePicker
         inputtable
@@ -239,7 +263,9 @@ const Header = ({
   filterNalId,
   setFilterNalId,
   setFilterPhysicianId,
-  filterPhysicianId
+  filterPhysicianId,
+  filterLcode,
+  setFilterLcodeId,
 }) => {
   const ButtonSection = ({ buttonClick, buttonMenu }) => {
     return (
@@ -280,8 +306,10 @@ const Header = ({
           filterNad={filterNad}
           setFilterNalId={setFilterNalId}
           filterNalId={filterNalId}
-          filterPhysicianId = {filterPhysicianId}
-          setFilterPhysicianId = {setFilterPhysicianId}
+          filterPhysicianId={filterPhysicianId}
+          setFilterPhysicianId={setFilterPhysicianId}
+          filterLcode={filterLcode}
+          setFilterLcodeId={setFilterLcodeId}
         />
       </div>
     </>
