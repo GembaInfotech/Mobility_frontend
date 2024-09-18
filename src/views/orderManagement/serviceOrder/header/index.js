@@ -19,6 +19,8 @@ const FilterSection = ({
   filterPatientId,
   setFilterNalId,
   filterNalId,
+  setFilterPhysicianId,
+  filterPhysicianId,
   selectedDate,
   setSelectedDate,
   filterPatientDob,
@@ -26,6 +28,7 @@ const FilterSection = ({
   filterNad,
   setFilterNad,
 }) => {
+
   const loadPatientsOption = (inputValue, resolve) => {
     getApi(APIS.LIST_DATA, {
       type: LIST_DATA_API_TYPE.PATIENTS,
@@ -45,10 +48,24 @@ const FilterSection = ({
     });
   };
 
+  const loadPhysicianOption = (inputValue, resolve) => {
+    getApi(APIS.LIST_DATA, {
+      type: LIST_DATA_API_TYPE.PHYSICIANS,
+      search: inputValue,
+    }).then((res) => {
+      console.log(res); // Log the response to see available NAL options
+      resolve(res?.data?.data);
+    });
+  };
+
+
+  const loadPhysician = debounce(loadPhysicianOption, 300);
   const loadNal = debounce(loadNalOption, 300);
   const loadStays = debounce(loadPatientsOption, 300);
   const navigate = useNavigate();
 
+
+  
   return (
     <div className="grid grid-cols-3 gap-4 mb-5">
       <TableSearchBar onChange={(query) => setSearch(query)} />
@@ -108,12 +125,14 @@ const FilterSection = ({
         cacheOptions
         size="sm"
         className="mb-4"
-        value={filterNalId}
-        loadOptions={loadNal}
+        value={filterPhysicianId}
+        loadOptions={loadPhysician}
         getOptionLabel={(v) => `${v?.name || ""}`}
         getOptionValue={(v) => v?._id}
-        onChange={(selectedNal) => {
-          setFilterNalId(selectedNal);
+        onChange={(selectedPhysician) => {
+          console.log(selectedPhysician);
+          setFilterPhysicianId(selectedPhysician);
+          
         }}
       />
 
