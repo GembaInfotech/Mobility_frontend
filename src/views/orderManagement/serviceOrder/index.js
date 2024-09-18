@@ -90,6 +90,7 @@ const ServiceOrder = () => {
   const [filterPatientId, setFilterPatientId] = useState("");
   const [filterPatientDob, setFilterPatientDob] = useState("");
   const [filterNad, setFilterNad] = useState("");
+  const [ filterNalId, setFilterNalId] = useState("");
   const [selectedData, setSelectedData] = useState("");
   const [payload, setPayload] = useState("");
   const [refresh, setRefresh] = useState(false);
@@ -100,6 +101,7 @@ const ServiceOrder = () => {
 
   useEffect(() => {
     if (id) {
+      
       getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.PATIENTS, id }).then(
         (result) => setFilterPatientId(result?.data?.data)
       );
@@ -111,9 +113,12 @@ const ServiceOrder = () => {
       limit,
       search,
       patientId: filterPatientId && filterPatientId?._id,
+      nalId: filterNalId._id,
       skip: limit * (page - 1),
     };
 
+    // console.log("filterNAL", filterNalId);
+    
   setPayload(payload);
 
     if(filterPatientDob && filterPatientDob !== "") payload.patientDob = filterPatientDob
@@ -139,6 +144,7 @@ const ServiceOrder = () => {
     limit,
     filtervalue,
     filterPatientId,
+    filterNalId,
     refresh,
     selectedDate,
     filterPatientDob,
@@ -396,7 +402,9 @@ const ServiceOrder = () => {
         filtervalue={filtervalue}
         setFilterValue={setFilterValue}
         setFilterPatientId={setFilterPatientId}
+        setFilterNalId = {setFilterNalId}
         filterPatientId={filterPatientId}
+        filterNalId = {filterNalId}
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}
         setFilterPatientDob={setFilterPatientDob}

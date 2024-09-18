@@ -1,10 +1,10 @@
 import React from "react";
-import { Button, DatePicker, Select, Tooltip } from "components/ui";
+import { Button, DatePicker, Select } from "components/ui";
 import { GrPowerReset } from "react-icons/gr";
 import TableSearchBar from "components/ui/TableSearchBar";
 import { getApi } from "services/CommonService";
 import { APIS, LIST_DATA_API_TYPE } from "constants/api.constant";
-import { debounce, filter } from "lodash";
+import { debounce } from "lodash";
 import AsyncSelect from "react-select/async";
 import { DATE_FORMAT } from "constants/app.constant";
 import moment from "moment";
@@ -18,7 +18,7 @@ const FilterSection = ({
   setFilterPatientId,
   filterPatientId,
   setFilterNalId,
-  filterNAlId,
+  filterNalId,
   selectedDate,
   setSelectedDate,
   filterPatientDob,
@@ -40,6 +40,7 @@ const FilterSection = ({
       type: LIST_DATA_API_TYPE.LOCATIONS,
       search: inputValue,
     }).then((res) => {
+      console.log(res); // Log the response to see available NAL options
       resolve(res?.data?.data);
     });
   };
@@ -47,6 +48,7 @@ const FilterSection = ({
   const loadNal = debounce(loadNalOption, 300);
   const loadStays = debounce(loadPatientsOption, 300);
   const navigate = useNavigate();
+
   return (
     <div className="grid grid-cols-3 gap-4 mb-5">
       <TableSearchBar onChange={(query) => setSearch(query)} />
@@ -83,23 +85,35 @@ const FilterSection = ({
         }}
       />
 
-      <Select
+      <AsyncSelect
         autoComplete="off"
         placeholder="Filter by NAL"
         defaultOptions
         cacheOptions
         size="sm"
         className="mb-4"
-        value={filterNAlId}
+        value={filterNalId}
         loadOptions={loadNal}
-        componentAs={AsyncSelect}
-        getOptionLabel={(v) =>
-        `${v?.name ? `${v?.name}` : ""
-          }`
-        }
+        getOptionLabel={(v) => `${v?.name || ""}`}
         getOptionValue={(v) => v?._id}
-        onChange={(event) => {
-          setFilterNalId(event);
+        onChange={(selectedNal) => {
+          setFilterNalId(selectedNal);
+        }}
+      />
+
+      <AsyncSelect
+        autoComplete="off"
+        placeholder="Filter by Refering Physician"
+        defaultOptions
+        cacheOptions
+        size="sm"
+        className="mb-4"
+        value={filterNalId}
+        loadOptions={loadNal}
+        getOptionLabel={(v) => `${v?.name || ""}`}
+        getOptionValue={(v) => v?._id}
+        onChange={(selectedNal) => {
+          setFilterNalId(selectedNal);
         }}
       />
 
@@ -174,6 +188,7 @@ const FilterSection = ({
           setFilterPatientId("");
           setSelectedDate({ startDate: null, endDate: null });
           setFilterNad(null);
+          setFilterNalId("");
           navigate("/app/orderManagement/service-order");
         }}
         icon={<GrPowerReset />}
@@ -198,24 +213,24 @@ const Header = ({
   setFilterPatientDob,
   filterNad,
   setFilterNad,
+  filterNalId,
+  setFilterNalId,
 }) => {
   const ButtonSection = ({ buttonClick, buttonMenu }) => {
     return (
       <div className="mb-4 ">
-        {buttonMenu?.map((btn, i, arr) => {
-          return (
-            <Button
-              key={i}
-              size="sm"
-              variant="solid"
-              onClick={(e) => buttonClick(e, btn.key)}
-              style={{ marginLeft: "5px" }}
-              icon={btn.icon}
-            >
-              {btn.label}
-            </Button>
-          );
-        })}
+        {buttonMenu?.map((btn, i) => (
+          <Button
+            key={i}
+            size="sm"
+            variant="solid"
+            onClick={(e) => buttonClick(e, btn.key)}
+            style={{ marginLeft: "5px" }}
+            icon={btn.icon}
+          >
+            {btn.label}
+          </Button>
+        ))}
       </div>
     );
   };
@@ -238,6 +253,8 @@ const Header = ({
           filterPatientId={filterPatientId}
           setFilterNad={setFilterNad}
           filterNad={filterNad}
+          setFilterNalId={setFilterNalId}
+          filterNalId={filterNalId}
         />
       </div>
     </>
