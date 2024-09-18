@@ -1,7 +1,7 @@
 const appConfig = {
-  apiBaseUrl: "http://DESKTOP-SBNSOFQ:8000/",
+  apiBaseUrl: "http://DESKTOP-V6IOMU3:8000/",
   apiPrefix: "/api",
-  imageBaseUrl: "http://DESKTOP-SBNSOFQ:8000/bucket/",
+  imageBaseUrl: "http://DESKTOP-V6IOMU3:8000/bucket/",
   authenticatedEntryPath: "/app/dashboard",
   unAuthenticatedEntryPath: "/sign-in",
   tourPath: "/app/account/kyc-form",

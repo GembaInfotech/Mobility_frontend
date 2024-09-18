@@ -62,11 +62,14 @@ const AddEditStockes = ({ onClose, refreshPage }) => {
     getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.MATERIALS })
       .then((res) => {
         if (res && res.data && Array.isArray(res.data.data)) {
+
+          // console.log("dataaaaa", res.data);
+          
           const materials = res.data.data.map((item) => ({
             label: item.materialNo,
             value: item._id,
             materialName: item.material,
-            uom: item.uom,
+            uom: item?.uomId?.name,
           }));
           setMaterialOptions(materials);
         } else {
@@ -207,6 +210,9 @@ const AddEditStockes = ({ onClose, refreshPage }) => {
                     (option) => option.value === values.materialNo
                   )}
                   onChange={(selectedOption) => {
+
+                    console.log("selectedoption", selectedOption);
+                    
                     setFieldValue("materialNo", selectedOption.value);
                     setFieldValue("materialName", selectedOption.materialName); // Set material name
                     setFieldValue("uom", selectedOption.uom); // Set UOM

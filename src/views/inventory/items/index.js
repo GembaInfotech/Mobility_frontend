@@ -233,11 +233,7 @@ const Codes = () => {
     },
     {
       Header: 'UOM',
-      accessor: 'uom',
-      Cell: (props) => {
-        const uom = props.row.original.uom; // Access the 'uom' object correctly
-        return uom && uom.name ? uom.name : "-"; // Display 'uomName.name' or '-' if not available
-      },
+      accessor: (row) => row.uomId ? row.uomId?.name: "-",
     },
     {
       Header: 'Group',
