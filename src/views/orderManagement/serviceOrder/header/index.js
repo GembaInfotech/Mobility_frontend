@@ -1,15 +1,15 @@
-import React from 'react';
-import { Button, DatePicker, Select, Tooltip } from 'components/ui';
-import { GrPowerReset } from 'react-icons/gr';
-import TableSearchBar from 'components/ui/TableSearchBar';
-import { getApi } from 'services/CommonService';
-import { APIS, LIST_DATA_API_TYPE } from 'constants/api.constant';
-import { debounce, filter } from 'lodash';
-import AsyncSelect from 'react-select/async';
-import { DATE_FORMAT } from 'constants/app.constant';
-import moment from 'moment';
-import { SERVICE_ORDER_STATUS } from '../serviceConstant';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { Button, DatePicker, Select, Tooltip } from "components/ui";
+import { GrPowerReset } from "react-icons/gr";
+import TableSearchBar from "components/ui/TableSearchBar";
+import { getApi } from "services/CommonService";
+import { APIS, LIST_DATA_API_TYPE } from "constants/api.constant";
+import { debounce, filter } from "lodash";
+import AsyncSelect from "react-select/async";
+import { DATE_FORMAT } from "constants/app.constant";
+import moment from "moment";
+import { SERVICE_ORDER_STATUS } from "../serviceConstant";
+import { useNavigate } from "react-router-dom";
 
 const FilterSection = ({
   setSearch,
@@ -17,6 +17,8 @@ const FilterSection = ({
   setFilterValue,
   setFilterPatientId,
   filterPatientId,
+  setFilterNalId,
+  filterNAlId,
   selectedDate,
   setSelectedDate,
   filterPatientDob,
@@ -25,12 +27,24 @@ const FilterSection = ({
   setFilterNad,
 }) => {
   const loadPatientsOption = (inputValue, resolve) => {
-    getApi(APIS.LIST_DATA, { type : LIST_DATA_API_TYPE.PATIENTS,
+    getApi(APIS.LIST_DATA, {
+      type: LIST_DATA_API_TYPE.PATIENTS,
       search: inputValue,
     }).then((result) => {
       resolve(result?.data?.data);
     });
   };
+
+  const loadNalOption = (inputValue, resolve) => {
+    getApi(APIS.LIST_DATA, {
+      type: LIST_DATA_API_TYPE.LOCATIONS,
+      search: inputValue,
+    }).then((res) => {
+      resolve(res?.data?.data);
+    });
+  };
+
+  const loadNal = debounce(loadNalOption, 300);
   const loadStays = debounce(loadPatientsOption, 300);
   const navigate = useNavigate();
   return (
@@ -58,10 +72,34 @@ const FilterSection = ({
         value={filterPatientId}
         loadOptions={loadStays}
         componentAs={AsyncSelect}
-        getOptionLabel={(v) => `${v?.firstName} ${v?.lastName ? v?.lastName : ''} ${v?.patientNo ? `(${v?.patientNo})` : ''} ${v?.dob ? `(${moment(v?.dob).format(DATE_FORMAT)})` : ''}`}
+        getOptionLabel={(v) =>
+          `${v?.firstName} ${v?.lastName ? v?.lastName : ""} ${
+            v?.patientNo ? `(${v?.patientNo})` : ""
+          } ${v?.dob ? `(${moment(v?.dob).format(DATE_FORMAT)})` : ""}`
+        }
         getOptionValue={(v) => v?._id}
         onChange={(event) => {
           setFilterPatientId(event);
+        }}
+      />
+
+      <Select
+        autoComplete="off"
+        placeholder="Filter by NAL"
+        defaultOptions
+        cacheOptions
+        size="sm"
+        className="mb-4"
+        value={filterNAlId}
+        loadOptions={loadNal}
+        componentAs={AsyncSelect}
+        getOptionLabel={(v) =>
+        `${v?.name ? `${v?.name}` : ""
+          }`
+        }
+        getOptionValue={(v) => v?._id}
+        onChange={(event) => {
+          setFilterNalId(event);
         }}
       />
 
@@ -79,7 +117,7 @@ const FilterSection = ({
           setFilterPatientDob(moment(date).format(DATE_FORMAT))
         }
       />
-    
+
       <DatePicker
         clearable={false}
         className=""
@@ -87,10 +125,15 @@ const FilterSection = ({
         size="sm"
         name="startDate"
         inputFormat={DATE_FORMAT}
-        maxDate={selectedDate?.endDate ? new Date(selectedDate?.endDate) : new Date()}
+        maxDate={
+          selectedDate?.endDate ? new Date(selectedDate?.endDate) : new Date()
+        }
         value={selectedDate?.startDate}
         onChange={(date) =>
-          setSelectedDate({ ...selectedDate, startDate: moment(date).format(DATE_FORMAT) })
+          setSelectedDate({
+            ...selectedDate,
+            startDate: moment(date).format(DATE_FORMAT),
+          })
         }
       />
       <DatePicker
@@ -100,11 +143,16 @@ const FilterSection = ({
         placeholder="Order End Date"
         size="sm"
         inputFormat={DATE_FORMAT}
-        minDate={selectedDate?.startDate ? new Date(selectedDate?.startDate) : null}
+        minDate={
+          selectedDate?.startDate ? new Date(selectedDate?.startDate) : null
+        }
         maxDate={new Date()}
         value={selectedDate?.endDate}
         onChange={(date) =>
-          setSelectedDate({ ...selectedDate, endDate: moment(date).format(DATE_FORMAT) })
+          setSelectedDate({
+            ...selectedDate,
+            endDate: moment(date).format(DATE_FORMAT),
+          })
         }
       />
       <DatePicker
@@ -116,19 +164,17 @@ const FilterSection = ({
         name="nad"
         inputFormat={DATE_FORMAT}
         value={filterNad}
-        onChange={(date) =>
-          setFilterNad(moment(date).format(DATE_FORMAT))
-        }
+        onChange={(date) => setFilterNad(moment(date).format(DATE_FORMAT))}
       />
       <Button
         size="sm"
         onClick={() => {
           setFilterPatientDob(null);
-          setFilterValue('');
-          setFilterPatientId('');
-          setSelectedDate({ startDate: null, endDate: null});
-          setFilterNad(null)
-          navigate('/app/orderManagement/service-order');
+          setFilterValue("");
+          setFilterPatientId("");
+          setSelectedDate({ startDate: null, endDate: null });
+          setFilterNad(null);
+          navigate("/app/orderManagement/service-order");
         }}
         icon={<GrPowerReset />}
       >
@@ -153,23 +199,23 @@ const Header = ({
   filterNad,
   setFilterNad,
 }) => {
-  const ButtonSection = ({buttonClick, buttonMenu}) => {
+  const ButtonSection = ({ buttonClick, buttonMenu }) => {
     return (
       <div className="mb-4 ">
-       {buttonMenu?.map((btn, i, arr) => {
-        return (
-          <Button
-            key={i}
-            size="sm"
-            variant="solid"
-            onClick={(e) => buttonClick(e, btn.key)}
-            style={{ marginLeft: "5px" }}
-            icon={btn.icon}
-          >
-            {btn.label}
-          </Button>
-        );
-      })}
+        {buttonMenu?.map((btn, i, arr) => {
+          return (
+            <Button
+              key={i}
+              size="sm"
+              variant="solid"
+              onClick={(e) => buttonClick(e, btn.key)}
+              style={{ marginLeft: "5px" }}
+              icon={btn.icon}
+            >
+              {btn.label}
+            </Button>
+          );
+        })}
       </div>
     );
   };
@@ -177,7 +223,7 @@ const Header = ({
   return (
     <>
       <div className="md:flex items-center justify-end">
-      <ButtonSection buttonMenu={buttonMenu} buttonClick={buttonClick} />
+        <ButtonSection buttonMenu={buttonMenu} buttonClick={buttonClick} />
       </div>
       <div className="items-center lg:flex">
         <FilterSection
@@ -197,6 +243,5 @@ const Header = ({
     </>
   );
 };
-
 
 export default Header;

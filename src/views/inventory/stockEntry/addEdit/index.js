@@ -70,7 +70,9 @@ const AddEditStockes = ({ onClose, refreshPage }) => {
             value: item._id,
             materialName: item.material,
             uom: item?.uomId?.name,
+            uomId:item?.uomId?._id
           }));
+          console.log(materials)
           setMaterialOptions(materials);
         } else {
           toast.push(
@@ -112,11 +114,12 @@ const AddEditStockes = ({ onClose, refreshPage }) => {
   const onSubmit = (values) => {
     setLoading(true);
     const payload = {
-      materialNo: values.materialNo,
+      materialId: values.materialNo,
       stockType: values.stockType?.value.toString(),
       quantity: values.quantity,
-      sourceWareHouse: values.sourceWareHouse,
+      wareouseId: values.sourceWareHouse,
       targetWareHouse: values.targetWareHouse,
+      uomId: values.uomId,
       availableQuantity: values.availableQuantity,
       type:LIST_DATA_API_TYPE.INVENTORY
     };
@@ -216,6 +219,8 @@ const AddEditStockes = ({ onClose, refreshPage }) => {
                     setFieldValue("materialNo", selectedOption.value);
                     setFieldValue("materialName", selectedOption.materialName); // Set material name
                     setFieldValue("uom", selectedOption.uom); // Set UOM
+                    setFieldValue("uomId", selectedOption.uomId); // Set UOM
+
                   }}
                 />
               </FormItem>
