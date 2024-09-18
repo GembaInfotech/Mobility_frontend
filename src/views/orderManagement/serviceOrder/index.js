@@ -105,7 +105,10 @@ const ServiceOrder = () => {
     if (id) {
       
       getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.PATIENTS, id }).then(
-        (result) => setFilterPatientId(result?.data?.data)
+        (result) =>{
+          // console.log(result)
+           setFilterPatientId(result?.data?.data);
+        }
       );
     }
   }, []);
@@ -120,9 +123,7 @@ const ServiceOrder = () => {
       lcodeId: filterLcodeId._id,
       skip: limit * (page - 1),
     };
-
-    console.log("filterphysician", filterPhysicianId);
-    
+    console.log(payload)
   setPayload(payload);
 
     if(filterPatientDob && filterPatientDob !== "") payload.patientDob = filterPatientDob
@@ -138,6 +139,7 @@ const ServiceOrder = () => {
 
     getApi(APIS.GET_SERVICE_ORDER, payload)
       .then((res) => {
+        console.log(res)
         setTableData(res?.data?.data);
         setTotalCount(res?.data?.count);
       })

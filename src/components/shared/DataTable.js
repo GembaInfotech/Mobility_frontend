@@ -212,27 +212,30 @@ const DataTable = (props) => {
         )}
       </Table>
       {isPagination && (
-        <div className="flex items-center justify-between mt-4">
-          <Pagination
-            pageSize={pageSize}
-            currentPage={pageIndex}
-            total={total}
-            onChange={handlePaginationChange}
-          />
-          <div style={{ minWidth: 130 }}>
-            <Select
-              size="sm"
-              menuPlacement="top"
-              isSearchable={false}
-              value={pageSizeOption.filter(
-                (option) => option.value === pageSize
-              )}
-              options={pageSizeOption}
-              onChange={(option) => handleSelectChange(option.value)}
-            />
-          </div>
-        </div>
-      )}
+  <div className="flex items-center justify-between mt-4">
+    <div className="font-semibold">
+    Total records: {total}
+    </div>
+    <Pagination
+      pageSize={pageSize}
+      currentPage={pageIndex}
+      total={total}
+      onChange={handlePaginationChange}
+    />
+    <div style={{ minWidth: 130 }}>
+      <Select
+        size="sm"
+        menuPlacement="top"
+        isSearchable={false}
+        value={pageSizeOption.filter(
+          (option) => option.value === pageSize
+        )}
+        options={pageSizeOption}
+        onChange={(option) => handleSelectChange(option.value)}
+      />
+    </div>
+  </div>
+)}
     </Loading>
   );
 };

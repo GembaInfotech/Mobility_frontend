@@ -30,7 +30,6 @@ const FilterSection = ({
   filterNad,
   setFilterNad,
 }) => {
-  console.log("filterPhysicianIddddd", filterPhysicianId?._id);
 
   const loadPatientsOption = (inputValue, resolve) => {
     getApi(APIS.LIST_DATA, {
@@ -141,7 +140,6 @@ const FilterSection = ({
         getOptionLabel={(v) => `${v?.name || ""}`}
         getOptionValue={(v) => v?._id}
         onChange={(selectedPhysician) => {
-          console.log("Selected Physician:", selectedPhysician);
           setFilterPhysicianId(selectedPhysician);
         }}
       />
@@ -158,7 +156,6 @@ const FilterSection = ({
         getOptionLabel={(v) => `${v?.code || ""}`}
         getOptionValue={(v) => v?._id}
         onChange={(selectedLcode) => {
-          console.log("Selected Lcode:", selectedLcode);
           setFilterLcodeId(selectedLcode);
         }}
       />
@@ -236,6 +233,7 @@ const FilterSection = ({
           setFilterNad(null);
           setFilterNalId("");
           setFilterPhysicianId("");
+          setFilterLcodeId("");
           navigate("/app/orderManagement/service-order");
         }}
         icon={<GrPowerReset />}

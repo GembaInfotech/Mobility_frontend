@@ -128,11 +128,13 @@ const AddEditStockes = ({ onClose, refreshPage }) => {
 
     postApi(APIS.ADD_EDIT_DATA, payload)
       .then(() => {
-        onClose();
         refreshPage();
+        console.log(payload)
         toast.push(
           <Notification type="success" message="Stock saved successfully!" />
         );
+        navigate(-1);
+        console.log(payload)
       })
       .catch((error) => {
         console.error("Error saving stock:", error);
