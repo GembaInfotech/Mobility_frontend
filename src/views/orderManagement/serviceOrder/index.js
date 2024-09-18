@@ -119,7 +119,7 @@ const ServiceOrder = () => {
       skip: limit * (page - 1),
     };
 
-    // console.log("filterNAL", filterNalId);
+    console.log("filterphysician", filterPhysicianId);
     
   setPayload(payload);
 

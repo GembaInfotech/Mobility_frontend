@@ -29,6 +29,10 @@ const FilterSection = ({
   setFilterNad,
 }) => {
 
+
+  console.log("filterPhysicianIddddd", filterPhysicianId?._id);
+  
+
   const loadPatientsOption = (inputValue, resolve) => {
     getApi(APIS.LIST_DATA, {
       type: LIST_DATA_API_TYPE.PATIENTS,
@@ -118,23 +122,22 @@ const FilterSection = ({
         }}
       />
 
-      <AsyncSelect
-        autoComplete="off"
-        placeholder="Filter by Refering Physician"
-        defaultOptions
-        cacheOptions
-        size="sm"
-        className="mb-4"
-        value={filterPhysicianId}
-        loadOptions={loadPhysician}
-        getOptionLabel={(v) => `${v?.name || ""}`}
-        getOptionValue={(v) => v?._id}
-        onChange={(selectedPhysician) => {
-          console.log(selectedPhysician);
-          setFilterPhysicianId(selectedPhysician);
-          
-        }}
-      />
+<AsyncSelect
+  autoComplete="off"
+  placeholder="Filter by Referring Physician"
+  defaultOptions
+  cacheOptions
+  size="sm"
+  className="mb-4"
+  value={filterPhysicianId} 
+  loadOptions={loadPhysician}
+  getOptionLabel={(v) => `${v?.name || ""}`} 
+  getOptionValue={(v) => v?._id} 
+  onChange={(selectedPhysician) => {
+    console.log("Selected Physician:", selectedPhysician);
+    setFilterPhysicianId(selectedPhysician);
+  }}
+/>
 
       <DatePicker
         inputtable
@@ -208,6 +211,7 @@ const FilterSection = ({
           setSelectedDate({ startDate: null, endDate: null });
           setFilterNad(null);
           setFilterNalId("");
+          setFilterPhysicianId("");
           navigate("/app/orderManagement/service-order");
         }}
         icon={<GrPowerReset />}
@@ -234,6 +238,8 @@ const Header = ({
   setFilterNad,
   filterNalId,
   setFilterNalId,
+  setFilterPhysicianId,
+  filterPhysicianId
 }) => {
   const ButtonSection = ({ buttonClick, buttonMenu }) => {
     return (
@@ -274,6 +280,8 @@ const Header = ({
           filterNad={filterNad}
           setFilterNalId={setFilterNalId}
           filterNalId={filterNalId}
+          filterPhysicianId = {filterPhysicianId}
+          setFilterPhysicianId = {setFilterPhysicianId}
         />
       </div>
     </>
