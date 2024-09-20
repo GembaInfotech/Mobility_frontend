@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunknasp=self.webpackChunknasp||[]).push([[2505],{52505:function(s,a,n){s.exports=n.p+"static/media/BasicAnnotation.b235274f76f2da32d314.md"}}]);

@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunknasp=self.webpackChunknasp||[]).push([[9849],{39849:function(e,s,a){e.exports=a.p+"static/media/HeaderFooterBorder.8a3cce81ce3b57f963bd.md"}}]);
