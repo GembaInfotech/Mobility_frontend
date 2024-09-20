@@ -112,7 +112,7 @@ const FilterSection = ({
         }}
       />
 
-      <AsyncSelect
+      <Select
         autoComplete="off"
         placeholder="Filter by NAL"
         defaultOptions
@@ -121,6 +121,7 @@ const FilterSection = ({
         className="mb-4"
         value={filterNalId}
         loadOptions={loadNal}
+        componentAs={AsyncSelect}
         getOptionLabel={(v) => `${v?.name || ""}`}
         getOptionValue={(v) => v?._id}
         onChange={(selectedNal) => {
@@ -128,7 +129,7 @@ const FilterSection = ({
         }}
       />
 
-      <AsyncSelect
+      <Select
         autoComplete="off"
         placeholder="Filter by Referring Physician"
         defaultOptions
@@ -137,6 +138,7 @@ const FilterSection = ({
         className="mb-4"
         value={filterPhysicianId}
         loadOptions={loadPhysician}
+        componentAs={AsyncSelect}
         getOptionLabel={(v) => `${v?.name || ""}`}
         getOptionValue={(v) => v?._id}
         onChange={(selectedPhysician) => {
@@ -144,7 +146,7 @@ const FilterSection = ({
         }}
       />
 
-      <AsyncSelect
+      <Select
         autoComplete="off"
         placeholder="Filter by LCode"
         defaultOptions
@@ -153,10 +155,11 @@ const FilterSection = ({
         className="mb-4"
         value={filterLcodeId}
         loadOptions={loadLcode}
+        componentAs={AsyncSelect}
         getOptionLabel={(v) => `${v?.code || ""}`}
         getOptionValue={(v) => v?._id}
         onChange={(selectedLcode) => {
-          setFilterLcodeId(selectedLcode);
+          setFilterLcodeId(selectedLcode || "");
         }}
       />
 
@@ -262,7 +265,7 @@ const Header = ({
   setFilterNalId,
   setFilterPhysicianId,
   filterPhysicianId,
-  filterLcode,
+  filterLcodeId,
   setFilterLcodeId,
 }) => {
   const ButtonSection = ({ buttonClick, buttonMenu }) => {
@@ -306,7 +309,7 @@ const Header = ({
           filterNalId={filterNalId}
           filterPhysicianId={filterPhysicianId}
           setFilterPhysicianId={setFilterPhysicianId}
-          filterLcode={filterLcode}
+          filterLcodeId={filterLcodeId}
           setFilterLcodeId={setFilterLcodeId}
         />
       </div>

@@ -111,7 +111,7 @@ const AddEditStockes = ({ onClose, refreshPage }) => {
       });
   }, [location.state?.editData]);
 
-  const onSubmit = (values) => {
+  const onSubmit = (values,{setSubmitting}) => {
     setLoading(true);
     const payload = {
       materialId: values.materialNo,
@@ -128,19 +128,19 @@ const AddEditStockes = ({ onClose, refreshPage }) => {
 
     postApi(APIS.ADD_EDIT_DATA, payload)
       .then(() => {
-        refreshPage();
-        console.log(payload)
-        toast.push(
-          <Notification type="success" message="Stock saved successfully!" />
-        );
         navigate(-1);
-        console.log(payload)
+        toast.push(
+          <Notification type="success">Stock saved successfully!</Notification>
+        );
       })
       .catch((error) => {
         console.error("Error saving stock:", error);
         toast.push(<Notification type="error" message="Save failed!" />);
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+        setSubmitting(false);
+      });
   };
 
   return (

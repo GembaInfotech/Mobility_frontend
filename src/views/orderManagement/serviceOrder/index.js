@@ -415,7 +415,7 @@ const ServiceOrder = () => {
         setFilterLcodeId={setFilterLcodeId}
         filterPatientId={filterPatientId}
         filterPhysicianId = {filterPhysicianId}
-        filterLcode={filterLcodeId}
+        filterLcodeId={filterLcodeId}
         filterNalId = {filterNalId}
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}
