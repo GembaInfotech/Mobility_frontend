@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunknasp=self.webpackChunknasp||[]).push([[1191],{1191:function(e,s,a){e.exports=a.p+"static/media/Placement.9cdb8a9316bb6c76b7d0.md"}}]);
