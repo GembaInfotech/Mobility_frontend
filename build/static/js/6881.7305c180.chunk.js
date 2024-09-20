@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunknasp=self.webpackChunknasp||[]).push([[6881],{86881:function(e,s,p){e.exports=p.p+"static/media/GridTemplateColumns.02762677ee98fd576456.md"}}]);

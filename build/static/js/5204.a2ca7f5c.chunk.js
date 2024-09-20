@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunknasp=self.webpackChunknasp||[]).push([[5204],{95204:function(e,s,a){e.exports=a.p+"static/media/BreakpointsMediaQueries.9430e798bb45868c5eb3.md"}}]);

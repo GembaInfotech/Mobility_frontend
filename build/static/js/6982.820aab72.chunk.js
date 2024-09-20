@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunknasp=self.webpackChunknasp||[]).push([[6982],{26982:function(s,a,e){s.exports=e.p+"static/media/Submenu.7c3d62da5c0da9d56db2.md"}}]);

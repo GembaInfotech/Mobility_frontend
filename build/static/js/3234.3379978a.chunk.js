@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunknasp=self.webpackChunknasp||[]).push([[3234],{93234:function(c,e,s){c.exports=s.p+"static/media/CustomIcon.daa90c57dca2e0ceec9f.md"}}]);
