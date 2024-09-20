@@ -65,7 +65,7 @@ const FilterSection = ({
       type: LIST_DATA_API_TYPE.CODES,
       search: inputValue,
     }).then((res) => {
-      const filteredData = res?.data?.data?.filter(item => item.code.startsWith('L'));
+      const filteredData = res?.data?.data?.filter(item => item.type === 1);
       resolve(filteredData);
     });
   };
