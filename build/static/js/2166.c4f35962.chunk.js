@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunknasp=self.webpackChunknasp||[]).push([[2166],{62166:function(c,e,s){c.exports=s.p+"static/media/MenuWithIcon.0bf0655bce4c417f68c4.md"}}]);

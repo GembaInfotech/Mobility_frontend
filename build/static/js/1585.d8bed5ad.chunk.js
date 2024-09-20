@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunknasp=self.webpackChunknasp||[]).push([[1585],{11585:function(a,s,c){a.exports=c.p+"static/media/Localization.ce5468d9f840facb0f98.md"}}]);

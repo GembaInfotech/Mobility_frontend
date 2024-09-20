@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunknasp=self.webpackChunknasp||[]).push([[7322],{37322:function(a,s,c){a.exports=c.p+"static/media/Color.a97a2bfa94010f5928cc.md"}}]);

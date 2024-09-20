@@ -8,7 +8,6 @@ import Layout from "components/layout";
 import history from "./history";
 import "./locales";
 
-
 function App() {
   return (
     <Provider store={store}>
