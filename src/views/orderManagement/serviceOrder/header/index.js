@@ -55,7 +55,7 @@ const FilterSection = ({
       type: LIST_DATA_API_TYPE.PHYSICIANS,
       search: inputValue,
     }).then((res) => {
-      // console.log(res); // Log the response to see available NAL options
+      console.log("nal", res?.data); // Log the response to see available NAL options
       resolve(res?.data?.data);
     });
   };
@@ -65,7 +65,12 @@ const FilterSection = ({
       type: LIST_DATA_API_TYPE.CODES,
       search: inputValue,
     }).then((res) => {
+      // console.log("lcode", res.data);
+      
       const filteredData = res?.data?.data?.filter(item => item.type === 1);
+      // console.log("lcode", filteredData);
+
+
       resolve(filteredData);
     });
   };
