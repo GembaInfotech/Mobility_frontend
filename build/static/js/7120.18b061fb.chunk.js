@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunknasp=self.webpackChunknasp||[]).push([[7120],{87120:function(e,s,a){e.exports=a.p+"static/media/CollapsableMenuItem.27fb717403ac531262c5.md"}}]);

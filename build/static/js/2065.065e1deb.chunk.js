@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunknasp=self.webpackChunknasp||[]).push([[2065],{82065:function(e,s,a){e.exports=a.p+"static/media/Pill.e4a0f06019963c4e9e94.md"}}]);
