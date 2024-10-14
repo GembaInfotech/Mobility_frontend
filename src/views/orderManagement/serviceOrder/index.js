@@ -34,7 +34,7 @@ import Notification from "components/template/Notification";
 
 const ACTION_CONSTANT = [
   { label: <FaPen />, key: PAGE_KEY.VIEW, toolTip: "View/Edit", show: () => hasPermisson(MODULE.SERVICEORDER, ACCESS.WRITE) },
-  { label: <FaDownload />, key: PAGE_KEY.DOWNLOAD, toolTip: "Download Forms", show: () => hasPermisson(MODULE.SERVICEORDER, ACCESS.READ) },
+  // { label: <FaDownload />, key: PAGE_KEY.DOWNLOAD, toolTip: "Download Forms", show: () => hasPermisson(MODULE.SERVICEORDER, ACCESS.READ) },
   {
     label: IMAGES.EXPORT,
     key: PAGE_KEY.MEDICAL_NECESSITY,
