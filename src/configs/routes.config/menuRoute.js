@@ -114,7 +114,7 @@ const menuRoute = [
       import("views/orderManagement/serviceOrder/deliveryReceipt")
     ),
     authority: [ADMIN, USER],
-    show: () => hasPermisson(MODULE.DElIVERYRECEIPT, ACCESS.READ),
+    show: () => hasPermisson(MODULE.SERVICEORDER, ACCESS.READ),
     meta: {
       header: "Delivery Receipts",
     },
@@ -126,7 +126,7 @@ const menuRoute = [
       import("views/orderManagement/serviceOrder/medicalNecessity")
     ),
     authority: [ADMIN, USER],
-    show: () => hasPermisson(MODULE.MEDICALNECESSITY, ACCESS.READ),
+    show: () => hasPermisson(MODULE.SERVICEORDER, ACCESS.READ),
     meta: {
       header: "Letter of Medical Necessity",
     },

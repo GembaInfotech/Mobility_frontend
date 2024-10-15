@@ -11,6 +11,10 @@ import HeaderPanel from "../headerPanel";
 import moment from "moment";
 import appConfig from "../../../../configs/app.config";
 import { MdKeyboardBackspace } from "react-icons/md";
+import hasPermisson, {
+  ACCESS,
+  MODULE,
+} from "utils/hasPermission";
 
 const initialValues = {
   patientName: "",
@@ -95,6 +99,7 @@ const DeliveryReceipt = () => {
   const { id } = useParams();
   const [editData, setEditData] = useState();
   const navigate = useNavigate();
+  const canEdit = hasPermisson(MODULE.SERVICEORDER, ACCESS.WRITE);
 
   useEffect(() => {
     if (id) {
@@ -183,7 +188,7 @@ const DeliveryReceipt = () => {
             <Button
               size="sm"
               variant="solid"
-              className="flex items-center	mr-5 gap-2"
+              className="flex items-center  mr-5 gap-2"
               loading={isSubmitting}
               type="submit"
             >
@@ -239,6 +244,7 @@ const DeliveryReceipt = () => {
                               placeholder={it.placeholder}
                               className="w-full"
                               component={Input}
+                              disabled={!canEdit}
                             />
                           </div>
                         </div>
@@ -262,6 +268,7 @@ const DeliveryReceipt = () => {
                               placeholder={''}
                               className="w-[100px]"
                               value={it.code}
+                              disabled={!canEdit}
                             />
                           </div>
                         </div>
@@ -274,6 +281,7 @@ const DeliveryReceipt = () => {
                               placeholder={''}
                               className="w-[100px]"
                               value={it.quantity}
+                              disabled={!canEdit}
                             />
                           </div>
                         </div>
@@ -286,6 +294,7 @@ const DeliveryReceipt = () => {
                               placeholder={''}
                               className="w-full"
                               value={it.description}
+                              disabled={!canEdit}
                             />
                           </div>
                         </div>
@@ -298,6 +307,7 @@ const DeliveryReceipt = () => {
                               placeholder={''}
                               className="w-[80px]"
                               value={it?.size || ''}
+                              disabled={!canEdit}
                             />
                           </div>
                         </div>
@@ -309,6 +319,7 @@ const DeliveryReceipt = () => {
                               placeholder={''}
                               className="w-[80px]"
                               value={it?.orientation || ''}
+                              disabled={!canEdit}
                             />
                           </div>
                         </div>
@@ -335,6 +346,7 @@ const DeliveryReceipt = () => {
                               placeholder={field.placeholder}
                               className="w-full"
                               component={Input}
+                              disabled={!canEdit}
                             />
                           </div>
                         </div>
