@@ -53,7 +53,7 @@ const AddEditAdmins = () => {
   }, [id]);
   //// SUBMIT TAGS HANDLER///////
 
-  const onSubmit = ({ name, id, email, roles, superAdmin }) => {
+  const onSubmit = ({ name, email, roles, superAdmin }) => {
 
     // console.log("superAdmin", superAdmin);
     
