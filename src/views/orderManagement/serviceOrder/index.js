@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Header from "./header";
+import appConfig from "configs/app.config";
 import { AdaptableCard, DataTable } from "components/shared";
 // import useThemeClass from "utils/hooks/useThemeClass";
 import { getApi, postApi } from "services/CommonService";
@@ -65,6 +66,12 @@ const BUTTON_CONSTANT = [
     show: () => hasPermisson(MODULE.SERVICEORDER, ACCESS.READ),
   },
   {
+    label: "Update Excel",
+    key: TABLE_ACTION_KEYS.IMPORT,
+    icon: <AiOutlineFile />,
+    show: () => hasPermisson(MODULE.SERVICEORDER, ACCESS.READ),
+  },
+  {
     label: "Add Prescription",
     key: TABLE_ACTION_KEYS.ADD,
     icon: <AiFillFileAdd />,
@@ -90,24 +97,24 @@ const ServiceOrder = () => {
   const [filterPatientId, setFilterPatientId] = useState("");
   const [filterPatientDob, setFilterPatientDob] = useState("");
   const [filterNad, setFilterNad] = useState("");
-  const [ filterNalId, setFilterNalId] = useState("");
-  const [ filterPhysicianId, setFilterPhysicianId] = useState("");
-  const [ filterLcodeId, setFilterLcodeId] = useState("");
+  const [filterNalId, setFilterNalId] = useState("");
+  const [filterPhysicianId, setFilterPhysicianId] = useState("");
+  const [filterLcodeId, setFilterLcodeId] = useState("");
   const [selectedData, setSelectedData] = useState("");
   const [payload, setPayload] = useState("");
   const [refresh, setRefresh] = useState(false);
   const [openExportModal, setOpenExportModal] = useState(false);
+  const [openImportModal, setOpenImportModal] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null); // State to store the selected file
   const navigate = useNavigate();
-
-
 
   useEffect(() => {
     if (id) {
-      
+
       getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.PATIENTS, id }).then(
-        (result) =>{
+        (result) => {
           // console.log(result)
-           setFilterPatientId(result?.data?.data);
+          setFilterPatientId(result?.data?.data);
         }
       );
     }
@@ -124,9 +131,9 @@ const ServiceOrder = () => {
       skip: limit * (page - 1),
     };
     console.log(payload)
-  setPayload(payload);
+    setPayload(payload);
 
-    if(filterPatientDob && filterPatientDob !== "") payload.patientDob = filterPatientDob
+    if (filterPatientDob && filterPatientDob !== "") payload.patientDob = filterPatientDob
 
     if (filtervalue && filtervalue?.value) payload.status = filtervalue?.value;
 
@@ -135,7 +142,7 @@ const ServiceOrder = () => {
       payload.endDate = selectedDate?.endDate;
     }
 
-    if(filterNad && filterNad !== "") payload.nad = filterNad
+    if (filterNad && filterNad !== "") payload.nad = filterNad
 
     getApi(APIS.GET_SERVICE_ORDER, payload)
       .then((res) => {
@@ -158,8 +165,6 @@ const ServiceOrder = () => {
     filterPatientDob,
     filterNad
   ]);
-
-
 
   const onActionHandle = (e, value, row) => {
     e.preventDefault();
@@ -208,7 +213,7 @@ const ServiceOrder = () => {
       </div>
     );
   };
-  
+
   const onHeaderButtonClick = (e, key) => {
     if (key === TABLE_ACTION_KEYS.ADD) {
       const path = "/app/service-order/add"
@@ -219,7 +224,56 @@ const ServiceOrder = () => {
     if (key === TABLE_ACTION_KEYS.EXPORT) {
       setOpenExportModal(true);
     }
+    if (key === TABLE_ACTION_KEYS.IMPORT) {
+      setOpenImportModal(true);
+    }
   };
+
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedFile(file.name);
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      for (const pair of formData.entries()) {
+        console.log(`${pair[0]}: ${pair[1] instanceof File ? pair[1].name : pair[1]}`);
+      }
+
+      postApi(APIS.UPDATE_EXCEL_DATA, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+        .then((res) => {
+
+          console.log("update excell", res);
+
+          const downloadLink = document.createElement('a');
+          downloadLink.href = appConfig.imageBaseUrl + res?.filePath;
+          downloadLink.download = 'file_name.xlsx';
+
+          // Trigger a click event on the download link
+          document.body.appendChild(downloadLink);
+          downloadLink.click();
+          document.body.removeChild(downloadLink);
+
+          console.log("API Response:", res);
+          toast.push(<Notification type="success">File uploaded and updated successfully!</Notification>);
+        })
+        .catch((error) => {
+          toast.push(
+            <Notification type="error">
+              Error uploading file: {error?.res?.message || "Unknown error"}
+            </Notification>
+          );
+        });
+
+      e.target.value = null;
+    }
+  };
+
 
   const onDeleteSubmit = () => {
     postApi(APIS.BLOCK_DELETE_DATA, {
@@ -241,18 +295,6 @@ const ServiceOrder = () => {
   };
 
   const columns = [
-    // {
-    //   Header: "Presc. ID",
-    //   Cell: (props) => {
-    //     const row = props.row.original;
-    //     return (
-    //       <div className="flex items-center ">
-    //         {row?.orderNo !== null && row?.orderNo ? row?.orderNo : "-"}
-    //       </div>
-    //     );
-    //   },
-    //   accessor: "orderNo",
-    // },
     {
       Header: "Presc. Date",
       Cell: (props) => {
@@ -264,19 +306,7 @@ const ServiceOrder = () => {
         );
       },
     },
-    // {
-    //   Header: 'Order Status',
-    //   Cell: (props) => (
-    //     <TagSection status={props?.row?.original?.orderStatus} selectedRow={props?.row?.original} />
-    //   ),
-    // },
-    // {
-    //   Header: "Patient ID",
-    //   Cell: (props) => {
-    //     const row = props.row.original;
-    //     return row?.patientId?.patientNo ? row?.patientId?.patientNo : "-";
-    //   },
-    // },
+
     {
       Header: "Patient Details",
       Cell: (props) => {
@@ -303,7 +333,7 @@ const ServiceOrder = () => {
       Header: "NAL",
       Cell: (props) => {
         const row = props.row.original;
-        return `${row?.appointmentLocationId?.name ||  "-"}`;
+        return `${row?.appointmentLocationId?.name || "-"}`;
       },
     },
 
@@ -391,6 +421,29 @@ const ServiceOrder = () => {
       ),
     },
   ];
+  const ImportModal = ({ isOpen, onClose }) => {
+    const handleClose = () => {
+      setSelectedFile(null); 
+      onClose(); 
+    };
+    return (
+      <Dialog isOpen={isOpen} onClose={handleClose}>
+        <h3>Import Excel File</h3>
+        <input
+          type="file"
+          accept=".xls,.xlsx"
+          onChange={handleFileUpload}
+          style={{ display: "none" }} // Hide the default file input
+          id="file-upload" // Assign an ID for the label
+        />
+        <label htmlFor="file-upload">
+          <strong>Choose file</strong>
+        </label>
+        {selectedFile && <p>Chosen file: {selectedFile}</p>}{" "}
+        {/* Display chosen file name */}
+      </Dialog>
+    );
+  };
 
   return (
     <>
@@ -400,7 +453,7 @@ const ServiceOrder = () => {
         </h3>
       )}
       <Header
-       buttonMenu={
+        buttonMenu={
           hasPermisson(MODULE.SERVICEORDER, ACCESS.WRITE)
             ? BUTTON_CONSTANT
             : BUTTON_CONSTANT.slice(0, BUTTON_CONSTANT.length - 1)
@@ -410,13 +463,13 @@ const ServiceOrder = () => {
         filtervalue={filtervalue}
         setFilterValue={setFilterValue}
         setFilterPatientId={setFilterPatientId}
-        setFilterNalId = {setFilterNalId}
-        setFilterPhysicianId = {setFilterPhysicianId}
+        setFilterNalId={setFilterNalId}
+        setFilterPhysicianId={setFilterPhysicianId}
         setFilterLcodeId={setFilterLcodeId}
         filterPatientId={filterPatientId}
-        filterPhysicianId = {filterPhysicianId}
+        filterPhysicianId={filterPhysicianId}
         filterLcodeId={filterLcodeId}
-        filterNalId = {filterNalId}
+        filterNalId={filterNalId}
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}
         setFilterPatientDob={setFilterPatientDob}
@@ -462,9 +515,13 @@ const ServiceOrder = () => {
           />
         </Dialog>
       )}
-
+      <ImportModal
+        isOpen={openImportModal}
+        onClose={() => setOpenImportModal(false)}
+        setSelectedFile={setSelectedFile}
+      />
       <ExportContent
-        Payload= {payload}
+        Payload={payload}
         user={filterPatientId}
         type="1"
         isOpen={openExportModal}

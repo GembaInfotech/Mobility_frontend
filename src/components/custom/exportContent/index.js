@@ -18,6 +18,9 @@ const ExportContent = ({ type, onDialogClose, isOpen, user, Payload }) => {
     }
 
     postApi(APIS.EXPORT_DATA, payload).then((res) => {
+      
+      console.log("export Excel");
+      console.log("response export excell", res );
       toast.push(<Notification type="success">Exported successfully</Notification>);
       const downloadLink = document.createElement('a');
       downloadLink.href = appConfig.imageBaseUrl + res?.data?.fileName; // Replace with the actual URL of your file

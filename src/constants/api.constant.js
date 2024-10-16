@@ -41,6 +41,7 @@ export const APIS = {
   UPDATE_PASSOWRD: 'api/updatePassword',
   USER_PASSWORD_RESET: 'admin/resetPasswordUser',
   EXPORT_DATA: 'admin/exportData',
+  UPDATE_EXCEL_DATA: 'admin/update-excel',
   GET_NOTIFICATION: 'admin/notifications',
   UNREAD_NOTIFICATION: 'admin/notificationActions',
 };
