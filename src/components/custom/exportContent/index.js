@@ -18,15 +18,10 @@ const ExportContent = ({ type, onDialogClose, isOpen, user, Payload }) => {
     }
 
     postApi(APIS.EXPORT_DATA, payload).then((res) => {
-      
-      console.log("export Excel");
-      console.log("response export excell", res );
       toast.push(<Notification type="success">Exported successfully</Notification>);
       const downloadLink = document.createElement('a');
-      downloadLink.href = appConfig.imageBaseUrl + res?.data?.fileName; // Replace with the actual URL of your file
-      downloadLink.download = 'file_name.xlsx'; // Replace with the desired file name
-
-      // Trigger a click event on the download link
+      downloadLink.href = appConfig.imageBaseUrl + res?.data?.fileName; 
+      downloadLink.download = 'file_name.xlsx';
       document.body.appendChild(downloadLink);
       downloadLink.click();
       document.body.removeChild(downloadLink);
