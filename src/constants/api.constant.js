@@ -1,7 +1,6 @@
 export const TOKEN_TYPE = 'Bearer ';
 export const REQUEST_HEADER_AUTH_KEY = 'Authorization';
 
- 
 export const LIST_DATA_API_TYPE = {
   DEVICE_TYPES: 1,
   LOCATIONS : 2,
