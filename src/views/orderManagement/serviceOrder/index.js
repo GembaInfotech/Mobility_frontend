@@ -146,7 +146,7 @@ const ServiceOrder = () => {
 
     getApi(APIS.GET_SERVICE_ORDER, payload)
       .then((res) => {
-        console.log(res)
+        // console.log(res)
         setTableData(res?.data?.data);
         setTotalCount(res?.data?.count);
       })
@@ -345,7 +345,7 @@ const ServiceOrder = () => {
         return (
           row?.prescriptions?.map((item, index) => <div className="w-40" key={index}>
             {
-              `${item?.lCode?.code} - ${item?.quantity} qty.`
+              `${item?.lCode?.code} - ${item?.quantity} qty. - ${item?.lCode?.description}`
             }
           </div>
           )

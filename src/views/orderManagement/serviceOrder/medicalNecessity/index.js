@@ -433,7 +433,7 @@ const MedicalNecessity = () => {
 
               <div className="uppercase flex justify-between text-black mt-12 font-semibold">
                 <div>Prescriber Signature</div>
-                <div>{`date: ${moment().format(DATE_FORMAT)}`}</div>
+                {/* <div>{`date: ${moment().format(DATE_FORMAT)}`}</div> */}
               </div>
             </div>
           </div>

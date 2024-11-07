@@ -412,7 +412,7 @@ const DeliveryReceipt = () => {
 
                 <div className="uppercase flex justify-between text-black mt-16 font-semibold">
                   <div>Patient Signature</div>
-                  <div>{`Date: ${moment().format(DATE_FORMAT)}`}</div>
+                  {/* <div>{`Date: ${moment().format(DATE_FORMAT)}`}</div> */}
                 </div>
               </div>
 
