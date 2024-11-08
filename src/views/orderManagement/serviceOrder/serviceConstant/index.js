@@ -158,6 +158,8 @@ export const SERVICE_ORDER_STATUS = [
   { label: "Billed", value: 9 ,color : "orange" },
   { label: "RNR", value: 10 ,color : "orange" },
   { label: "Denied", value: 11 ,color : "red" },
+  { label: "Dropship in Process", value: 12 ,color : "emerald" },
+
   // { label: "Pending", value: 1, color: "red" },
   // { label: "In-Process", value: 2, color: "indigo" },
   // { label: "Completed", value: 3, color: "green" },
