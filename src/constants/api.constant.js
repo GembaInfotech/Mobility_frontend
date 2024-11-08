@@ -16,6 +16,7 @@ export const LIST_DATA_API_TYPE = {
   INVLOCATION:12,
 }
 
+
 export const APIS = {
   ADD_EDIT_ADMINS: 'admin/addEditAdmins',
   ADD_EDIT_PHYSICIANS: 'admin/addEditPhysician',
