@@ -142,36 +142,36 @@ const menuRoute = [
       header: "Patient Management",
     },
   },
-  {
-    key: "apps.inventory.items",
-    path: `${APP_PREFIX_PATH}/inventory/items`,
-    component: React.lazy(() => import("views/inventory/items")),
-    authority: [ADMIN, USER],
-    show: () => hasPermisson(MODULE.LOCATIONS, ACCESS.READ),
-    meta: {
-      header: "Add Material",
-    },
-  },
-  {
-    key: "apps.inventory.location",
-    path: `${APP_PREFIX_PATH}/inventory/location`,
-    component: React.lazy(() => import("views/inventory/location")),
-    authority: [ADMIN, USER],
-    show: () => hasPermisson(MODULE.LOCATIONS, ACCESS.READ),
-    meta: {
-      header: "Location Companies",
-    },
-  },
-  {
-    key: "apps.inventory.stockEntry",
-    path: `${APP_PREFIX_PATH}/inventory/stockEntry`,
-    component: React.lazy(() => import("views/inventory/stockEntry")),
-    authority: [ADMIN, USER],
-    show: () => hasPermisson(MODULE.STOCKENTRY, ACCESS.READ),
-    meta: {
-      header: "Stock Entry",
-    },
-  }, 
+  // {
+  //   key: "apps.inventory.items",
+  //   path: `${APP_PREFIX_PATH}/inventory/items`,
+  //   component: React.lazy(() => import("views/inventory/items")),
+  //   authority: [ADMIN, USER],
+  //   show: () => hasPermisson(MODULE.LOCATIONS, ACCESS.READ),
+  //   meta: {
+  //     header: "Add Material",
+  //   },
+  // },
+  // {
+  //   key: "apps.inventory.location",
+  //   path: `${APP_PREFIX_PATH}/inventory/location`,
+  //   component: React.lazy(() => import("views/inventory/location")),
+  //   authority: [ADMIN, USER],
+  //   show: () => hasPermisson(MODULE.LOCATIONS, ACCESS.READ),
+  //   meta: {
+  //     header: "Location Companies",
+  //   },
+  // },
+  // {
+  //   key: "apps.inventory.stockEntry",
+  //   path: `${APP_PREFIX_PATH}/inventory/stockEntry`,
+  //   component: React.lazy(() => import("views/inventory/stockEntry")),
+  //   authority: [ADMIN, USER],
+  //   show: () => hasPermisson(MODULE.STOCKENTRY, ACCESS.READ),
+  //   meta: {
+  //     header: "Stock Entry",
+  //   },
+  // }, 
   // {
   //   key: "apps.inventory.inventoryDetail",
   //   path: `${APP_PREFIX_PATH}/inventory/inventoryDetail/:id`,
@@ -182,27 +182,27 @@ const menuRoute = [
   //     header: "Inventory Details",
   //   },
   // },
-  //
-  // {
-  //   key: "appsMenu.userManagement.staff",
-  //   path: `${APP_PREFIX_PATH}/userManagement/staff`,
-  //   component: React.lazy(() => import("views/userManagement/staff")),
-  //   authority: [ADMIN, USER],
-  //   show: () => hasPermisson(MODULE.STAFF, ACCESS.READ),
-  //   meta: {
-  //     header: "Staff Management",
-  //   },
-  // },
-  // {
-  //   key: "appsMenu.userManagement.provider",
-  //   path: `${APP_PREFIX_PATH}/userManagement/provider`,
-  //   component: React.lazy(() => import("views/userManagement/provider")),
-  //   authority: [ADMIN, USER],
-  //   show: () => hasPermisson(MODULE.PROVIDER, ACCESS.READ),
-  //   meta: {
-  //     header: "Provider Management",
-  //   },
-  // },
+  
+  {
+    key: "appsMenu.userManagement.staff",
+    path: `${APP_PREFIX_PATH}/userManagement/staff`,
+    component: React.lazy(() => import("views/userManagement/staff")),
+    authority: [ADMIN, USER],
+    show: () => hasPermisson(MODULE.STAFF, ACCESS.READ),
+    meta: {
+      header: "Staff Management",
+    },
+  },
+  {
+    key: "appsMenu.userManagement.provider",
+    path: `${APP_PREFIX_PATH}/userManagement/provider`,
+    component: React.lazy(() => import("views/userManagement/provider")),
+    authority: [ADMIN, USER],
+    show: () => hasPermisson(MODULE.PROVIDER, ACCESS.READ),
+    meta: {
+      header: "Provider Management",
+    },
+  },
 ];
 
 export default menuRoute;
