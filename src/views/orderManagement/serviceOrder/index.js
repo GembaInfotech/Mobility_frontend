@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Header from "./header";
 import appConfig from "configs/app.config";
 import { AdaptableCard, DataTable } from "components/shared";
+
 // import useThemeClass from "utils/hooks/useThemeClass";
 import { getApi, postApi } from "services/CommonService";
 import { APIS, LIST_DATA_API_TYPE } from "constants/api.constant";
@@ -13,7 +14,7 @@ import {
   SERVICE_ORDER_STATUS,
 } from "./serviceConstant";
 import dayjs from "dayjs";
-import { FaPen, FaDownload } from "react-icons/fa";
+import { FaPen, FaDownload, FaEye } from "react-icons/fa";
 // import { Tooltip } from "components/ui";
 import {
   CONFIRMATION_OBJ,
@@ -57,6 +58,10 @@ const ACTION_CONSTANT = [
     show: () => hasPermisson(MODULE.SERVICEORDER, ACCESS.DELETE),
   },
 ];
+
+const STATUS_ACTION = [
+  { label: <FaEye />, key: PAGE_KEY.STATUS_VIEW, toolTip: "View", show: () => hasPermisson(MODULE.SERVICEORDER, ACCESS.READ) },
+]
 
 const BUTTON_CONSTANT = [
   {
@@ -113,7 +118,7 @@ const ServiceOrder = () => {
 
       getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.PATIENTS, id }).then(
         (result) => {
-          // console.log(result)
+          // console.log("get order status", result)
           setFilterPatientId(result?.data?.data);
         }
       );
@@ -146,7 +151,7 @@ const ServiceOrder = () => {
 
     getApi(APIS.GET_SERVICE_ORDER, payload)
       .then((res) => {
-        // console.log(res)
+        console.log("orderStatus get", res)
         setTableData(res?.data?.data);
         setTotalCount(res?.data?.count);
       })
@@ -400,14 +405,25 @@ const ServiceOrder = () => {
 
     //   },
     // },
+
     {
       Header: "Presc. Status",
       accessor: "",
       Cell: (props) => {
         const row = props.row.original;
-        return <TagSection status={row?.orderStatus} selectedRow={row} />;
+        return (
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}> 
+            <TagSection status={row?.orderStatus} selectedRow={row} />
+            <ActionColumn
+              row={row}
+              onActionHandle={onActionHandle}
+              actionsMenu={STATUS_ACTION}
+            />
+          </div>
+        );
       },
     },
+    
     {
       Header: "Actions",
       id: "action",
@@ -423,8 +439,8 @@ const ServiceOrder = () => {
   ];
   const ImportModal = ({ isOpen, onClose }) => {
     const handleClose = () => {
-      setSelectedFile(null); 
-      onClose(); 
+      setSelectedFile(null);
+      onClose();
     };
     return (
       <Dialog isOpen={isOpen} onClose={handleClose}>
@@ -501,7 +517,31 @@ const ServiceOrder = () => {
           buttonLabel={"Delete"}
         />
       )}
-      {selectedKey !== PAGE_KEY.DELETE && (
+
+      {selectedKey === PAGE_KEY.STATUS_VIEW && (
+       <Dialog
+       isOpen={openModal}
+       onClose={onDialogClose}
+       onRequestClose={onDialogClose}
+       contentClassName="py-10 pl-20 pr-40 mt-60 min-w-36"
+     >
+       <div>
+         {selectedData && (
+           <>
+             <p className="font-bold text-md mb-2">
+               <span className="text-blue-900">Comment:</span> {selectedData.addComment || "No comments available"}
+             </p>
+             <p className="font-bold text-md">
+               <span className="text-blue-900">Added By:</span> {selectedData.commentAddedBy?.email || "Not provided"}
+             </p>
+           </>
+         )}
+       </div>
+     </Dialog>
+     
+      )}
+
+      {(selectedKey !== PAGE_KEY.DELETE && selectedKey !== PAGE_KEY.STATUS_VIEW) && (
         <Dialog
           isOpen={openModal}
           onClose={onDialogClose}
@@ -532,3 +572,4 @@ const ServiceOrder = () => {
 };
 
 export default ServiceOrder;
+

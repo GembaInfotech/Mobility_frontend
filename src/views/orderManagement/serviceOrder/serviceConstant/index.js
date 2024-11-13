@@ -341,6 +341,7 @@ export const PAGE_KEY = {
   STATUS_CHANGE: "statusChange",
   DELIVERY_RECEIPT: "deliveryReceipt",
   MEDICAL_NECESSITY: "medicalNecessity",
+  STATUS_VIEW:"statusView"
 };
 
 export const MODAL_HEADER = {

@@ -1,5 +1,5 @@
 import React from "react";
-import { Select, FormItem } from "components/ui";
+import { Select, FormItem, Input,} from "components/ui";
 import { Field } from "formik";
 import { StickyFooter } from "components/shared";
 import { Button, FormContainer } from "components/ui";
@@ -16,6 +16,7 @@ const StatusChange = ({ onSubmit, selectedData }) => {
         initialValues={{
           orderStatus: selectedData?.orderStatus,
           id: selectedData?.id,
+          name: ""
         }}
         onSubmit={onSubmit}
         enableReinitialize
@@ -40,6 +41,21 @@ const StatusChange = ({ onSubmit, selectedData }) => {
                   cacheOptions
                 />
               </FormItem>
+
+              <FormItem
+                  label="Add Coomment"
+                  invalid={errors?.name && touched?.name}
+                  errorMessage={errors?.name}
+                >
+                  <Field
+                    type="text"
+                    autoComplete="off"
+                    name="name"
+                    placeholder="Enter Name"
+                    component={Input}
+                  />
+              </FormItem>
+              
               <StickyFooter
                 className="-mx-8 px-8 flex items-center justify-between py-4"
                 stickyClass="border-t bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700"
