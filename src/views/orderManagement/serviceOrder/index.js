@@ -4,6 +4,7 @@ import appConfig from "configs/app.config";
 import { AdaptableCard, DataTable } from "components/shared";
 
 // import useThemeClass from "utils/hooks/useThemeClass";
+
 import { getApi, postApi } from "services/CommonService";
 import { APIS, LIST_DATA_API_TYPE } from "constants/api.constant";
 import { useNavigate, useParams } from "react-router-dom";
