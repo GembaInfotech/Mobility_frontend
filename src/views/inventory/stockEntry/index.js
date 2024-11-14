@@ -34,21 +34,21 @@ const BUTTON_CONSTANT = [
   },
 ];
 
-const FILTER_CONSTANT = [
-  {
-    component: "input",
-    placeholder: "Search",
-    className: "mb-4 w-40",
-    filterKey: "search",
-  },
-  {
-    component: "resetButton",
-    label: "Reset",
-    icon: <GrPowerReset />,
-    className: "mb-4",
-    filterKey: { search: "" },
-  },
-];
+// const FILTER_CONSTANT = [
+//   {
+//     component: "input",
+//     placeholder: "Filter By Location",
+//     className: "mb-4 w-40",
+//     filterKey: "search",
+//   },
+//   {
+//     component: "resetButton",
+//     label: "Reset",
+//     icon: <GrPowerReset />,
+//     className: "mb-4",
+//     filterKey: { search: "" },
+//   },
+// ];
 
 const Codes = () => {
   const [codes, setCodes] = useState([]);
@@ -67,12 +67,14 @@ const Codes = () => {
   useEffect(() => {
     setLoading(true);
     getApi(APIS.LIST_DATA, {
-      type: LIST_DATA_API_TYPE.INVENTORY,
+      type: LIST_DATA_API_TYPE.STOCK_ENTRY,
       limit,
       search,
       skip: limit * (page - 1),
     })
       .then((res) => {
+        console.log("dataa", res?.data?.data );
+        
         setCodes(res?.data?.data);
         setTotalCount(res?.data?.count);
       })
@@ -81,20 +83,21 @@ const Codes = () => {
 
   const columns = [
     {
-      Header: "Stock Entry Type",
-      accessor: "stockType",
+      Header: "LCodes",
+      accessor: (row) => row.lcodeId?.code || "-", 
+    },
+    
+    {
+      Header: "Description",
+      accessor: (row) => row.lcodeId?.description || "-", 
+    },
+    {
+      Header: "Quantity",
+      accessor: "quantity",
     },
     {
       Header: "Location",
-      accessor: "location",
-    },
-    {
-      Header: "Posting Date",
-      accessor: "postingDate",
-    },
-    {
-      Header: "Created By",
-      accessor: (row) => row.createdBy ? row.createdBy?.name : "-",
+      accessor: (row) => row.locationId?.name || "-", 
     },
     {
       Header: "Active",
@@ -173,7 +176,7 @@ const Codes = () => {
             ? BUTTON_CONSTANT
             : BUTTON_CONSTANT.slice(0, BUTTON_CONSTANT.length - 1)
         }
-        FilterMenu={FILTER_CONSTANT}
+        // FilterMenu={FILTER_CONSTANT}
         setSearch={setSearch}
         buttonClick={onHeaderButtonClick}
         setFilterValue={setFilterValue}

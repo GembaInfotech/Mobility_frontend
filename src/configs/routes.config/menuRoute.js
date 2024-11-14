@@ -142,46 +142,46 @@ const menuRoute = [
       header: "Patient Management",
     },
   },
-  // {
-  //   key: "apps.inventory.items",
-  //   path: `${APP_PREFIX_PATH}/inventory/items`,
-  //   component: React.lazy(() => import("views/inventory/items")),
-  //   authority: [ADMIN, USER],
-  //   show: () => hasPermisson(MODULE.LOCATIONS, ACCESS.READ),
-  //   meta: {
-  //     header: "Add Material",
-  //   },
-  // },
-  // {
-  //   key: "apps.inventory.location",
-  //   path: `${APP_PREFIX_PATH}/inventory/location`,
-  //   component: React.lazy(() => import("views/inventory/location")),
-  //   authority: [ADMIN, USER],
-  //   show: () => hasPermisson(MODULE.LOCATIONS, ACCESS.READ),
-  //   meta: {
-  //     header: "Location Companies",
-  //   },
-  // },
-  // {
-  //   key: "apps.inventory.stockEntry",
-  //   path: `${APP_PREFIX_PATH}/inventory/stockEntry`,
-  //   component: React.lazy(() => import("views/inventory/stockEntry")),
-  //   authority: [ADMIN, USER],
-  //   show: () => hasPermisson(MODULE.STOCKENTRY, ACCESS.READ),
-  //   meta: {
-  //     header: "Stock Entry",
-  //   },
-  // }, 
-  // {
-  //   key: "apps.inventory.inventoryDetail",
-  //   path: `${APP_PREFIX_PATH}/inventory/inventoryDetail/:id`,
-  //   component: React.lazy(() => import("views/inventory/inventoryDetail")),
-  //   authority: [ADMIN, USER],
-  //   show: () => hasPermisson(MODULE.INVENTORY, ACCESS.READ),
-  //   meta: {
-  //     header: "Inventory Details",
-  //   },
-  // },
+  {
+    key: "apps.inventory.items",
+    path: `${APP_PREFIX_PATH}/inventory/items`,
+    component: React.lazy(() => import("views/inventory/items")),
+    authority: [ADMIN, USER],
+    show: () => hasPermisson(MODULE.LOCATIONS, ACCESS.READ),
+    meta: {
+      header: "Add Material",
+    },
+  },
+  {
+    key: "apps.inventory.location",
+    path: `${APP_PREFIX_PATH}/inventory/location`,
+    component: React.lazy(() => import("views/inventory/location")),
+    authority: [ADMIN, USER],
+    show: () => hasPermisson(MODULE.LOCATIONS, ACCESS.READ),
+    meta: {
+      header: "Location Companies",
+    },
+  },
+  {
+    key: "apps.inventory.stockEntry",
+    path: `${APP_PREFIX_PATH}/inventory/stockEntry`,
+    component: React.lazy(() => import("views/inventory/stockEntry")),
+    authority: [ADMIN, USER],
+    show: () => hasPermisson(MODULE.STOCKENTRY, ACCESS.READ),
+    meta: {
+      header: "Stock Entry",
+    },
+  }, 
+  {
+    key: "apps.inventory.inventoryDetail",
+    path: `${APP_PREFIX_PATH}/inventory/inventoryDetail/:id`,
+    component: React.lazy(() => import("views/inventory/inventoryDetail")),
+    authority: [ADMIN, USER],
+    show: () => hasPermisson(MODULE.INVENTORY, ACCESS.READ),
+    meta: {
+      header: "Inventory Details",
+    },
+  },
   
   {
     key: "appsMenu.userManagement.staff",

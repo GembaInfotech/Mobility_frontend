@@ -18,35 +18,27 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 // Validation schema
 const validationSchema = Yup.object().shape({
-  materialNo: Yup.string().required("Material Code is required"),
+  code: Yup.string().required("L Code is required"),
   stockType: Yup.object().required("Stock Entry Type is required"),
   quantity: Yup.number()
     .required("Quantity is required")
     .positive("Quantity must be positive")
     .integer("Quantity must be an integer"),
-  sourceWareHouse: Yup.string().required("Source Warehouse is required"),
-  targetWareHouse: Yup.string().when("stockType", {
-    is: (val) => val.value === 2,
-    then: Yup.string().required("Target Warehouse is required"),
-  }),
+  location: Yup.string().required("Location is required"),
 });
 
 const initialValues = {
-  materialNo: "",
-  materialName: "",
-  stockType: "",
+  code: "",
+  description: "",
+  stockType: { label: "Material Receipt", value: 1 }, // Default value for stockType
   quantity: "",
-  sourceWareHouse: "",
-  targetWareHouse: "",
-  availableQuantity: "",
+  location: "",
 };
 
 const AddEditStockes = ({ onClose, refreshPage }) => {
   const [loading, setLoading] = useState(false);
   const [materialOptions, setMaterialOptions] = useState([]);
   const [warehouseOptions, setWarehouseOptions] = useState([]);
-  const [filteredWarehouseOptions, setFilteredWarehouseOptions] = useState([]);
-  const [availableQuantities, setAvailableQuantities] = useState({});
   const [editData, setEditData] = useState(initialValues);
 
   const navigate = useNavigate();
@@ -57,22 +49,19 @@ const AddEditStockes = ({ onClose, refreshPage }) => {
     if (location.state?.editData) {
       setEditData(location.state.editData);
     }
-    
+
     // Fetch materials
-    getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.MATERIALS })
+    getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.CODES })
       .then((res) => {
         if (res && res.data && Array.isArray(res.data.data)) {
-
-          // console.log("dataaaaa", res.data);
-          
-          const materials = res.data.data.map((item) => ({
-            label: item.materialNo,
+          const filteredData = res.data.data.filter((item) => item.type === 1);
+          const materials = filteredData.map((item) => ({
+            label: item.code,
             value: item._id,
-            materialName: item.material,
+            description: item.description,
             uom: item?.uomId?.name,
-            uomId:item?.uomId?._id
+            uomId: item?.uomId?._id,
           }));
-          console.log(materials)
           setMaterialOptions(materials);
         } else {
           toast.push(
@@ -88,7 +77,7 @@ const AddEditStockes = ({ onClose, refreshPage }) => {
       });
 
     // Fetch warehouses
-    getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.INVLOCATION })
+    getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.LOCATIONS })
       .then((res) => {
         if (res && res.data && Array.isArray(res.data.data)) {
           const locations = res.data.data.map((location) => ({
@@ -96,7 +85,6 @@ const AddEditStockes = ({ onClose, refreshPage }) => {
             value: location._id,
           }));
           setWarehouseOptions(locations);
-          setFilteredWarehouseOptions(locations);
         } else {
           toast.push(
             <Notification type="error">No Warehouses found!</Notification>
@@ -111,21 +99,22 @@ const AddEditStockes = ({ onClose, refreshPage }) => {
       });
   }, [location.state?.editData]);
 
-  const onSubmit = (values,{setSubmitting}) => {
+  const onSubmit = (values, { setSubmitting }) => {
     setLoading(true);
+  
+    // Log the values before submitting
+    console.log("Form Data being submitted:", values);
+  
     const payload = {
-      materialId: values.materialNo,
-      stockType: values.stockType?.value,
+      lcodeId: values.code,
+      stockType: values.stockType?.value, // Always 1, i.e., Material Receipt
       quantity: values.quantity,
-      warehouseId: values.sourceWareHouse,
-      targetWareHouse: values.targetWareHouse,
+      locationId: values.location,
       uomId: values.uomId,
-      availableQuantity: values.availableQuantity,
-      modelType:LIST_DATA_API_TYPE.STOCK_ENTRY,
+      modelType: LIST_DATA_API_TYPE.STOCK_ENTRY,
     };
-
-    console.log(payload)
-
+  
+    // API call to save the data
     postApi(APIS.ADD_EDIT_DATA, payload)
       .then(() => {
         navigate(-1);
@@ -139,7 +128,7 @@ const AddEditStockes = ({ onClose, refreshPage }) => {
       })
       .finally(() => {
         setLoading(false);
-        setSubmitting(false);
+        setSubmitting(false); // Ensure the button is re-enabled
       });
   };
 
@@ -153,7 +142,7 @@ const AddEditStockes = ({ onClose, refreshPage }) => {
       {({ errors, touched, values, setFieldValue, isSubmitting }) => (
         <Form>
           <div className="flex mb-3 justify-between w-3/4">
-            <h3>{editData.materialNo ? "Edit Stock" : "Add Stock"}</h3>
+            <h3>{editData.code ? "Edit Stock" : "Add Stock"}</h3>
             <div className="flex">
               <Button
                 size="sm"
@@ -167,73 +156,55 @@ const AddEditStockes = ({ onClose, refreshPage }) => {
               <Button
                 size="sm"
                 variant="solid"
-                loading={isSubmitting}
+                loading={isSubmitting || loading} // Handle both isSubmitting and loading states
                 icon={<AiOutlineSave />}
                 type="submit"
               >
-                {editData.materialNo ? "Update" : "Save"}
+                {editData.code ? "Update" : "Save"}
               </Button>
             </div>
           </div>
           <Card className="mt-2.5 w-3/4">
             <FormContainer className="md:w-full lg:w-1/2">
-              {/* Stock Entry Type */}
-              <FormItem
-                label="Stock Entry Type"
-                invalid={errors.stockType && touched.stockType}
-                errorMessage={errors.stockType?.label}
-              >
-                <Select
-                  name="stockType"
-                  options={[
-                    { label: "Material Receipt", value: 1 },
-                    { label: "Material Transfer", value: 2 },
-                  ]}
-                  placeholder="Select Stock Entry Type"
-                  value={values.stockType}
-                  onChange={(option) => {
-                    setFieldValue("stockType", option);
-                    setFieldValue("sourceWareHouse", "");
-                    setFieldValue("targetWareHouse", "");
-                    setFieldValue("availableQuantity", "");
-                  }}
+              {/* Stock Entry Type - Removed Select */}
+              <FormItem label="Stock Entry Type">
+                <Input
+                  value="Material Receipt" // Display as text, no need for user interaction
+                  readOnly
+                  size="sm"
                 />
               </FormItem>
 
               {/* Material Code */}
               <FormItem
-                label="Material Code"
-                invalid={errors?.materialNo && touched?.materialNo}
-                errorMessage={errors?.materialNo}
+                label="LCode"
+                invalid={errors?.code && touched?.code}
+                errorMessage={errors?.code}
               >
                 <Select
                   size="sm"
-                  name="materialNo"
-                  placeholder="Select Material Code"
+                  name="lcode"
+                  placeholder="Select LCode"
                   options={materialOptions}
                   value={materialOptions.find(
-                    (option) => option.value === values.materialNo
-                  )}
+                    (option) => option.value === values.code
+                  ) || null}
                   onChange={(selectedOption) => {
-
-                    console.log("selectedoption", selectedOption);
-                    
-                    setFieldValue("materialNo", selectedOption.value);
-                    setFieldValue("materialName", selectedOption.materialName); // Set material name
+                    setFieldValue("code", selectedOption.value); // Update 'lcode' value
+                    setFieldValue("description", selectedOption.description); // Set description
                     setFieldValue("uom", selectedOption.uom); // Set UOM
-                    setFieldValue("uomId", selectedOption.uomId); // Set UOM
-
+                    setFieldValue("uomId", selectedOption.uomId); // Set UOM ID
                   }}
                 />
               </FormItem>
 
               {/* Material Name and UOM */}
-              <FormItem label="Material Name">
+              <FormItem label="Description">
                 <Field
                   as={Input}
                   size="sm"
-                  name="materialName"
-                  value={values.materialName}
+                  name="description"
+                  value={values.description}
                   readOnly
                 />
               </FormItem>
@@ -262,72 +233,24 @@ const AddEditStockes = ({ onClose, refreshPage }) => {
                 />
               </FormItem>
 
-              {/* Source Warehouse */}
+              {/* Location */}
               <FormItem
-                label="Source Warehouse"
-                invalid={errors.sourceWareHouse && touched.sourceWareHouse}
-                errorMessage={errors.sourceWareHouse}
+                label="Location"
+                invalid={errors.location && touched.location}
+                errorMessage={errors.location}
               >
                 <Select
-                  name="sourceWareHouse"
+                  name="Location"
                   options={warehouseOptions}
-                  placeholder="Select Source Warehouse"
+                  placeholder="Select Location"
                   value={warehouseOptions.find(
-                    (option) => option.value === values.sourceWareHouse
+                    (option) => option.value === values.location
                   )}
-                  onChange={(option) => {
-                    setFieldValue("sourceWareHouse", option.value);
-
-                    // Fetch available quantity based on selected warehouse
-                    const selectedWarehouse = warehouseOptions.find(
-                      (wh) => wh.value === option.value
-                    );
-                    // Replace this mock with actual API call or logic to fetch available quantity
-                    const quantity = availableQuantities[option.value] || "";
-
-                    setFieldValue("availableQuantity", quantity);
-
-                    // Update target warehouse options by removing selected source warehouse
-                    const updatedTargetOptions = warehouseOptions.filter(
-                      (wh) => wh.value !== option.value
-                    );
-                    setFilteredWarehouseOptions(updatedTargetOptions);
+                  onChange={(selectedOption) => {
+                    setFieldValue("location", selectedOption.value); // Update location value
                   }}
                 />
               </FormItem>
-
-              {/* Available Quantity */}
-              {values.stockType?.value === 2 && (
-                <>
-                  <FormItem label="Available Quantity">
-                    <Field
-                      as={Input}
-                      name="availableQuantity"
-                      value={values.availableQuantity}
-                      readOnly
-                    />
-                  </FormItem>
-
-                  {/* Target Warehouse */}
-                  <FormItem
-                    label="Target Warehouse"
-                    invalid={errors.targetWareHouse && touched.targetWareHouse}
-                    errorMessage={errors.targetWareHouse}
-                  >
-                    <Select
-                      name="targetWareHouse"
-                      options={filteredWarehouseOptions}
-                      placeholder="Select Target Warehouse"
-                      value={filteredWarehouseOptions.find(
-                        (option) => option.value === values.targetWareHouse
-                      )}
-                      onChange={(option) => {
-                        setFieldValue("targetWareHouse", option.value);
-                      }}
-                    />
-                  </FormItem>
-                </>
-              )}
             </FormContainer>
           </Card>
         </Form>
