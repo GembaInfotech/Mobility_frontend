@@ -49,10 +49,10 @@ const FilterSection = ({
 
   return (
     <div className="md:flex gap-4 w-full">
-      <TableSearchBar
+      {setSearch && <TableSearchBar
         placeholder={searchPlaceholder}
         onChange={(query) => setSearch(query)}
-      />
+      />}
       {FilterMenu?.map((filter, i) => {
         return (
           <React.Fragment key={i}>
