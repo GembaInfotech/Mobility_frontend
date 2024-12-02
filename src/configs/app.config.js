@@ -6,6 +6,7 @@ const appConfig = {
   unAuthenticatedEntryPath: "/sign-in",
   tourPath: "/app/account/kyc-form",
   enableMock: true,
+  
 };
 
 
