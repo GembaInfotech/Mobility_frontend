@@ -43,7 +43,7 @@ const StatusChange = ({ onSubmit, selectedData }) => {
               </FormItem>
 
               <FormItem
-                  label="Add Coomment"
+                  label="Add Comment"
                   invalid={errors?.name && touched?.name}
                   errorMessage={errors?.name}
                 >

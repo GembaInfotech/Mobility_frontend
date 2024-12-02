@@ -129,6 +129,11 @@ const Codes = () => {
     {
       Header: "Quantity",
       accessor: "quantity",
+      Cell: ({ value }) => (
+        <span style={{ color: value <= 5 ? "red" : "black" }}>
+          {value}
+        </span>
+      ),
     },
     {
       Header: "Location",
