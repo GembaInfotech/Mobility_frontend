@@ -36,7 +36,7 @@ const BUTTON_CONSTANT = [
     label: "Add Stock",
     key: TABLE_ACTION_KEYS.ADD,
     icon: <HiOutlinePlusCircle />,
-    show: () => hasPermisson(MODULE.STOCKENTRY, ACCESS.WRITE),
+    show: () => hasPermisson(MODULE.STOCKENTRY, ACCESS.WRITE)
   },
 ];
 

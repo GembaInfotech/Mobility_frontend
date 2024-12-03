@@ -177,7 +177,7 @@ const menuRoute = [
     path: `${APP_PREFIX_PATH}/inventory/inventoryDetail/:id`,
     component: React.lazy(() => import("views/inventory/inventoryDetail")),
     authority: [ADMIN, USER],
-    show: () => hasPermisson(MODULE.INVENTORY, ACCESS.READ),
+    show: () => hasPermisson(MODULE.STOCKENTRY, ACCESS.READ),
     meta: {
       header: "Inventory Details",
     },

@@ -155,9 +155,7 @@ const appsNavigationConfig = [
         type: NAV_ITEM_TYPE_ITEM,
         authority: [ADMIN, USER],
         isVisible: () =>
-          hasPermisson(MODULE.CODES, ACCESS.READ) ||
-          hasPermisson(MODULE.COUPONS, ACCESS.READ) ||
-          hasPermisson(MODULE.TYPESOFDEVICES, ACCESS.READ),
+          hasPermisson(MODULE.STOCKENTRY, ACCESS.READ),
         subMenu: [
           // {
           //   key: 'appsMenu.inventory',

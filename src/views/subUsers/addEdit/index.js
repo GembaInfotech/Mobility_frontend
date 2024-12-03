@@ -46,23 +46,29 @@ const AddEditAdmins = () => {
       }).then((res) => {
         const response = res?.data?.data;
         response.superAdmin = response.superAdmin? true : false;
-        response.roles = response.roles? response.roles : PERMISSIONS;
+        response.roles = response.roles? response.roles : PERMISSIONS;  
         setEditData(response);
       });
     }
   }, [id]);
   //// SUBMIT TAGS HANDLER///////
 
+  
+
   const onSubmit = ({ name, email, roles, superAdmin }) => {
 
-    // console.log("superAdmin", superAdmin);
+    const mergedRoles = PERMISSIONS.map((permission) => {
+      const existingRole = roles?.find((role) => role.name === permission.name);
+      return existingRole || permission;
+    });
+  
     
     setLoading(true);
     const payload = new FormData();
     payload.append('name', name);
     payload.append('email', email);
     payload.append('superAdmin', superAdmin);
-    payload.append('roles', roles?.length ? JSON.stringify(roles) : JSON.stringify(PERMISSIONS));
+    payload.append('roles', JSON.stringify(mergedRoles));
     if (id) {
       payload.append('adminId', id);
     }

@@ -98,6 +98,9 @@ export const userActionMenu = (module, buttons) => {
   return newButtons;
 };
 const hasPermisson = (module, access) => {
+
+  // console.log("module", module, "access", access);
+  
   const { roles, superAdmin } = store?.getState()?.auth?.user;
 
   if (superAdmin) {

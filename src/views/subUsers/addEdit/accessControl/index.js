@@ -63,6 +63,13 @@ export const PERMISSIONS = [
     edit: false,
     delete: false,
   },
+  {
+    label: "Stock Entry",
+    name: "stock-entry",
+    read: true,
+    edit: false,
+    delete: false,
+  },
 ];
 
 const AccessControl = ({ touched, errors, values, setFieldValue }) => {
