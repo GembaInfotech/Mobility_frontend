@@ -136,12 +136,14 @@ const Codes = () => {
       ...payload,
     })
       .then((res) => {
+        console.log('ressss',res);
         setSampleCodeName(res?.data?.lcodeSampleFile);
         setCodes([]);
         setCodes(res?.data?.data);
         setTotalCount(res?.data?.count);
       })
       .finally(() => setLoading(false));
+      console.log('ressssppp',Codes);
   }, [search, page, limit, refresh, filterValue]);
 
   const onActionHandle = (e, key, row) => {

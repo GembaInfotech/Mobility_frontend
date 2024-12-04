@@ -14,12 +14,17 @@ const Confirmation = ({ selectedKey, selectedData, closeDialog }) => {
   const onSubmit = (payload) => {
     if (selectedKey === PAGE_KEY.STATUS_CHANGE) {
       payload.orderStatus = payload?.orderStatus?.value;
+      console.log("lcode", selectedData );
+      
       const formData = new FormData();
+      selectedData.prescriptions.forEach((prescription) => {
+        formData.append("lcodeQuantity", prescription.quantity); // Append each quantity
+        formData.append("lcodeId", prescription.lCode._id);       // Append each lCode ID
+    });
+    
       formData.append("id", selectedData?._id);
       formData.append("orderStatus", payload?.orderStatus);
       formData.append("NALId", selectedData.appointmentLocationId._id )
-      formData.append("lcodeQuantity", selectedData.prescriptions[0].quantity)
-      formData.append("lcodeId", selectedData.prescriptions[0].lCode._id)
       formData.append("addComment", payload?.name);
       postApi(APIS.ADD_EDIT_PRESCRIPTION, formData).then((res) => {
         toast.push(<Notification type="success">{UPDATE_TOAST}</Notification>);
@@ -54,7 +59,7 @@ const Confirmation = ({ selectedKey, selectedData, closeDialog }) => {
   return (
     
         <div style={{ minHeight: "250px" }}>
-          <div className="text-base font-bold	pl-5">{dialogHeader}</div>
+          <div className="text-base font-bold pl-5">{dialogHeader}</div>
           {selectedKey === PAGE_KEY.CALENDOR && (
             <CalendorSection onSubmit={onSubmit} selectedData={selectedData} />
           )}

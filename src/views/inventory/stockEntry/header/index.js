@@ -1,5 +1,5 @@
-import React from "react";
-import { Button, DatePicker, Select } from "components/ui";
+import React, { useEffect, useState } from "react";
+import { Button, Select } from "components/ui";
 import { GrPowerReset } from "react-icons/gr";
 import { getApi } from "services/CommonService";
 import { APIS, LIST_DATA_API_TYPE } from "constants/api.constant";
@@ -7,50 +7,53 @@ import { debounce } from "lodash";
 import AsyncSelect from "react-select/async";
 import { useNavigate } from "react-router-dom";
 
-const FilterSection = ({
-  setFilterLocationId,
-  filterLocationId
-}) => {
+const FilterSection = ({ setFilterLocationId, filterLocationId }) => {
+  const [locations, setLocations] = useState([]); // Store locations fetched from API
 
+  // Fetch location options
   const loadLocationOption = (inputValue, resolve) => {
     getApi(APIS.LIST_DATA, {
       type: LIST_DATA_API_TYPE.LOCATIONS,
       search: inputValue,
     }).then((res) => {
-      // console.log(res); // Log the response to see available NAL options
       resolve(res?.data?.data);
+      setLocations(res?.data?.data); // Save the fetched locations to state
     });
   };
-
 
   const loadLocation = debounce(loadLocationOption, 300);
   const navigate = useNavigate();
 
+  // Find the selected location based on the filterLocationId
+  const selectedLocation = locations.find(
+    (location) => location._id === filterLocationId
+  );
+
   return (
     <div className="grid grid-cols-3 gap-4 mb-5">
-     
-      <Select
+      {/* AsyncSelect to display filtered location */}
+      <AsyncSelect
         autoComplete="off"
         placeholder="Filter by Location"
         defaultOptions
         cacheOptions
         size="sm"
         className="mb-4"
-        value={filterLocationId}
+        value={selectedLocation || null} // Set selected location as value
         loadOptions={loadLocation}
-        componentAs={AsyncSelect}
         getOptionLabel={(v) => `${v?.name || ""}`}
         getOptionValue={(v) => v?._id}
-        onChange={(selectedLocation) => {
-            console.log("selectedLocation", selectedLocation);
-          setFilterLocationId(selectedLocation?._id);
+        onChange={(selectedOption) => {
+          console.log("Selected Location: ", selectedOption);
+          setFilterLocationId(selectedOption?._id); // Update the parent state with selected location ID
         }}
       />
+      {/* Reset button */}
       <Button
         size="sm"
         onClick={() => {
-          setFilterLocationId("");
-          navigate("/app/inventory/stockEntry");
+          setFilterLocationId(""); // Reset the filter location ID
+          navigate("/app/inventory/stockEntry"); // Navigate to the stock entry page
         }}
         icon={<GrPowerReset />}
       >
@@ -71,7 +74,7 @@ const Header = ({
 }) => {
   const ButtonSection = ({ buttonClick, buttonMenu }) => {
     return (
-      <div className="mb-4 ">
+      <div className="mb-4">
         {buttonMenu?.map((btn, i) => (
           <Button
             key={i}
@@ -99,7 +102,7 @@ const Header = ({
           setFilterValue={setFilterValue}
           filtervalue={filtervalue}
           setFilterLocationId={setFilterLocationId}
-          filterLocationId={filterLocationId}
+          filterLocationId={filterLocationId} // Passing the filter location ID to the FilterSection
         />
       </div>
     </>
