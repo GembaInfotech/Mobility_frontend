@@ -7,24 +7,30 @@ import { PAGE_KEY, MODAL_HEADER } from "../serviceConstant";
 import { postApi } from "services/CommonService";
 import { APIS } from "constants/api.constant";
 import { Notification, toast } from "components/ui";
-import {UPDATE_TOAST } from "constants/app.constant";
+import { UPDATE_TOAST } from "constants/app.constant";
 
 const Confirmation = ({ selectedKey, selectedData, closeDialog }) => {
   const [dialogHeader, setDialogHeader] = useState();
   const onSubmit = (payload) => {
     if (selectedKey === PAGE_KEY.STATUS_CHANGE) {
       payload.orderStatus = payload?.orderStatus?.value;
-      console.log("lcode", selectedData );
-      
+
       const formData = new FormData();
+
+      const lcodeQuantities = [];
+      const lcodeIds = [];
+
       selectedData.prescriptions.forEach((prescription) => {
-        formData.append("lcodeQuantity", prescription.quantity); // Append each quantity
-        formData.append("lcodeId", prescription.lCode._id);       // Append each lCode ID
-    });
-    
+        lcodeQuantities.push(prescription.quantity);
+        lcodeIds.push(prescription.lCode._id);
+      });
+
+      formData.append("lcodeQuantity", JSON.stringify(lcodeQuantities));
+      formData.append("lcodeId", JSON.stringify(lcodeIds));
+
       formData.append("id", selectedData?._id);
       formData.append("orderStatus", payload?.orderStatus);
-      formData.append("NALId", selectedData.appointmentLocationId._id )
+      formData.append("NALId", selectedData.appointmentLocationId._id)
       formData.append("addComment", payload?.name);
       postApi(APIS.ADD_EDIT_PRESCRIPTION, formData).then((res) => {
         toast.push(<Notification type="success">{UPDATE_TOAST}</Notification>);
@@ -57,24 +63,24 @@ const Confirmation = ({ selectedKey, selectedData, closeDialog }) => {
   }, [selectedKey]);
 
   return (
-    
-        <div style={{ minHeight: "250px" }}>
-          <div className="text-base font-bold pl-5">{dialogHeader}</div>
-          {selectedKey === PAGE_KEY.CALENDOR && (
-            <CalendorSection onSubmit={onSubmit} selectedData={selectedData} />
-          )}
-          {selectedKey === PAGE_KEY.DOWNLOAD && (
-            <DownloadSection onSubmit={onSubmit} selectedData={selectedData} />
-          )}
-          {selectedKey === PAGE_KEY.INSURANCE && (
-            <InsuranceSection onSubmit={onSubmit} selectedData={selectedData} />
-          )}
-          {selectedKey === PAGE_KEY.STATUS_CHANGE && (
-            <StatusChange onSubmit={onSubmit} selectedData={selectedData} />
-          )}
 
-        </div>
-    
+    <div style={{ minHeight: "250px" }}>
+      <div className="text-base font-bold pl-5">{dialogHeader}</div>
+      {selectedKey === PAGE_KEY.CALENDOR && (
+        <CalendorSection onSubmit={onSubmit} selectedData={selectedData} />
+      )}
+      {selectedKey === PAGE_KEY.DOWNLOAD && (
+        <DownloadSection onSubmit={onSubmit} selectedData={selectedData} />
+      )}
+      {selectedKey === PAGE_KEY.INSURANCE && (
+        <InsuranceSection onSubmit={onSubmit} selectedData={selectedData} />
+      )}
+      {selectedKey === PAGE_KEY.STATUS_CHANGE && (
+        <StatusChange onSubmit={onSubmit} selectedData={selectedData} />
+      )}
+
+    </div>
+
 
   );
 };
