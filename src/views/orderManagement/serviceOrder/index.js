@@ -312,7 +312,6 @@ const ServiceOrder = () => {
         );
       },
     },
-
     {
       Header: "Patient Details",
       Cell: (props) => {
@@ -322,6 +321,19 @@ const ServiceOrder = () => {
             <p>{`${row?.patientId?.lastName}, ${row?.patientId?.firstName}`}</p>
             <span className="text-gray-600 text-xs font-semibold">
               {row?.patientId?.patientNo}
+            </span>
+          </div>
+        );
+      },
+    },
+    {
+      Header: "NASPAC CASE No.",
+      Cell: (props) => {
+        const row = props.row.original;
+        return (
+          <div className="w-40">
+            <span className="text-gray-600 text-xs font-semibold">
+              {row?.patientId?.naspacNo}
             </span>
           </div>
         );
