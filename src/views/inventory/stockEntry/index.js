@@ -11,6 +11,7 @@ import ConfirmationContent from 'components/custom/ConfirmationContent';
 import ActiveInActiveCheckbox from 'components/custom/activeCheckbox';
 import hasPermisson, { ACCESS, MODULE, newColumn } from 'utils/hasPermission';
 import { FaPen } from "react-icons/fa";
+// import { IoIosSend } from "react-icons/io";
 import { PAGE_KEY } from 'views/orderManagement/serviceOrder/serviceConstant';
 import {
   TABLE_ACTION_KEYS,
@@ -28,7 +29,8 @@ const DEL_CONFIRM = {
 };
 
 const ACTION_CONSTANT = [
-  { label: <FaPen />, key: PAGE_KEY.VIEW, toolTip: "View/Edit", show: () => hasPermisson(MODULE.STOCKENTRY, ACCESS.WRITE) }
+  { label: <FaPen />, key: PAGE_KEY.VIEW, toolTip: "View/Edit", show: () => hasPermisson(MODULE.STOCKENTRY, ACCESS.WRITE) },
+  // { label: <IoIosSend />, key: PAGE_KEY.VIEW, toolTip: "Transfer/Edit", show: () => hasPermisson(MODULE.STOCKENTRY, ACCESS.WRITE) }
 ];
 
 const BUTTON_CONSTANT = [
@@ -81,6 +83,7 @@ const Codes = () => {
         },
       });
     }
+
   };
   
   

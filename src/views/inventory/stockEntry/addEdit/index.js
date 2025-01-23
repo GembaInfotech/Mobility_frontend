@@ -26,6 +26,8 @@ const initialValues = {
   location: "",
   uom: "",
   uomId: "",
+  transferLocation: "",
+  transferQuantity: ""
 };
 
 const AddEditStock = ({ onClose, refreshPage }) => {
@@ -84,6 +86,7 @@ const AddEditStock = ({ onClose, refreshPage }) => {
 
     if (id) {
       const data = location.state?.editData;
+
       setEditData({
         code: data?.lcodeId?._id || "",
         description: data.lcodeId?.description || "",
@@ -91,11 +94,12 @@ const AddEditStock = ({ onClose, refreshPage }) => {
         quantity: data.quantity || "",
         location: data.locationId?._id || "",
         modelType: LIST_DATA_API_TYPE.STOCK_ENTRY,
+
       });
     }
   }, [id, location.state?.editData]);
 
-  // Submit handler
+
   const onSubmit = (values, { setSubmitting }) => {
     const payload = {
       lcodeId: values.code,
@@ -103,6 +107,8 @@ const AddEditStock = ({ onClose, refreshPage }) => {
       quantity: values.quantity,
       locationId: values.location,
       uomId: values.uomId,
+      transferLocation: values.transferLocation, // Include transfer location
+      transferQuantity: values.transferQuantity, // Include transfer quantity
       modelType: LIST_DATA_API_TYPE.STOCK_ENTRY,
     };
     if (id) {
@@ -143,14 +149,22 @@ const AddEditStock = ({ onClose, refreshPage }) => {
           </div>
           <Card className="mt-2.5 w-3/4">
             <FormContainer className="md:w-full lg:w-1/2">
-              <FormItem label="Stock Entry Type">
-                <Input value="Material Receipt" readOnly size="sm" />
+              <FormItem label="Stock Entry Type" invalid={errors.stockType && touched.stockType} errorMessage={errors.stockType}>
+                <Select
+                  name="stockType"
+                  options={[
+                    { label: "Material Receipt", value: 1 },
+                    { label: "Material Transfer", value: 2 },
+                  ]}
+                  placeholder="Select Stock Type"
+                  value={values.stockType}
+                  onChange={(selectedOption) => setFieldValue("stockType", selectedOption)}
+                />
               </FormItem>
 
-              {/* Location Field */}
               <FormItem label="Location" invalid={errors.location && touched.location} errorMessage={errors.location}>
                 <Select
-                  name="Location"
+                  name="location"
                   options={warehouseOptions}
                   placeholder="Select Location"
                   value={warehouseOptions.find((option) => option.value === values.location)}
@@ -158,14 +172,13 @@ const AddEditStock = ({ onClose, refreshPage }) => {
                 />
               </FormItem>
 
-              {/* LCode Field */}
-              <FormItem label="LCode" invalid={errors?.code && touched?.code} errorMessage={errors?.code}>
+              <FormItem label="LCode" invalid={errors.code && touched.code} errorMessage={errors.code}>
                 {loadingMaterialOptions ? (
                   <Input size="sm" value="Loading..." readOnly />
                 ) : (
                   <Select
                     size="sm"
-                    name="lcode"
+                    name="code"
                     placeholder="Select LCode"
                     options={materialOptions}
                     value={materialOptions.find((option) => option.value === values.code) || null}
@@ -184,8 +197,41 @@ const AddEditStock = ({ onClose, refreshPage }) => {
               </FormItem>
 
               <FormItem label="Quantity" invalid={errors.quantity && touched.quantity} errorMessage={errors.quantity}>
-                <Field as={Input} type="number" name="quantity" placeholder="Add Quantity" value={values.quantity} />
+                <Field as={Input} type="number" name="quantity" placeholder="Add Quantity" value={values.quantity} onChange={(e) => setFieldValue("quantity", e.target.value)} />
               </FormItem>
+
+              {values.stockType.value === 2 && (
+                <>
+                  <FormItem
+                    label="Transfer Location"
+                    invalid={errors.transferLocation && touched.transferLocation}
+                    errorMessage={errors.transferLocation}
+                  >
+                    <Select
+                      name="transferLocation"
+                      options={warehouseOptions}
+                      placeholder="Select Transfer Location"
+                      value={warehouseOptions.find((option) => option.value === values.transferLocation)}
+                      onChange={(selectedOption) => setFieldValue("transferLocation", selectedOption.value)}
+                    />
+                  </FormItem>
+
+                  <FormItem
+                    label="Transfer Quantity"
+                    invalid={errors.transferQuantity && touched.transferQuantity}
+                    errorMessage={errors.transferQuantity}
+                  >
+                    <Field
+                      as={Input}
+                      type="number"
+                      name="transferQuantity"
+                      placeholder="Enter Transfer Quantity"
+                      value={values.transferQuantity}
+                      onChange={(e) => setFieldValue("transferQuantity", e.target.value)}
+                    />
+                  </FormItem>
+                </>
+              )}
             </FormContainer>
           </Card>
         </Form>
