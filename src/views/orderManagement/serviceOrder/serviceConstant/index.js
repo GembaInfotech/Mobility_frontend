@@ -154,6 +154,7 @@ export const SERVICE_ORDER_STATUS = [
   { label: "Order Fulfilment in Process", value: 4, color : "emerald" },
   { label: "Order Fulfilment Completed", value: 5,color : "cyan" },
   { label: "Delivery Ready", value: 6 , color : "orange" },
+  { label: "Delivery Scheduled", value: 15 , color : "orange" },
   { label: "Dropship in Process", value: 12 ,color : "emerald" },
   { label: "Delivered", value: 7 , color: "green" },
   { label: "DR Sent to PPS", value: 8, color: "purple"  },

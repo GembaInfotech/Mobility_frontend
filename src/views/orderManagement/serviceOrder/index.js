@@ -101,11 +101,13 @@ const ServiceOrder = () => {
     endDate: "",
   });
   const [filterPatientId, setFilterPatientId] = useState("");
+
   const [filterPatientDob, setFilterPatientDob] = useState("");
   const [filterNad, setFilterNad] = useState("");
   const [filterNalId, setFilterNalId] = useState("");
   const [filterPhysicianId, setFilterPhysicianId] = useState("");
   const [filterLcodeId, setFilterLcodeId] = useState("");
+  const [filterInsuranceId, setFilterInsuranceId] = useState("");
   const [selectedData, setSelectedData] = useState("");
   const [payload, setPayload] = useState("");
   const [refresh, setRefresh] = useState(false);
@@ -119,7 +121,7 @@ const ServiceOrder = () => {
 
       getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.PATIENTS, id }).then(
         (result) => {
-          // console.log("get order status", result)
+          console.log("get order status", result)
           setFilterPatientId(result?.data?.data);
         }
       );
@@ -134,6 +136,7 @@ const ServiceOrder = () => {
       nalId: filterNalId._id,
       physicianId: filterPhysicianId._id,
       lcodeId: filterLcodeId._id,
+      insuranceId : filterInsuranceId._id,
       skip: limit * (page - 1),
     };
     console.log(payload)
@@ -166,6 +169,7 @@ const ServiceOrder = () => {
     filterNalId,
     filterPhysicianId,
     filterLcodeId,
+    filterInsuranceId,
     refresh,
     selectedDate,
     filterPatientDob,
@@ -495,9 +499,11 @@ const ServiceOrder = () => {
         setFilterNalId={setFilterNalId}
         setFilterPhysicianId={setFilterPhysicianId}
         setFilterLcodeId={setFilterLcodeId}
+        setFilterInsuranceId= {setFilterInsuranceId}
         filterPatientId={filterPatientId}
         filterPhysicianId={filterPhysicianId}
         filterLcodeId={filterLcodeId}
+        // filterInsuranceId = {filterInsuranceId}
         filterNalId={filterNalId}
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}
