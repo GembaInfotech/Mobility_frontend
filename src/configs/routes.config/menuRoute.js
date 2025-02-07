@@ -22,6 +22,18 @@ const menuRoute = [
       header: "Sub Admins",
     },
   },
+  
+  {
+    key: "apps.company",
+    path: `${APP_PREFIX_PATH}/company`,
+    component: React.lazy(() => import("views/company")),
+    authority: [ADMIN, USER],
+    show: () => hasPermisson(MODULE.COMPANY, ACCESS.READ),
+    meta: {
+      header: "Company",
+    },
+  },
+
   {
     key: "apps.addSubUser",
     path: `${APP_PREFIX_PATH}/sub-user/add`,
@@ -30,6 +42,16 @@ const menuRoute = [
     show: () => hasPermisson(MODULE.SUBUSERS, ACCESS.WRITE),
     meta: {
       header: "Add Sub Admin",
+    },
+  },
+  {
+    key: "apps.company",
+    path: `${APP_PREFIX_PATH}/company/add`,
+    component: React.lazy(() => import("views/company/addEdit")),
+    authority: [ADMIN, USER],
+    show: () => hasPermisson(MODULE.COMPANY, ACCESS.WRITE),
+    meta: {
+      header: "Add Company",
     },
   },
   {
@@ -42,6 +64,18 @@ const menuRoute = [
       header: "Edit Sub Admin",
     },
   },
+
+  {
+    key: "apps.editCompany",
+    path: `${APP_PREFIX_PATH}/company/edit/:id`,
+    component: React.lazy(() => import("views/company/addEdit")),
+    authority: [ADMIN, USER],
+    show: () => hasPermisson(MODULE.COMPANY, ACCESS.WRITE),
+    meta: {
+      header: "Edit Company",
+    },
+  },
+
 
   {
     key: "apps.masters.codes",

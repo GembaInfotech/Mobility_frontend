@@ -8,6 +8,7 @@ export const ACCESS = {
 
 export const MODULE = {
   SUBUSERS: "sub-user",
+  COMPANY: "company",
   PHYSICIAN: "physician",
   PATIENT: "patient",
   STAFF: "staff",

@@ -14,6 +14,7 @@ export const LIST_DATA_API_TYPE = {
   STOCK_ENTRY:10,
   UOM:11,
   INVLOCATION:12,
+  COMPANY: 13
 }
 
 

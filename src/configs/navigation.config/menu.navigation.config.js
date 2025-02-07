@@ -38,6 +38,16 @@ const appsNavigationConfig = [
         isVisible: () => hasPermisson(MODULE.SUBUSERS, ACCESS.READ),
         subMenu: [],
       },
+      // {
+      //   key: 'appsMenu.subUser',
+      //   path: `${APP_PREFIX_PATH}/company`,
+      //   title: 'Company',
+      //   icon: 'account',
+      //   type: NAV_ITEM_TYPE_ITEM,
+      //   authority: [ADMIN, USER],
+      //   isVisible: () => hasPermisson(MODULE.SUBUSERS, ACCESS.READ),
+      //   subMenu: [],
+      // },
       {
         key: 'appsMenu.userManagement',
         title: 'Users Management',
