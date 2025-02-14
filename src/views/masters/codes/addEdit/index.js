@@ -59,6 +59,7 @@ const initialValues = {
 const AddEditCodes = ({ editData, show, onClose, refreshPage }) => {
   const formRef = useRef();
   const [loading, setLoading] = useState(false);
+  const savedHospitalId = localStorage.getItem("selectedHospitalId");
 
   //// SUBMIT TAGS HANDLER///////
 
@@ -69,6 +70,7 @@ const AddEditCodes = ({ editData, show, onClose, refreshPage }) => {
       description,
       type: type?.value?.toString(),
       modelType: LIST_DATA_API_TYPE.CODES,
+      companyId:savedHospitalId
     };
 
     if (id) {

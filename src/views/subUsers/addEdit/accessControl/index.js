@@ -70,6 +70,14 @@ export const PERMISSIONS = [
     edit: false,
     delete: false,
   },
+  {
+    label: "Company",
+    name: "Company",
+    read: false,
+    edit: false,
+    delete: false,
+  },
+
 ];
 
 const AccessControl = ({ touched, errors, values, setFieldValue }) => {

@@ -42,7 +42,6 @@ export function useDropdownMenuContext (menuRef) {
 		},
 		[items, focusSelf]
 	)
-
 	const lookupNextActiveItemIndex = useCallback((start, direction) => {
 		for (let i = start; i > -1 && i < items.length; i += direction) {
 			if (!items[i].props?.disabled) {

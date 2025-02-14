@@ -82,6 +82,7 @@ const initialValues = {
 };
 
 const AddEditPhysician = ({ closeAddEdit, selectedRow }) => {
+  const savedHospitalId = localStorage.getItem("selectedHospitalId");
 
   //// HANDLER FOR SUBMIT FORM /////
   const onSubmit = (payload, { setSubmitting }) => {
@@ -111,6 +112,7 @@ const AddEditPhysician = ({ closeAddEdit, selectedRow }) => {
     dataToSend.address = payload?.address
     dataToSend.fax = payload?.fax
     dataToSend.npiNo = payload?.npiNo
+    dataToSend.companyId = savedHospitalId
 
     postApi(APIS.ADD_EDIT_PHYSICIANS, dataToSend)
       .then((res) => {

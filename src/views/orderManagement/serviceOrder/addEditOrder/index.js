@@ -39,7 +39,7 @@ const schema = Yup.object().shape({
   secondaryInsuranceNo: Yup.string(),
   insuranceType: Yup.number(),
   insuranceDocument: Yup.mixed(),
-  notes: Yup.string(),
+  notes: Yup.string(), 
 });
 
 const initialValues = {
@@ -68,6 +68,7 @@ const initialValues = {
 };
 
 const AddEditSeriveOrder = () => {
+  const savedHospitalId = localStorage.getItem("selectedHospitalId");
   const { id } = useParams();
   const [editdata, setEditData] = useState({});
   const [loading, setLoading] = useState(true);
@@ -251,14 +252,19 @@ const AddEditSeriveOrder = () => {
       formData.append('nextAppointmentDate', payload?.nextAppointmentDate);
     }
 
+    
     formData.append('notes', payload?.notes || '');
     formData.append('insuranceType', payload?.insuranceType);
 
     if ('physicianNotes' in payload) {
       formData.append('physicianNotes', payload?.physicianNotes);
     }
+    if (savedHospitalId) {
+      formData.append('companyId', savedHospitalId);
+    }    
 
     postApi(APIS.ADD_EDIT_PRESCRIPTION, formData).then((res) => {
+      console.log("formData asdf", formData)
       toast.push(
         <Notification type="success">
           {id ? UPDATE_TOAST : ADDED_TOAST}

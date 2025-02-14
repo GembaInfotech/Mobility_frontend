@@ -50,6 +50,7 @@ const initialValues = {
 };
 
 const AddEditPatient = () => {
+  const savedHospitalId = localStorage.getItem("selectedHospitalId");
   const { id } = useParams();
   const [editdata, setEditData] = useState({});
   const [loading, setLoading] = useState(true);
@@ -116,6 +117,10 @@ const AddEditPatient = () => {
     ///setup the + sign with country code if it was not there
     if (!payload?.countryCode?.includes("+")) {
       payload.countryCode = `+${payload.countryCode}`;
+    }
+
+    if(savedHospitalId){
+      payload.companyId = savedHospitalId;
     }
    
     postApi(APIS.ADD_EDIT_PATIENT, { ...payload }).then((res) => {

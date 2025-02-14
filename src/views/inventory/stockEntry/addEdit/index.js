@@ -31,6 +31,7 @@ const initialValues = {
 };
 
 const AddEditStock = ({ onClose, refreshPage }) => {
+  const savedHospitalId = localStorage.getItem("selectedHospitalId");
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
   const [materialOptions, setMaterialOptions] = useState([]); // To store materials
@@ -110,6 +111,7 @@ const AddEditStock = ({ onClose, refreshPage }) => {
       transferLocation: values.transferLocation, // Include transfer location
       transferQuantity: values.transferQuantity, // Include transfer quantity
       modelType: LIST_DATA_API_TYPE.STOCK_ENTRY,
+      companyId: savedHospitalId,
     };
     if (id) {
       payload.id = id;

@@ -72,6 +72,7 @@ const initialValues = {
 };
 
 const AddEditInsurance = ({ closeAddEdit, selectedRow }) => {
+  const savedHospitalId = localStorage.getItem("selectedHospitalId");
 
   //// HANDLER FOR SUBMIT FORM /////
   const onSubmit = (payload, { setSubmitting }) => {
@@ -99,6 +100,7 @@ const AddEditInsurance = ({ closeAddEdit, selectedRow }) => {
     dataToSend.name = payload?.name
     dataToSend.email = payload?.email
     dataToSend.address = payload?.address
+    dataToSend.companyId = savedHospitalId
 
     postApi(APIS.ADD_EDIT_INSURANCE, dataToSend)
       .then((res) => {

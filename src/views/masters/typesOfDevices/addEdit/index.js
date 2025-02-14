@@ -48,6 +48,8 @@ const initialValues = {
 };
 
 const AddEditDeviceType = ({ editData, show, onClose, refreshPage }) => {
+  const savedHospitalId = localStorage.getItem("selectedHospitalId");
+
   const formRef = useRef();
   const [loading, setLoading] = useState(false);
 
@@ -55,7 +57,9 @@ const AddEditDeviceType = ({ editData, show, onClose, refreshPage }) => {
     setLoading(true);
     const payload = {
       name,
-      modelType : LIST_DATA_API_TYPE.DEVICE_TYPES
+      modelType : LIST_DATA_API_TYPE.DEVICE_TYPES,
+      companyId: savedHospitalId
+      
     };
 
     if (id) {

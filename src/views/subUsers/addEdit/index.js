@@ -10,6 +10,7 @@ import {
   Card,
   Spinner,
   Switcher,
+  Select,
 } from 'components/ui';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
@@ -26,7 +27,7 @@ const SignupSchema = Yup.object().shape({
 const initialValues = {
   name: '',
   email: '',
-  superAdmin : false,
+  superAdmin: false,
   roles: PERMISSIONS,
 };
 
@@ -34,40 +35,62 @@ const AddEditAdmins = () => {
   const formRef = useRef();
   const [loading, setLoading] = useState(false);
   const [editData, setEditData] = useState();
+  const [companyOptions, setCompanyOptionos] = useState([]);
   const { id } = useParams();
   const navigate = useNavigate();
   const { superAdmin } = useSelector((state) => state?.auth?.user);
-  
+
   useEffect(() => {
+
+    getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.COMPANY })
+      .then((res) => {
+        if (res && res.data && Array.isArray(res.data.data)) {
+          const locations = res.data.data.map((location) => ({
+            label: location.name,
+            value: location._id,
+          }));
+          setCompanyOptionos(locations);
+        } else {
+          toast.push(<Notification type="error">No Companies found!</Notification>);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching Companies:", error);
+        toast.push(<Notification type="error">Failed to load Companies</Notification>);
+      });
+
     if (id) {
       getApi(APIS.LIST_DATA, {
-        type : LIST_DATA_API_TYPE.ADMINS,
+        type: LIST_DATA_API_TYPE.ADMINS,
         id,
       }).then((res) => {
         const response = res?.data?.data;
-        response.superAdmin = response.superAdmin? true : false;
-        response.roles = response.roles? response.roles : PERMISSIONS;  
+        response.superAdmin = response.superAdmin ? true : false;
+        response.roles = response.roles ? response.roles : PERMISSIONS;
         setEditData(response);
       });
     }
   }, [id]);
   //// SUBMIT TAGS HANDLER///////
 
-  
 
-  const onSubmit = ({ name, email, roles, superAdmin }) => {
+
+  const onSubmit = ({ name, email, roles, superAdmin, company }) => {
 
     const mergedRoles = PERMISSIONS.map((permission) => {
       const existingRole = roles?.find((role) => role.name === permission.name);
       return existingRole || permission;
     });
-  
-    
+
+
     setLoading(true);
     const payload = new FormData();
     payload.append('name', name);
     payload.append('email', email);
     payload.append('superAdmin', superAdmin);
+    if(!superAdmin){
+      payload.append('companyId', company);
+    }
     payload.append('roles', JSON.stringify(mergedRoles));
     if (id) {
       payload.append('adminId', id);
@@ -125,6 +148,7 @@ const AddEditAdmins = () => {
                       component={Input}
                     />
                   </FormItem>
+
                   <FormItem
                     label="Email"
                     invalid={errors?.email && touched?.email}
@@ -138,6 +162,7 @@ const AddEditAdmins = () => {
                       component={Input}
                     />
                   </FormItem>
+
                   {superAdmin && (
                     <>
                       <div className="flex justify-between">
@@ -145,14 +170,23 @@ const AddEditAdmins = () => {
                         <Switcher
                           name="superAdmin"
                           checked={values?.superAdmin}
-                          onChange={(val, ) => {
+                          onChange={(val,) => {
                             console.log("checked", val);
-                            
+
                             setFieldValue('superAdmin', !val);
                           }}
                         />
                       </div>
-                      { !values?.superAdmin && <AccessControl setFieldValue={setFieldValue} values={values} />}
+                      {!values?.superAdmin && <><FormItem label="Company" invalid={errors.company && touched.company} errorMessage={errors.company}>
+                    <Select
+                      name="Company"
+                      options={companyOptions}
+                      placeholder="Select Company"
+                      value={companyOptions.find((option) => option.value === values.company)}
+                      onChange={(selectedOption) => setFieldValue("company", selectedOption.value)}
+                    />
+                  </FormItem>
+                  <AccessControl setFieldValue={setFieldValue} values={values} /></>}
                     </>
                   )}
                 </FormContainer>
