@@ -35,7 +35,6 @@ const sideNavCollapseStyle = {
 const SideNav = () => {
   const user = useSelector((state) => state.auth.user);
 
-
   console.log("user roles", user);
   
   const themeColor = useSelector((state) => state.theme.themeColor);
@@ -113,6 +112,7 @@ const SideNav = () => {
     const selectedId = event.target.value;
     setSelectedHospital(selectedId);
     localStorage.setItem("selectedHospitalId", selectedId);
+    window.location.reload();
   };
 
   const sideNavColor = () => {

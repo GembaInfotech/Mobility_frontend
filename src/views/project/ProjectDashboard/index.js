@@ -61,6 +61,8 @@ const BLOCK_CONSTANT_DATA = [
 injectReducer('projectDashboard', reducer);
 
 const ProjectDashboard = () => {
+  const savedHospitalId = localStorage.getItem("selectedHospitalId");
+
   const dispatch = useDispatch();
 
   const [data, setData] = useState({});
@@ -70,7 +72,7 @@ const ProjectDashboard = () => {
 
   useEffect(() => {
     fetchData();
-    getApi(APIS.LIST_DASHBOARD)
+    getApi(APIS.LIST_DASHBOARD, {companyId:savedHospitalId})
       .then((res) => setData(res?.data))
       .finally(() => setLoading(false));
   }, []);

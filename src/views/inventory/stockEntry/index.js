@@ -43,6 +43,8 @@ const BUTTON_CONSTANT = [
 ];
 
 const Codes = () => {
+  const savedHospitalId = localStorage.getItem("selectedHospitalId");
+
   const [codes, setCodes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refresh, setRefresh] = useState(false);
@@ -64,6 +66,7 @@ const Codes = () => {
       type: LIST_DATA_API_TYPE.STOCK_ENTRY,
       locationId: filterLocationId || "",
       limit,
+      companyId:savedHospitalId,
       skip: limit * (page - 1),
     })
       .then((res) => {

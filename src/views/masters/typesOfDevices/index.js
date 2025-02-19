@@ -51,6 +51,8 @@ const CONFIRMATION_CONSTANT = {
 };
 
 const TypesOfDevice = () => {
+  const savedHospitalId = localStorage.getItem("selectedHospitalId");
+
   const [deviceType, setDeviceType] = useState([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
@@ -70,6 +72,7 @@ const TypesOfDevice = () => {
       type: LIST_DATA_API_TYPE.DEVICE_TYPES,
       limit,
       search,
+      companyId:savedHospitalId,
       skip: limit * (page - 1),
     })
       .then((res) => {

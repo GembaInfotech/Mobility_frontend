@@ -32,6 +32,7 @@ const ACTION_CONSTANT = [
 ];
 
 const Insurances = () => {
+  const savedHospitalId = localStorage.getItem("selectedHospitalId");
   const [tabledata, setTableData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -50,6 +51,7 @@ const Insurances = () => {
       type : LIST_DATA_API_TYPE.INSURANCES,
       limit,
       search,
+      companyId:savedHospitalId,
       skip: limit * (page - 1),
     })
       .then((res) => {

@@ -100,6 +100,7 @@ const FIELD_CONFIRMATION_CONSTANT = {
 };
 
 const Codes = () => {
+  const savedHospitalId = localStorage.getItem("selectedHospitalId");
   const [codes, setCodes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
@@ -125,6 +126,7 @@ const Codes = () => {
     const payload = {
       type: LIST_DATA_API_TYPE.CODES,
       limit,
+      companyId:savedHospitalId,
       search,
       skip: limit * (page - 1),
     };

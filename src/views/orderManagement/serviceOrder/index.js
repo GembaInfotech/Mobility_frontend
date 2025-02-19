@@ -86,6 +86,8 @@ const BUTTON_CONSTANT = [
 ];
 
 const ServiceOrder = () => {
+  const savedHospitalId = localStorage.getItem("selectedHospitalId");
+
   const { id } = useParams();
   const [tabledata, setTableData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -132,6 +134,7 @@ const ServiceOrder = () => {
     const payload = {
       limit,
       search,
+      companyId: savedHospitalId,
       patientId: filterPatientId && filterPatientId?._id,
       nalId: filterNalId._id,
       physicianId: filterPhysicianId._id,
