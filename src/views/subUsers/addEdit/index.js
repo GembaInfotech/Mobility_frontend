@@ -76,25 +76,26 @@ const AddEditAdmins = () => {
 
 
   const onSubmit = ({ name, email, roles, superAdmin, company }) => {
-
     const mergedRoles = PERMISSIONS.map((permission) => {
       const existingRole = roles?.find((role) => role.name === permission.name);
       return existingRole || permission;
     });
-
-
+  
     setLoading(true);
     const payload = new FormData();
     payload.append('name', name);
     payload.append('email', email);
     payload.append('superAdmin', superAdmin);
-    if(!superAdmin){
-      payload.append('companyId', company);
+    
+    if (!superAdmin && company?.length > 0) {
+      company.forEach((compId) => payload.append('companyId',compId )); // Send multiple company IDs
     }
+    
     payload.append('roles', JSON.stringify(mergedRoles));
     if (id) {
       payload.append('adminId', id);
     }
+  
     postApi(APIS.ADD_EDIT_ADMINS, payload)
       .then(() => {
         navigate(-1);
@@ -102,6 +103,7 @@ const AddEditAdmins = () => {
       })
       .finally(() => setLoading(false));
   };
+  
   return (
     <AdaptableCard>
       <Formik
@@ -177,16 +179,18 @@ const AddEditAdmins = () => {
                           }}
                         />
                       </div>
-                      {!values?.superAdmin && <><FormItem label="Company" invalid={errors.company && touched.company} errorMessage={errors.company}>
-                    <Select
-                      name="Company"
-                      options={companyOptions}
-                      placeholder="Select Company"
-                      value={companyOptions.find((option) => option.value === values.company)}
-                      onChange={(selectedOption) => setFieldValue("company", selectedOption.value)}
-                    />
-                  </FormItem>
-                  <AccessControl setFieldValue={setFieldValue} values={values} /></>}
+                      {!values?.superAdmin && <>
+                        <FormItem label="Company" invalid={errors.company && touched.company} errorMessage={errors.company}>
+                          <Select
+                            name="Company"
+                            options={companyOptions}
+                            placeholder="Select Company"
+                            isMulti // Enables multi-select
+                            value={companyOptions.filter((option) => values.company?.includes(option.value))} // Handles multiple selected values
+                            onChange={(selectedOptions) => setFieldValue("company", selectedOptions.map(option => option.value))} // Stores an array of selected values
+                          />
+                        </FormItem>
+                        <AccessControl setFieldValue={setFieldValue} values={values} /></>}
                     </>
                   )}
                 </FormContainer>
