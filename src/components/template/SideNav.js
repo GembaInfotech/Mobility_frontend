@@ -59,11 +59,8 @@ const SideNav = () => {
     const savedHospitalId = localStorage.getItem("selectedHospitalId");
 
     if (user?.companyId) {
-      // Call your additional API here
-      console.log("hello user user user");
-
       getApi(APIS.LIST_DATA, {
-        companyId: user.companyId,
+        companyIds: JSON.stringify(user.companyId),
         type: LIST_DATA_API_TYPE.COMPANY,
       })
         .then((res) => {
