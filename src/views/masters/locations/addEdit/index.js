@@ -56,53 +56,53 @@ const AddEditDeviceType = ({ editData, show, onClose, refreshPage }) => {
   const formRef = useRef();
   const [loading, setLoading] = useState(false);
 
-   useEffect(() => {
-        if (user?.companyId) {
-          getApi(APIS.LIST_DATA, {
-            companyIds: JSON.stringify(user.companyId),
-            type: LIST_DATA_API_TYPE.COMPANY,
-          })
-            .then((res) => {
-              const response = res?.data?.data;
-    
-              if (Array.isArray(response)) {
-                const companyOptions = response.map((company) => ({
-                  label: company.name,
-                  value: company._id,
-                }));
-                setCompanyOptionos(companyOptions);
-              }
-            })
-            .catch((error) => {
-              // Handle any errors from the additional API call
-              console.error("Error calling additional API:", error);
-            });
-        } else {
-          getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.COMPANY })
-            .then((res) => {
-              if (res && res.data && Array.isArray(res.data.data)) {
-                const locations = res.data.data.map((location) => ({
-                  label: location.name,
-                  value: location._id,
-                }));
-                setCompanyOptionos(locations);
-              } else {
-                toast.push(<Notification type="error">No Companies found!</Notification>);
-              }
-            })
-            .catch((error) => {
-              console.error("Error fetching Companies:", error);
-              toast.push(<Notification type="error">Failed to load Companies</Notification>);
-            });
-        }
-    
-      }, []);
-  
+  useEffect(() => {
+    if (user?.companyId) {
+      getApi(APIS.LIST_DATA, {
+        companyIds: JSON.stringify(user.companyId),
+        type: LIST_DATA_API_TYPE.COMPANY,
+      })
+        .then((res) => {
+          const response = res?.data?.data;
+
+          if (Array.isArray(response)) {
+            const companyOptions = response.map((company) => ({
+              label: company.name,
+              value: company._id,
+            }));
+            setCompanyOptionos(companyOptions);
+          }
+        })
+        .catch((error) => {
+          // Handle any errors from the additional API call
+          console.error("Error calling additional API:", error);
+        });
+    } else {
+      getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.COMPANY })
+        .then((res) => {
+          if (res && res.data && Array.isArray(res.data.data)) {
+            const locations = res.data.data.map((location) => ({
+              label: location.name,
+              value: location._id,
+            }));
+            setCompanyOptionos(locations);
+          } else {
+            toast.push(<Notification type="error">No Companies found!</Notification>);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching Companies:", error);
+          toast.push(<Notification type="error">Failed to load Companies</Notification>);
+        });
+    }
+
+  }, []);
+
   const onSubmit = ({ name, id, companyId }) => {
     setLoading(true);
     const payload = {
       name,
-      modelType : LIST_DATA_API_TYPE.LOCATIONS,
+      modelType: LIST_DATA_API_TYPE.LOCATIONS,
       companyId: companyId,
     };
 
@@ -150,27 +150,27 @@ const AddEditDeviceType = ({ editData, show, onClose, refreshPage }) => {
             <Form className="p-5">
               <FormContainer>
                 <FormItem
-                                                    label="Company"
-                                                    invalid={errors.companyId && touched.companyId}
-                                                    errorMessage={errors.companyId}
-                                                  >
-                                                    <Field name="companyId">
-                                                      {({ field, form }) => (
-                                                        <Select
-                                                          {...field}
-                                                          options={companyOptions}
-                                                          placeholder="Select Company"
-                                                          value={companyOptions.find(
-                                                            (option) => option.value === field.value
-                                                          )}
-                                                          onChange={(selectedOption) =>
-                                                            form.setFieldValue("companyId", selectedOption.value)
-                                                          }
-                                                          onBlur={field.onBlur}
-                                                        />
-                                                      )}
-                                                    </Field>
-                                                  </FormItem>
+                  label="Company"
+                  invalid={errors.companyId && touched.companyId}
+                  errorMessage={errors.companyId}
+                >
+                  <Field name="companyId">
+                    {({ field, form }) => (
+                      <Select
+                        {...field}
+                        options={companyOptions}
+                        placeholder="Select Company"
+                        value={companyOptions.find(
+                          (option) => option.value === field.value
+                        )}
+                        onChange={(selectedOption) =>
+                          form.setFieldValue("companyId", selectedOption.value)
+                        }
+                        onBlur={field.onBlur}
+                      />
+                    )}
+                  </Field>
+                </FormItem>
                 <FormItem
                   label="Location"
                   invalid={errors?.name && touched?.name}

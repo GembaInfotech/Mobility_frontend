@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AdaptableCard } from "components/shared";
 import {
   Button,
@@ -7,16 +7,17 @@ import {
   Notification,
   Card,
   FormItem,
-  Input
+  Input,
+  Select,
 } from "components/ui";
 import { AiOutlineSave, AiOutlineCloseCircle } from "react-icons/ai";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { getApi, postApi } from "services/CommonService";
-import { APIS } from "constants/api.constant";
+import { APIS, LIST_DATA_API_TYPE } from "constants/api.constant";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/bootstrap.css";
-
+import { useSelector } from "react-redux";
 
 const FORM_FIELDS = [
   {
@@ -54,9 +55,9 @@ const FORM_FIELDS = [
     placeholder: "Enter Address",
     component: Input,
     isBasic: true,
-    textArea : true 
+    textArea: true
   },
-  
+
 ];
 
 ////// YUP VALIDATION //////
@@ -79,11 +80,54 @@ const initialValues = {
   phoneNumber: "",
   countryCode: "+1",
   address: "",
+  companyId: "",
 };
 
 const AddEditPhysician = ({ closeAddEdit, selectedRow }) => {
-  const savedHospitalId = localStorage.getItem("selectedHospitalId");
+  const [companyOptions, setCompanyOptionos] = useState([]);
+  const user = useSelector((state) => state.auth.user);
 
+  useEffect(() => {
+    if (user?.companyId) {
+      getApi(APIS.LIST_DATA, {
+        companyIds: JSON.stringify(user.companyId),
+        type: LIST_DATA_API_TYPE.COMPANY,
+      })
+        .then((res) => {
+          const response = res?.data?.data;
+
+          if (Array.isArray(response)) {
+            const companyOptions = response.map((company) => ({
+              label: company.name,
+              value: company._id,
+            }));
+            setCompanyOptionos(companyOptions);
+          }
+        })
+        .catch((error) => {
+          // Handle any errors from the additional API call
+          console.error("Error calling additional API:", error);
+        });
+    } else {
+      getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.COMPANY })
+        .then((res) => {
+          if (res && res.data && Array.isArray(res.data.data)) {
+            const locations = res.data.data.map((location) => ({
+              label: location.name,
+              value: location._id,
+            }));
+            setCompanyOptionos(locations);
+          } else {
+            toast.push(<Notification type="error">No Companies found!</Notification>);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching Companies:", error);
+          toast.push(<Notification type="error">Failed to load Companies</Notification>);
+        });
+    }
+
+  }, []);
   //// HANDLER FOR SUBMIT FORM /////
   const onSubmit = (payload, { setSubmitting }) => {
 
@@ -103,7 +147,7 @@ const AddEditPhysician = ({ closeAddEdit, selectedRow }) => {
       delete dataToSend.phoneNumber;
     }
 
-    if(selectedRow){
+    if (selectedRow) {
       dataToSend.id = selectedRow._id
     }
 
@@ -112,7 +156,7 @@ const AddEditPhysician = ({ closeAddEdit, selectedRow }) => {
     dataToSend.address = payload?.address
     dataToSend.fax = payload?.fax
     dataToSend.npiNo = payload?.npiNo
-    dataToSend.companyId = savedHospitalId
+    dataToSend.companyId = payload?.companyId
 
     postApi(APIS.ADD_EDIT_PHYSICIANS, dataToSend)
       .then((res) => {
@@ -162,6 +206,28 @@ const AddEditPhysician = ({ closeAddEdit, selectedRow }) => {
             <div>
               <Card className="mt-2.5 w-3/4 ">
                 <FormContainer className=" md:w-full lg:w-1/2">
+                  <FormItem
+                    label="Company"
+                    invalid={errors.companyId && touched.companyId}
+                    errorMessage={errors.companyId}
+                  >
+                    <Field name="companyId">
+                      {({ field, form }) => (
+                        <Select
+                          {...field}
+                          options={companyOptions}
+                          placeholder="Select Company"
+                          value={companyOptions.find(
+                            (option) => option.value === field.value
+                          )}
+                          onChange={(selectedOption) =>
+                            form.setFieldValue("companyId", selectedOption.value)
+                          }
+                          onBlur={field.onBlur}
+                        />
+                      )}
+                    </Field>
+                  </FormItem>
                   {FORM_FIELDS.map((field, index) => {
                     return (
                       <FormItem
@@ -185,7 +251,7 @@ const AddEditPhysician = ({ closeAddEdit, selectedRow }) => {
                           />
                         ) : (
                           <>
-                           {field?.component === "phoneNumber" && (
+                            {field?.component === "phoneNumber" && (
                               <PhoneInput
                                 inputStyle={{ width: "369px", padding: "11px 14px 11px 60px" }}
                                 enableSearch={true}
@@ -197,7 +263,7 @@ const AddEditPhysician = ({ closeAddEdit, selectedRow }) => {
                                   setFieldValue(field.countryCode, country?.dialCode);
                                 }}
                               />
-                           )}
+                            )}
                           </>
                         )}
                       </FormItem>
