@@ -240,8 +240,6 @@ const AddEditPatient = () => {
                       value={companyOptions.find((option) => option.value === values.companyId) || null}
                       onChange={(selectedOption) => setFieldValue("companyId", selectedOption.value)}
                     />
-
-
                   </FormItem>
                   {PATIENT_FIELD_CONSTANT.map((field, index, array) => {
                     return (

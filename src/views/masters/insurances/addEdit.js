@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AdaptableCard } from "components/shared";
 import {
   Button,
@@ -8,12 +8,14 @@ import {
   Card,
   FormItem,
   Input,
+  Select,
 } from "components/ui";
 import { AiOutlineSave, AiOutlineCloseCircle } from "react-icons/ai";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { getApi, postApi } from "services/CommonService";
-import { APIS } from "constants/api.constant";
+import { useSelector } from "react-redux";
+import { APIS, LIST_DATA_API_TYPE } from "constants/api.constant";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/bootstrap.css";
 
@@ -48,7 +50,7 @@ const FORM_FIELDS = [
     component: Input,
     isBasic: true,
   },
-  
+
 ];
 
 ////// YUP VALIDATION //////
@@ -69,11 +71,56 @@ const initialValues = {
   phoneNumber: "",
   countryCode: "+1",
   address: "",
+  companyId: "",
 };
 
 const AddEditInsurance = ({ closeAddEdit, selectedRow }) => {
-  const savedHospitalId = localStorage.getItem("selectedHospitalId");
+  // const savedHospitalId = localStorage.getItem("selectedHospitalId");
+  const [companyOptions, setCompanyOptionos] = useState([]);
+  const user = useSelector((state) => state.auth.user);
 
+
+  useEffect(() => {
+    if (user?.companyId) {
+      getApi(APIS.LIST_DATA, {
+        companyIds: JSON.stringify(user.companyId),
+        type: LIST_DATA_API_TYPE.COMPANY,
+      })
+        .then((res) => {
+          const response = res?.data?.data;
+
+          if (Array.isArray(response)) {
+            const companyOptions = response.map((company) => ({
+              label: company.name,
+              value: company._id,
+            }));
+            setCompanyOptionos(companyOptions);
+          }
+        })
+        .catch((error) => {
+          // Handle any errors from the additional API call
+          console.error("Error calling additional API:", error);
+        });
+    } else {
+      getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.COMPANY })
+        .then((res) => {
+          if (res && res.data && Array.isArray(res.data.data)) {
+            const locations = res.data.data.map((location) => ({
+              label: location.name,
+              value: location._id,
+            }));
+            setCompanyOptionos(locations);
+          } else {
+            toast.push(<Notification type="error">No Companies found!</Notification>);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching Companies:", error);
+          toast.push(<Notification type="error">Failed to load Companies</Notification>);
+        });
+    }
+
+  }, []);
   //// HANDLER FOR SUBMIT FORM /////
   const onSubmit = (payload, { setSubmitting }) => {
 
@@ -84,6 +131,8 @@ const AddEditInsurance = ({ closeAddEdit, selectedRow }) => {
       ""
     );
 
+    dataToSend.companyId = payload.companyId;
+
     if (!payload?.countryCode?.includes("+")) {
       dataToSend.countryCode = `+${payload.countryCode}`;
     }
@@ -93,14 +142,14 @@ const AddEditInsurance = ({ closeAddEdit, selectedRow }) => {
       delete dataToSend.phoneNumber;
     }
 
-    if(selectedRow){
+    if (selectedRow) {
       dataToSend.id = selectedRow._id
     }
 
     dataToSend.name = payload?.name
     dataToSend.email = payload?.email
     dataToSend.address = payload?.address
-    dataToSend.companyId = savedHospitalId
+    // dataToSend.companyId = savedHospitalId
 
     postApi(APIS.ADD_EDIT_INSURANCE, dataToSend)
       .then((res) => {
@@ -150,6 +199,29 @@ const AddEditInsurance = ({ closeAddEdit, selectedRow }) => {
             <div>
               <Card className="mt-2.5 w-3/4 ">
                 <FormContainer className=" md:w-full lg:w-1/2">
+                <FormItem
+  label="Company"
+  invalid={errors.companyId && touched.companyId}
+  errorMessage={errors.companyId}
+>
+  <Field name="companyId">
+    {({ field, form }) => (
+      <Select
+        {...field}
+        options={companyOptions}
+        placeholder="Select Company"
+        value={companyOptions.find(
+          (option) => option.value === field.value
+        )}
+        onChange={(selectedOption) =>
+          form.setFieldValue("companyId", selectedOption.value)
+        }
+        onBlur={field.onBlur}
+      />
+    )}
+  </Field>
+</FormItem>
+
                   {FORM_FIELDS.map((field, index) => {
                     return (
                       <FormItem
@@ -172,7 +244,7 @@ const AddEditInsurance = ({ closeAddEdit, selectedRow }) => {
                           />
                         ) : (
                           <>
-                           {field?.component === "phoneNumber" && (
+                            {field?.component === "phoneNumber" && (
                               <PhoneInput
                                 inputStyle={{ width: "369px", padding: "11px 14px 11px 60px" }}
                                 enableSearch={true}
@@ -184,10 +256,11 @@ const AddEditInsurance = ({ closeAddEdit, selectedRow }) => {
                                   setFieldValue(field.countryCode, country?.dialCode);
                                 }}
                               />
-                           )}
+                            )}
                           </>
                         )}
                       </FormItem>
+
                     );
                   })}
                 </FormContainer>
