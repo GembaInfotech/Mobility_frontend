@@ -8,6 +8,7 @@ import {
   Notification,
   toast,
   Radio,
+  Select,
 } from "components/ui";
 import { Form, Field, useFormik, FormikProvider } from "formik";
 import {
@@ -18,12 +19,13 @@ import {
 import MixComponent from "./mixComponent";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { postApi, getApi } from "services/CommonService";
-import { APIS } from "constants/api.constant";
+import { APIS, LIST_DATA_API_TYPE } from "constants/api.constant";
 import { UPDATE_TOAST, ADDED_TOAST } from "constants/app.constant";
 import * as Yup from "yup";
 import { DATE_FORMAT } from 'constants/app.constant';
 import dayjs from "dayjs";
 import { MdKeyboardBackspace } from 'react-icons/md';
+import { useSelector } from "react-redux";
 
 
 const schema = Yup.object().shape({
@@ -43,6 +45,7 @@ const schema = Yup.object().shape({
 });
 
 const initialValues = {
+  companyId:"", 
   patientId: "",
   locationId: "",
   appointmentLocationId: "",
@@ -68,7 +71,8 @@ const initialValues = {
 };
 
 const AddEditSeriveOrder = () => {
-  const savedHospitalId = localStorage.getItem("selectedHospitalId");
+  const [companyOptions, setCompanyOptionos] = useState([]);
+  const user = useSelector((state) => state.auth.user);
   const { id } = useParams();
   const [editdata, setEditData] = useState({});
   const [loading, setLoading] = useState(true);
@@ -104,6 +108,44 @@ const AddEditSeriveOrder = () => {
   }
 
   useEffect(() => {
+    if (user?.companyId) {
+          getApi(APIS.LIST_DATA, {
+            companyIds: JSON.stringify(user.companyId),
+            type: LIST_DATA_API_TYPE.COMPANY,
+          })
+            .then((res) => {
+              const response = res?.data?.data;
+    
+              if (Array.isArray(response)) {
+                const companyOptions = response.map((company) => ({
+                  label: company.name,
+                  value: company._id,
+                }));
+                setCompanyOptionos(companyOptions);
+              }
+            })
+            .catch((error) => {
+              // Handle any errors from the additional API call
+              console.error("Error calling additional API:", error);
+            });
+        } else {
+          getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.COMPANY })
+            .then((res) => {
+              if (res && res.data && Array.isArray(res.data.data)) {
+                const locations = res.data.data.map((location) => ({
+                  label: location.name,
+                  value: location._id,
+                }));
+                setCompanyOptionos(locations);
+              } else {
+                toast.push(<Notification type="error">No Companies found!</Notification>);
+              }
+            })
+            .catch((error) => {
+              console.error("Error fetching Companies:", error);
+              toast.push(<Notification type="error">Failed to load Companies</Notification>);
+            });
+        }
     if (id) {
       getApi(APIS.GET_SERVICE_ORDER, {
         id
@@ -259,8 +301,8 @@ const AddEditSeriveOrder = () => {
     if ('physicianNotes' in payload) {
       formData.append('physicianNotes', payload?.physicianNotes);
     }
-    if (savedHospitalId) {
-      formData.append('companyId', savedHospitalId);
+    if ('companyId' in payload) {
+      formData.append('companyId', payload?.companyId);
     }    
 
     postApi(APIS.ADD_EDIT_PRESCRIPTION, formData).then((res) => {
@@ -385,7 +427,28 @@ const AddEditSeriveOrder = () => {
                   />
 
                   <div className=" md:w-full lg:w-1/2">
-
+                                      <FormItem
+                                        label="Company"
+                                        invalid={errors.companyId && touched.companyId}
+                                        errorMessage={errors.companyId}
+                                      >
+                                        <Field name="companyId">
+                                          {({ field, form }) => (
+                                            <Select
+                                              {...field}
+                                              options={companyOptions}
+                                              placeholder="Select Company"
+                                              value={companyOptions.find(
+                                                (option) => option.value === field.value
+                                              )}
+                                              onChange={(selectedOption) =>
+                                                form.setFieldValue("companyId", selectedOption.value)
+                                              }
+                                              onBlur={field.onBlur}
+                                            />
+                                          )}
+                                        </Field>
+                                      </FormItem>
                     {PERSONAL_INFORMATION.map((field, index, array) => {
                       return (
                         <>
