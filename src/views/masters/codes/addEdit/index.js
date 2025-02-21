@@ -63,8 +63,6 @@ const AddEditCodes = ({ editData, show, onClose, refreshPage }) => {
     const user = useSelector((state) => state.auth.user);
   const formRef = useRef();
   const [loading, setLoading] = useState(false);
-  const savedHospitalId = localStorage.getItem("selectedHospitalId");
-
   //// SUBMIT TAGS HANDLER///////
   useEffect(() => {
       if (user?.companyId) {
