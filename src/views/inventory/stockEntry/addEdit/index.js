@@ -7,6 +7,7 @@ import { AiOutlineSave, AiOutlineCloseCircle } from "react-icons/ai";
 import { getApi, postApi } from "services/CommonService";
 import { APIS, LIST_DATA_API_TYPE } from "constants/api.constant";
 import { UPDATE_TOAST, ADDED_TOAST } from "constants/app.constant";
+import { useSelector } from "react-redux";
 
 const validationSchema = Yup.object().shape({
   code: Yup.string().required("L Code is required"),
@@ -27,24 +28,62 @@ const initialValues = {
   uom: "",
   uomId: "",
   transferLocation: "",
-  transferQuantity: ""
+  transferQuantity: "",
+  companyId: "",
 };
 
 const AddEditStock = ({ onClose, refreshPage }) => {
-  const savedHospitalId = localStorage.getItem("selectedHospitalId");
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
   const [materialOptions, setMaterialOptions] = useState([]); // To store materials
   const [warehouseOptions, setWarehouseOptions] = useState([]); // To store locations
   const [editData, setEditData] = useState(initialValues);
   const [loadingMaterialOptions, setLoadingMaterialOptions] = useState(true); // To handle loading state for materials
-
+  const [companyOptions, setCompanyOptionos] = useState([]);
+  const user = useSelector((state) => state.auth.user);
   const navigate = useNavigate();
   const location = useLocation();
 
   // Fetch data for materials and locations
   useEffect(() => {
-    // Fetch LCode materials (Stock types)
+    if (user?.companyId) {
+      getApi(APIS.LIST_DATA, {
+        companyIds: JSON.stringify(user.companyId),
+        type: LIST_DATA_API_TYPE.COMPANY,
+      })
+        .then((res) => {
+          const response = res?.data?.data;
+
+          if (Array.isArray(response)) {
+            const companyOptions = response.map((company) => ({
+              label: company.name,
+              value: company._id,
+            }));
+            setCompanyOptionos(companyOptions);
+          }
+        })
+        .catch((error) => {
+          // Handle any errors from the additional API call
+          console.error("Error calling additional API:", error);
+        });
+    } else {
+      getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.COMPANY })
+        .then((res) => {
+          if (res && res.data && Array.isArray(res.data.data)) {
+            const locations = res.data.data.map((location) => ({
+              label: location.name,
+              value: location._id,
+            }));
+            setCompanyOptionos(locations);
+          } else {
+            toast.push(<Notification type="error">No Companies found!</Notification>);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching Companies:", error);
+          toast.push(<Notification type="error">Failed to load Companies</Notification>);
+        });
+    }
     getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.CODES })
       .then((res) => {
         if (res && res.data && Array.isArray(res.data.data)) {
@@ -111,7 +150,7 @@ const AddEditStock = ({ onClose, refreshPage }) => {
       transferLocation: values.transferLocation, // Include transfer location
       transferQuantity: values.transferQuantity, // Include transfer quantity
       modelType: LIST_DATA_API_TYPE.STOCK_ENTRY,
-      companyId: savedHospitalId,
+      companyId: values.companyId,
     };
     if (id) {
       payload.id = id;
@@ -151,6 +190,28 @@ const AddEditStock = ({ onClose, refreshPage }) => {
           </div>
           <Card className="mt-2.5 w-3/4">
             <FormContainer className="md:w-full lg:w-1/2">
+              <FormItem
+                label="Company"
+                invalid={errors.companyId && touched.companyId}
+                errorMessage={errors.companyId}
+              >
+                <Field name="companyId">
+                  {({ field, form }) => (
+                    <Select
+                      {...field}
+                      options={companyOptions}
+                      placeholder="Select Company"
+                      value={companyOptions.find(
+                        (option) => option.value === field.value
+                      )}
+                      onChange={(selectedOption) =>
+                        form.setFieldValue("companyId", selectedOption.value)
+                      }
+                      onBlur={field.onBlur}
+                    />
+                  )}
+                </Field>
+              </FormItem>
               <FormItem label="Stock Entry Type" invalid={errors.stockType && touched.stockType} errorMessage={errors.stockType}>
                 <Select
                   name="stockType"
