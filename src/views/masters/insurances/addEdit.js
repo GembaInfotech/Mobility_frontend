@@ -199,28 +199,28 @@ const AddEditInsurance = ({ closeAddEdit, selectedRow }) => {
             <div>
               <Card className="mt-2.5 w-3/4 ">
                 <FormContainer className=" md:w-full lg:w-1/2">
-                <FormItem
-  label="Company"
-  invalid={errors.companyId && touched.companyId}
-  errorMessage={errors.companyId}
->
-  <Field name="companyId">
-    {({ field, form }) => (
-      <Select
-        {...field}
-        options={companyOptions}
-        placeholder="Select Company"
-        value={companyOptions.find(
-          (option) => option.value === field.value
-        )}
-        onChange={(selectedOption) =>
-          form.setFieldValue("companyId", selectedOption.value)
-        }
-        onBlur={field.onBlur}
-      />
-    )}
-  </Field>
-</FormItem>
+                  <FormItem
+                    label="Company"
+                    invalid={errors.companyId && touched.companyId}
+                    errorMessage={errors.companyId}
+                  >
+                    <Field name="companyId">
+                      {({ field, form }) => (
+                        <Select
+                          {...field}
+                          options={companyOptions}
+                          placeholder="Select Company"
+                          value={companyOptions.find(
+                            (option) => option.value === field.value
+                          )}
+                          onChange={(selectedOption) =>
+                            form.setFieldValue("companyId", selectedOption.value)
+                          }
+                          onBlur={field.onBlur}
+                        />
+                      )}
+                    </Field>
+                  </FormItem>
 
                   {FORM_FIELDS.map((field, index) => {
                     return (
