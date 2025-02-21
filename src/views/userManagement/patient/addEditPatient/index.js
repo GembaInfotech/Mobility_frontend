@@ -7,6 +7,7 @@ import {
   Spinner,
   Notification,
   toast,
+  Select,
 } from "components/ui";
 import { Form, Field, useFormik, FormikProvider } from "formik";
 import {
@@ -19,6 +20,7 @@ import { postApi, getApi } from "services/CommonService";
 import { APIS, LIST_DATA_API_TYPE } from "constants/api.constant";
 import { UPDATE_TOAST, ADDED_TOAST } from "constants/app.constant";
 import * as Yup from "yup";
+import { useSelector } from "react-redux";
 // import ImageField from "./imageField";
 import moment from "moment";
 
@@ -50,13 +52,55 @@ const initialValues = {
 };
 
 const AddEditPatient = () => {
-  const savedHospitalId = localStorage.getItem("selectedHospitalId");
+  const [companyOptions, setCompanyOptionos] = useState([]);
+  const user = useSelector((state) => state.auth.user);
+
+  console.log("companyOptionshdbfhrbf", companyOptions);
+
   const { id } = useParams();
   const [editdata, setEditData] = useState({});
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (user?.companyId) {
+      getApi(APIS.LIST_DATA, {
+        companyIds: JSON.stringify(user.companyId),
+        type: LIST_DATA_API_TYPE.COMPANY,
+      })
+        .then((res) => {
+          const response = res?.data?.data;
+          
+          if (Array.isArray(response)) {
+            const companyOptions = response.map((company) => ({
+              label: company.name,
+              value: company._id,
+            }));
+            setCompanyOptionos(companyOptions);
+          }
+        })
+        .catch((error) => {
+          // Handle any errors from the additional API call
+          console.error("Error calling additional API:", error);
+        });
+    } else {
+      getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.COMPANY })
+        .then((res) => {
+          if (res && res.data && Array.isArray(res.data.data)) {
+            const locations = res.data.data.map((location) => ({
+              label: location.name,
+              value: location._id,
+            }));
+            setCompanyOptionos(locations);
+          } else {
+            toast.push(<Notification type="error">No Companies found!</Notification>);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching Companies:", error);
+          toast.push(<Notification type="error">Failed to load Companies</Notification>);
+        });
+    }
     if (id) {
       getApi(APIS.LIST_DATA, {
         type: LIST_DATA_API_TYPE.PATIENTS,
@@ -69,7 +113,7 @@ const AddEditPatient = () => {
             lastName: data?.lastName,
             dob: data?.dob,
             countryCode: data?.countryCode !== null ? data?.countryCode : "+1",
-            phoneNumber: data?.countryCode+data?.phoneNumber,
+            phoneNumber: data?.countryCode + data?.phoneNumber,
             naspacNo: data?.naspacNo,
             primaryInsurance: { label: data?.primaryInsurance?.name, value: data?.primaryInsurance?._id },
             secondaryInsurance: { label: data?.secondaryInsurance?.name, value: data?.secondaryInsurance?._id },
@@ -107,22 +151,19 @@ const AddEditPatient = () => {
     if (payload.secondaryInsurance) {
       payload.secondaryInsurance = payload?.secondaryInsurance?.value;
     }
-    
-    if(payload.primaryInsuranceNo === '') delete payload.primaryInsuranceNo
-    if(payload.secondaryInsuranceNo === '') delete payload.secondaryInsuranceNo
 
-    if(payload.primaryInsurance === '') delete payload.primaryInsurance
-    if(payload.secondaryInsurance === '') delete payload.secondaryInsurance
+    if (payload.primaryInsuranceNo === '') delete payload.primaryInsuranceNo
+    if (payload.secondaryInsuranceNo === '') delete payload.secondaryInsuranceNo
+
+    if (payload.primaryInsurance === '') delete payload.primaryInsurance
+    if (payload.secondaryInsurance === '') delete payload.secondaryInsurance
 
     ///setup the + sign with country code if it was not there
     if (!payload?.countryCode?.includes("+")) {
       payload.countryCode = `+${payload.countryCode}`;
     }
 
-    if(savedHospitalId){
-      payload.companyId = savedHospitalId;
-    }
-   
+
     postApi(APIS.ADD_EDIT_PATIENT, { ...payload }).then((res) => {
       toast.push(
         <Notification type="success">
@@ -191,12 +232,24 @@ const AddEditPatient = () => {
                 <FormContainer className=" md:w-full lg:w-1/2">
                   <h5 className="mb-4">Personal Information</h5>
                   {/* <ImageField {...{ touched, errors, values, setFieldValue }} /> */}
+                  <FormItem label="Company" invalid={errors.company && touched.company} errorMessage={errors.company}>
+                    <Select
+                      name="companyId"
+                      options={companyOptions}
+                      placeholder="Select Company"
+                      value={companyOptions.find((option) => option.value === values.companyId) || null}
+                      onChange={(selectedOption) => setFieldValue("companyId", selectedOption.value)}
+                    />
+
+
+                  </FormItem>
                   {PATIENT_FIELD_CONSTANT.map((field, index, array) => {
                     return (
                       <>
                         {/* {field?.title && (
                           <h6 className="my-3">{field?.title}</h6>
                         )} */}
+
 
                         <FormItem
                           key={index}
@@ -211,6 +264,7 @@ const AddEditPatient = () => {
                           }
                           errorMessage={errors?.[field?.name]}
                         >
+
                           {field.isBasic ? (
                             <Field
                               textArea={field?.textArea ? true : false}
@@ -233,6 +287,7 @@ const AddEditPatient = () => {
                       </>
                     );
                   })}
+
                 </FormContainer>
               </Card>
               <Card className="mt-4 w-3/4 ">
