@@ -56,17 +56,26 @@ const Codes = () => {
   const [activeConfirm, setActiveConfirm] = useState(false);
   const [filtervalue, setFilterValue] = useState("");
   const [filterLocationId, setFilterLocationId] = useState("");
+  const [filterCompanyId, setFilterCompanyId] = useState("");
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
 
+  console.log("filterCompanyId", filterCompanyId);
+  
   // Fetching data when component mounts or any dependency changes
+  let companyId = savedHospitalId
   useEffect(() => {
     setLoading(true);
+    if(filterCompanyId){
+      companyId = filterCompanyId
+    }
     getApi(APIS.LIST_DATA, {
+     
       type: LIST_DATA_API_TYPE.STOCK_ENTRY,
       locationId: filterLocationId || "",
+      companyId: companyId,
       limit,
-      companyId:savedHospitalId,
+      // companyId:savedHospitalId,
       skip: limit * (page - 1),
     })
       .then((res) => {
@@ -74,7 +83,7 @@ const Codes = () => {
         setTotalCount(res?.data?.count);
       })
       .finally(() => setLoading(false));
-  }, [page, limit, refresh, filtervalue, filterLocationId]);
+  }, [page, limit, refresh, filtervalue, filterLocationId, filterCompanyId]);
 
   const onActionHandle = (e, key, row) => {
     e.preventDefault();
@@ -183,7 +192,9 @@ const Codes = () => {
         filtervalue={filtervalue}
         setFilterValue={setFilterValue}
         setFilterLocationId={setFilterLocationId}
+        setFilterCompanyId = {setFilterCompanyId}
         filterLocationId={filterLocationId}
+        filterCompanyId = {filterCompanyId}
       />
       <AdaptableCard className="h-full" bodyClass="h-full">
         <DataTable

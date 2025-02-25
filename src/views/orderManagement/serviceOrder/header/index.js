@@ -10,6 +10,7 @@ import { DATE_FORMAT } from "constants/app.constant";
 import moment from "moment";
 import { SERVICE_ORDER_STATUS } from "../serviceConstant";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const FilterSection = ({
   setSearch,
@@ -18,7 +19,9 @@ const FilterSection = ({
   setFilterPatientId,
   filterPatientId,
   setFilterNalId,
+  setFilterCompanyId,
   filterNalId,
+  filterCompanyId,
   setFilterPhysicianId,
   filterPhysicianId,
   filterLcodeId,
@@ -33,9 +36,35 @@ const FilterSection = ({
   setFilterNad,
 }) => {
 
+
+  const user = useSelector((state) => state.auth.user);
+
+
+  const loadCompanyOption = (inputValue, resolve) => {
+    if (user?.companyId) {
+      getApi(APIS.LIST_DATA, {
+        companyIds: JSON.stringify(user.companyId),
+        type: LIST_DATA_API_TYPE.COMPANY,
+      }).then((res) => {
+        resolve(res?.data?.data)
+      })
+    } else {
+      getApi(APIS.LIST_DATA, {
+        type: LIST_DATA_API_TYPE.COMPANY,
+        search: inputValue,
+      }).then((res) => {
+        // console.log(res); // Log the response to see available NAL options
+        resolve(res?.data?.data);
+      });
+    }
+  };
+
+  console.log("filterCompanyId filterCompanyId", filterCompanyId?._id);
+  
   const loadPatientsOption = (inputValue, resolve) => {
     getApi(APIS.LIST_DATA, {
       type: LIST_DATA_API_TYPE.PATIENTS,
+      companyId: filterCompanyId?._id ?? savedHospitalId,
       search: inputValue,
     }).then((result) => {
       resolve(result?.data?.data);
@@ -45,16 +74,17 @@ const FilterSection = ({
   const loadNalOption = (inputValue, resolve) => {
     getApi(APIS.LIST_DATA, {
       type: LIST_DATA_API_TYPE.LOCATIONS,
+      companyId: filterCompanyId?._id ?? savedHospitalId,
       search: inputValue,
     }).then((res) => {
       // console.log(res); // Log the response to see available NAL options
       resolve(res?.data?.data);
     });
   };
-
   const loadPhysicianOption = (inputValue, resolve) => {
     getApi(APIS.LIST_DATA, {
       type: LIST_DATA_API_TYPE.PHYSICIANS,
+      companyId: filterCompanyId?._id ?? savedHospitalId,
       search: inputValue,
     }).then((res) => {
       console.log("nal", res?.data); // Log the response to see available NAL options
@@ -65,6 +95,7 @@ const FilterSection = ({
   const loadLcodeOption = (inputValue, resolve) => {
     getApi(APIS.LIST_DATA, {
       type: LIST_DATA_API_TYPE.CODES,
+      companyId: filterCompanyId?._id ?? savedHospitalId,
       search: inputValue,
     }).then((res) => {
       console.log("lcode", res.data.data);
@@ -76,8 +107,11 @@ const FilterSection = ({
   };
 
   const InsuranceOtpion = (inputValue, resolve) => {
+    console.log("filterCompanyId filterCompanyId filterCompanyId", filterCompanyId)
+    
     getApi(APIS.LIST_DATA, {
       type: LIST_DATA_API_TYPE.INSURANCES,
+      companyId: filterCompanyId?._id ?? savedHospitalId,
       search: inputValue
     }).then((res) => {
       console.log(res.data.data, "result for insurance")
@@ -91,12 +125,32 @@ const FilterSection = ({
 
   const loadPhysician = debounce(loadPhysicianOption, 300);
   const loadNal = debounce(loadNalOption, 300);
+  const loadCompany = debounce(loadCompanyOption, 300);
   const loadStays = debounce(loadPatientsOption, 300);
   const navigate = useNavigate();
+
+
+  const savedHospitalId = localStorage.getItem("selectedHospitalId");
 
   return (
     <div className="grid grid-cols-3 gap-4 mb-5">
       {/* <TableSearchBar onChange={(query) => setSearch(query)} /> */}
+      <Select
+        autoComplete="off"
+        placeholder="Filter by Company"
+        defaultOptions
+        cacheOptions
+        size="sm"
+        className="mb-4"
+        value={filterCompanyId}
+        loadOptions={loadCompany}
+        componentAs={AsyncSelect}
+        getOptionLabel={(v) => `${v?.name || ""}`}
+        getOptionValue={(v) => v?._id}
+        onChange={(selectedCompany) => {
+          setFilterCompanyId(selectedCompany);
+        }}
+      />
       <Select
         autoComplete="off"
         placeholder="Filter by Insurance"
@@ -268,6 +322,7 @@ const FilterSection = ({
           setSelectedDate({ startDate: null, endDate: null });
           setFilterNad(null);
           setFilterNalId("");
+          setFilterCompanyId("");
           setFilterPhysicianId("");
           setFilterLcodeId("");
           setFilterInsuranceId("");
@@ -296,7 +351,9 @@ const Header = ({
   filterNad,
   setFilterNad,
   filterNalId,
+  filterCompanyId,
   setFilterNalId,
+  setFilterCompanyId,
   setFilterPhysicianId,
   filterPhysicianId,
   filterLcodeId,
@@ -342,7 +399,9 @@ const Header = ({
           setFilterNad={setFilterNad}
           filterNad={filterNad}
           setFilterNalId={setFilterNalId}
+          setFilterCompanyId={setFilterCompanyId}
           filterNalId={filterNalId}
+          filterCompanyId={filterCompanyId}
           filterPhysicianId={filterPhysicianId}
           setFilterPhysicianId={setFilterPhysicianId}
           filterLcodeId={filterLcodeId}

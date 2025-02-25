@@ -107,6 +107,7 @@ const ServiceOrder = () => {
   const [filterPatientDob, setFilterPatientDob] = useState("");
   const [filterNad, setFilterNad] = useState("");
   const [filterNalId, setFilterNalId] = useState("");
+  const [filterCompanyId, setFilterCompanyId] = useState("");
   const [filterPhysicianId, setFilterPhysicianId] = useState("");
   const [filterLcodeId, setFilterLcodeId] = useState("");
   const [filterInsuranceId, setFilterInsuranceId] = useState("");
@@ -130,16 +131,29 @@ const ServiceOrder = () => {
     }
   }, []);
 
+  // useEffect(() => {
+  //   var companyId;
+  //   if (filterCompanyId && filterCompanyId._id) {
+  //     companyId = filterCompanyId._id;
+  //   } else {
+  //     companyId = savedHospitalId;
+  //   }
+  // },[filterCompanyId])
+
+  console.log("filterCompanyId", filterCompanyId)
   useEffect(() => {
     const payload = {
       limit,
       search,
-      companyId: savedHospitalId,
-      patientId: filterPatientId && filterPatientId?._id,
+      // companyId: typeof filterCompanyId === "object" && filterCompanyId !== null 
+      // ? filterCompanyId._id 
+      // : savedHospitalId,
+      companyId: filterCompanyId?._id ?? savedHospitalId,
       nalId: filterNalId._id,
+      // companyId: filterCompanyId._id,
       physicianId: filterPhysicianId._id,
       lcodeId: filterLcodeId._id,
-      insuranceId : filterInsuranceId._id,
+      insuranceId: filterInsuranceId._id,
       skip: limit * (page - 1),
     };
     console.log(payload)
@@ -170,6 +184,7 @@ const ServiceOrder = () => {
     filtervalue,
     filterPatientId,
     filterNalId,
+    filterCompanyId,
     filterPhysicianId,
     filterLcodeId,
     filterInsuranceId,
@@ -432,7 +447,7 @@ const ServiceOrder = () => {
       Cell: (props) => {
         const row = props.row.original;
         return (
-          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}> 
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
             <TagSection status={row?.orderStatus} selectedRow={row} />
             <ActionColumn
               row={row}
@@ -443,7 +458,7 @@ const ServiceOrder = () => {
         );
       },
     },
-    
+
     {
       Header: "Actions",
       id: "action",
@@ -500,14 +515,17 @@ const ServiceOrder = () => {
         setFilterValue={setFilterValue}
         setFilterPatientId={setFilterPatientId}
         setFilterNalId={setFilterNalId}
+        setFilterCompanyId={setFilterCompanyId}
         setFilterPhysicianId={setFilterPhysicianId}
         setFilterLcodeId={setFilterLcodeId}
-        setFilterInsuranceId= {setFilterInsuranceId}
+        setFilterInsuranceId={setFilterInsuranceId}
         filterPatientId={filterPatientId}
         filterPhysicianId={filterPhysicianId}
         filterLcodeId={filterLcodeId}
         // filterInsuranceId = {filterInsuranceId}
         filterNalId={filterNalId}
+        filterCompanyId={filterCompanyId}
+
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}
         setFilterPatientDob={setFilterPatientDob}
@@ -541,26 +559,26 @@ const ServiceOrder = () => {
       )}
 
       {selectedKey === PAGE_KEY.STATUS_VIEW && (
-       <Dialog
-       isOpen={openModal}
-       onClose={onDialogClose}
-       onRequestClose={onDialogClose}
-       contentClassName="py-10 pl-20 pr-40 mt-60 min-w-36"
-     >
-       <div>
-         {selectedData && (
-           <>
-             <p className="font-bold text-md mb-2">
-               <span className="text-blue-900">Comment:</span> {selectedData.addComment || "No comments available"}
-             </p>
-             <p className="font-bold text-md">
-               <span className="text-blue-900">Added By:</span> {selectedData.commentAddedBy?.email || "Not provided"}
-             </p>
-           </>
-         )}
-       </div>
-     </Dialog>
-     
+        <Dialog
+          isOpen={openModal}
+          onClose={onDialogClose}
+          onRequestClose={onDialogClose}
+          contentClassName="py-10 pl-20 pr-40 mt-60 min-w-36"
+        >
+          <div>
+            {selectedData && (
+              <>
+                <p className="font-bold text-md mb-2">
+                  <span className="text-blue-900">Comment:</span> {selectedData.addComment || "No comments available"}
+                </p>
+                <p className="font-bold text-md">
+                  <span className="text-blue-900">Added By:</span> {selectedData.commentAddedBy?.email || "Not provided"}
+                </p>
+              </>
+            )}
+          </div>
+        </Dialog>
+
       )}
 
       {(selectedKey !== PAGE_KEY.DELETE && selectedKey !== PAGE_KEY.STATUS_VIEW) && (
