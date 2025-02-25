@@ -7,9 +7,12 @@ import AsyncSelect from "react-select/async";
 import { CODE_TYPE, DATE_FORMAT } from 'constants/app.constant';
 import dayjs from "dayjs";
 
+const savedHospitalId = localStorage.getItem("selectedHospitalId");
+
 const loadPhysicianOption = (inputValue, resolve) => {
   getApi(APIS.LIST_DATA, {
     type: LIST_DATA_API_TYPE.PHYSICIANS,
+    companyId:savedHospitalId,
     search: inputValue,
   }).then((result) => {
     const filter = result?.data?.data.map((item) => {
@@ -25,6 +28,7 @@ const loadPhysicianOption = (inputValue, resolve) => {
 const loadLocationOption = (inputValue, resolve) => {
   getApi(APIS.LIST_DATA, {
     type: LIST_DATA_API_TYPE.LOCATIONS,
+    companyId:savedHospitalId,
     search: inputValue,
   }).then((result) => {
     const filter = result?.data?.data.map((item) => {
@@ -41,6 +45,7 @@ const loadLocationOption = (inputValue, resolve) => {
 const loadPatientOption = (inputValue, resolve) => {
   getApi(APIS.LIST_DATA, {
     type: LIST_DATA_API_TYPE.PATIENTS,
+    companyId:savedHospitalId,
     search: inputValue,
   }).then((result) => {
     const filter = result?.data?.data.map((item) => {
@@ -57,6 +62,7 @@ const loadPatientOption = (inputValue, resolve) => {
 const loadlCodeOption = (inputValue, resolve) => {
   getApi(APIS.LIST_DATA, {
     type: LIST_DATA_API_TYPE.CODES,
+    companyId:savedHospitalId,
     search: inputValue,
     codeType: CODE_TYPE.Lcode
   }).then((result) => {
@@ -73,6 +79,7 @@ const loadlCodeOption = (inputValue, resolve) => {
 const loadicdCodeOption = (inputValue, resolve) => {
   getApi(APIS.LIST_DATA, {
     type: LIST_DATA_API_TYPE.CODES,
+    companyId:savedHospitalId,
     search: inputValue,
     codeType: CODE_TYPE.Icd
   }).then((result) => {
@@ -90,6 +97,7 @@ const loadicdCodeOption = (inputValue, resolve) => {
 const loadDeviceTypeOption = (inputValue, resolve) => {
   getApi(APIS.LIST_DATA, {
     type: LIST_DATA_API_TYPE.DEVICE_TYPES,
+    companyId:savedHospitalId,
     search: inputValue,
   }).then((result) => {
     const filter = result?.data?.data.map((item) => {
@@ -106,6 +114,7 @@ const loadDeviceTypeOption = (inputValue, resolve) => {
 const loadInsuranceOption = (inputValue, resolve) => {
   getApi(APIS.LIST_DATA, {
     type: LIST_DATA_API_TYPE.INSURANCES,
+    companyId:savedHospitalId,
     search: inputValue,
   }).then((result) => {
     const filter = result?.data?.data.map((item) => {
@@ -122,6 +131,7 @@ const loadInsuranceOption = (inputValue, resolve) => {
 const loadInsuranceOption1 = (inputValue, resolve) => {
   getApi(APIS.LIST_DATA, {
     type: LIST_DATA_API_TYPE.INSURANCES,
+    companyId:savedHospitalId,
     search: inputValue,
   }).then((result) => {
     const filter = result?.data?.data.map((item) => {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, DatePicker, Select } from "components/ui";
 import { GrPowerReset } from "react-icons/gr";
 import TableSearchBar from "components/ui/TableSearchBar";
@@ -60,7 +60,7 @@ const FilterSection = ({
   };
 
   console.log("filterCompanyId filterCompanyId", filterCompanyId?._id);
-  
+
   const loadPatientsOption = (inputValue, resolve) => {
     getApi(APIS.LIST_DATA, {
       type: LIST_DATA_API_TYPE.PATIENTS,
@@ -105,10 +105,14 @@ const FilterSection = ({
       resolve(filteredData);
     });
   };
+  // useEffect(() => {
+  //   setFilterInsuranceId("");
+  //   setFilterPatientId("")
+  // }, [filterCompanyId]);
 
   const InsuranceOtpion = (inputValue, resolve) => {
     console.log("filterCompanyId filterCompanyId filterCompanyId", filterCompanyId)
-    
+
     getApi(APIS.LIST_DATA, {
       type: LIST_DATA_API_TYPE.INSURANCES,
       companyId: filterCompanyId?._id ?? savedHospitalId,
@@ -167,6 +171,7 @@ const FilterSection = ({
           setFilterInsuranceId(selectedInsurance || "");
         }}
       />
+
       <Select
         autoComplete="off"
         size="sm"
@@ -180,6 +185,7 @@ const FilterSection = ({
       />
 
       <Select
+        // key={`${filterCompanyId?._id || "default"}`}
         autoComplete="off"
         placeholder="Filter by Patient (Name, Phone, ID)"
         defaultOptions

@@ -43,6 +43,8 @@ const AddEditStock = ({ onClose, refreshPage }) => {
   const user = useSelector((state) => state.auth.user);
   const navigate = useNavigate();
   const location = useLocation();
+  const savedHospitalId = localStorage.getItem("selectedHospitalId");
+
 
   // Fetch data for materials and locations
   useEffect(() => {
@@ -84,7 +86,7 @@ const AddEditStock = ({ onClose, refreshPage }) => {
           toast.push(<Notification type="error">Failed to load Companies</Notification>);
         });
     }
-    getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.CODES })
+    getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.CODES, companyId: savedHospitalId, })
       .then((res) => {
         if (res && res.data && Array.isArray(res.data.data)) {
           const filteredData = res.data.data.filter((item) => item.type === 1);
@@ -107,7 +109,7 @@ const AddEditStock = ({ onClose, refreshPage }) => {
       });
 
     // Fetch locations (Warehouses)
-    getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.LOCATIONS })
+    getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.LOCATIONS, companyId: savedHospitalId, })
       .then((res) => {
         if (res && res.data && Array.isArray(res.data.data)) {
           const locations = res.data.data.map((location) => ({
