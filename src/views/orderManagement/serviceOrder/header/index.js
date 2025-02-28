@@ -1,11 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect , useState} from "react";
 import { Button, DatePicker, Select } from "components/ui";
 import { GrPowerReset } from "react-icons/gr";
-import TableSearchBar from "components/ui/TableSearchBar";
 import { getApi } from "services/CommonService";
 import { APIS, LIST_DATA_API_TYPE } from "constants/api.constant";
-import { debounce } from "lodash";
-import AsyncSelect from "react-select/async";
 import { DATE_FORMAT } from "constants/app.constant";
 import moment from "moment";
 import { SERVICE_ORDER_STATUS } from "../serviceConstant";
@@ -38,107 +35,71 @@ const FilterSection = ({
 
 
   const user = useSelector((state) => state.auth.user);
+  const savedHospitalId = localStorage.getItem("selectedHospitalId");
 
+  const [companyOptions, setCompanyOptions] = useState([]);
+  const [insuranceOptions, setInsuranceOptions] = useState([]);
+  const [patientOptions, setPatientOptions] = useState([]);
+  const [nalOptions, setNalOptions] = useState([]);
+  const [physicianOptions, setPhysicianOptions] = useState([]);
+  const [lcodeOptions, setLcodeOptions] = useState([]);
 
-  const loadCompanyOption = (inputValue, resolve) => {
-    if (user?.companyId) {
-      getApi(APIS.LIST_DATA, {
-        companyIds: JSON.stringify(user.companyId),
-        type: LIST_DATA_API_TYPE.COMPANY,
-      }).then((res) => {
-        resolve(res?.data?.data)
-      })
-    } else {
-      getApi(APIS.LIST_DATA, {
-        type: LIST_DATA_API_TYPE.COMPANY,
-        search: inputValue,
-      }).then((res) => {
-        // console.log(res); // Log the response to see available NAL options
-        resolve(res?.data?.data);
-      });
-    }
-  };
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      try {
+        let response;
+       
+        if (user?.companyId) {
+          response = await getApi(APIS.LIST_DATA, {
+            companyIds: JSON.stringify(user.companyId),
+            type: LIST_DATA_API_TYPE.COMPANY,
+          });
+        } else {
+          response = await getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.COMPANIES });
+        }
+ 
+        console.log(response?.data);
+        setCompanyOptions(response?.data?.data || []);
+       
+      } catch (error) {
+        console.error("Error loading company list:", error);
+      }
+    };
+ 
+    fetchCompanies();
+  }, [user]);
+ 
+  useEffect(() => {
+    const fetchFilters = async () => {
+      const companyId = filterCompanyId?._id ?? savedHospitalId;
 
-  console.log("filterCompanyId filterCompanyId", filterCompanyId?._id);
+      try {
+        const [insuranceRes, patientRes, nalRes, physicianRes, lcodeRes] = await Promise.all([
+          getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.INSURANCES, companyId }),
+          getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.PATIENTS, companyId }),
+          getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.LOCATIONS, companyId }),
+          getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.PHYSICIANS, companyId }),
+          getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.CODES, companyId }),
+        ]);
 
-  const loadPatientsOption = (inputValue, resolve) => {
-    getApi(APIS.LIST_DATA, {
-      type: LIST_DATA_API_TYPE.PATIENTS,
-      companyId: filterCompanyId?._id ?? savedHospitalId,
-      search: inputValue,
-    }).then((result) => {
-      resolve(result?.data?.data);
-    });
-  };
+        setInsuranceOptions(insuranceRes?.data?.data || []);
+        setPatientOptions(patientRes?.data?.data || []);
+        setNalOptions(nalRes?.data?.data || []);
+        setPhysicianOptions(physicianRes?.data?.data || []);
+        setLcodeOptions(lcodeRes?.data?.data || []);
+      } catch (error) {
+        console.error("Error loading filter options:", error);
+      }
+    };
 
-  const loadNalOption = (inputValue, resolve) => {
-    getApi(APIS.LIST_DATA, {
-      type: LIST_DATA_API_TYPE.LOCATIONS,
-      companyId: filterCompanyId?._id ?? savedHospitalId,
-      search: inputValue,
-    }).then((res) => {
-      // console.log(res); // Log the response to see available NAL options
-      resolve(res?.data?.data);
-    });
-  };
-  const loadPhysicianOption = (inputValue, resolve) => {
-    getApi(APIS.LIST_DATA, {
-      type: LIST_DATA_API_TYPE.PHYSICIANS,
-      companyId: filterCompanyId?._id ?? savedHospitalId,
-      search: inputValue,
-    }).then((res) => {
-      console.log("nal", res?.data); // Log the response to see available NAL options
-      resolve(res?.data?.data);
-    });
-  };
+    fetchFilters();
+  }, [filterCompanyId]);
 
-  const loadLcodeOption = (inputValue, resolve) => {
-    getApi(APIS.LIST_DATA, {
-      type: LIST_DATA_API_TYPE.CODES,
-      companyId: filterCompanyId?._id ?? savedHospitalId,
-      search: inputValue,
-    }).then((res) => {
-      console.log("lcode", res.data.data);
-
-      const filteredData = res?.data?.data?.filter(item => item.type === 1);
-      // console.log("lcode", filteredData);
-      resolve(filteredData);
-    });
-  };
-  // useEffect(() => {
-  //   setFilterInsuranceId("");
-  //   setFilterPatientId("")
-  // }, [filterCompanyId]);
-
-  const InsuranceOtpion = (inputValue, resolve) => {
-    console.log("filterCompanyId filterCompanyId filterCompanyId", filterCompanyId)
-
-    getApi(APIS.LIST_DATA, {
-      type: LIST_DATA_API_TYPE.INSURANCES,
-      companyId: filterCompanyId?._id ?? savedHospitalId,
-      search: inputValue
-    }).then((res) => {
-      console.log(res.data.data, "result for insurance")
-      const insuranceData = res?.data?.data
-      resolve(insuranceData)
-    })
-  }
-
-  const loadLcode = debounce(loadLcodeOption, 300);
-  const Insurance = debounce(InsuranceOtpion, 300);
-
-  const loadPhysician = debounce(loadPhysicianOption, 300);
-  const loadNal = debounce(loadNalOption, 300);
-  const loadCompany = debounce(loadCompanyOption, 300);
-  const loadStays = debounce(loadPatientsOption, 300);
   const navigate = useNavigate();
 
 
-  const savedHospitalId = localStorage.getItem("selectedHospitalId");
-
   return (
     <div className="grid grid-cols-3 gap-4 mb-5">
-      {/* <TableSearchBar onChange={(query) => setSearch(query)} /> */}
       <Select
         autoComplete="off"
         placeholder="Filter by Company"
@@ -147,12 +108,17 @@ const FilterSection = ({
         size="sm"
         className="mb-4"
         value={filterCompanyId}
-        loadOptions={loadCompany}
-        componentAs={AsyncSelect}
+        options={companyOptions}
         getOptionLabel={(v) => `${v?.name || ""}`}
         getOptionValue={(v) => v?._id}
         onChange={(selectedCompany) => {
           setFilterCompanyId(selectedCompany);
+          setFilterPatientId(null);
+          setFilterInsuranceId(null);
+          setFilterNalId(null);
+          setFilterPhysicianId(null);
+          setFilterLcodeId(null);
+          setFilterValue("");
         }}
       />
       <Select
@@ -163,8 +129,7 @@ const FilterSection = ({
         size="sm"
         className="mb-4"
         value={filterInsuranceId}
-        loadOptions={Insurance}
-        componentAs={AsyncSelect}
+        options={insuranceOptions}
         getOptionLabel={(v) => `${v?.name || ""}`}
         getOptionValue={(v) => v?._id}
         onChange={(selectedInsurance) => {
@@ -193,8 +158,7 @@ const FilterSection = ({
         size="sm"
         className="mb-4"
         value={filterPatientId}
-        loadOptions={loadStays}
-        componentAs={AsyncSelect}
+        options={patientOptions}
         getOptionLabel={(v) =>
           `${v?.firstName} ${v?.lastName ? v?.lastName : ""} ${v?.patientNo ? `(${v?.patientNo})` : ""
           } ${v?.dob ? `(${moment(v?.dob).format(DATE_FORMAT)})` : ""}`
@@ -213,8 +177,7 @@ const FilterSection = ({
         size="sm"
         className="mb-4"
         value={filterNalId}
-        loadOptions={loadNal}
-        componentAs={AsyncSelect}
+        options={nalOptions}
         getOptionLabel={(v) => `${v?.name || ""}`}
         getOptionValue={(v) => v?._id}
         onChange={(selectedNal) => {
@@ -230,8 +193,7 @@ const FilterSection = ({
         size="sm"
         className="mb-4"
         value={filterPhysicianId}
-        loadOptions={loadPhysician}
-        componentAs={AsyncSelect}
+        options={physicianOptions}
         getOptionLabel={(v) => `${v?.name || ""}`}
         getOptionValue={(v) => v?._id}
         onChange={(selectedPhysician) => {
@@ -247,8 +209,7 @@ const FilterSection = ({
         size="sm"
         className="mb-4"
         value={filterLcodeId}
-        loadOptions={loadLcode}
-        componentAs={AsyncSelect}
+        options={lcodeOptions}
         getOptionLabel={(v) => `${v?.code || ""}`}
         getOptionValue={(v) => v?._id}
         onChange={(selectedLcode) => {

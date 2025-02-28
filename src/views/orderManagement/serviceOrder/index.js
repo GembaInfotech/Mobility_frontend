@@ -102,6 +102,7 @@ const ServiceOrder = () => {
     startDate: "",
     endDate: "",
   });
+  
   const [filterPatientId, setFilterPatientId] = useState("");
 
   const [filterPatientDob, setFilterPatientDob] = useState("");
@@ -149,11 +150,11 @@ const ServiceOrder = () => {
       // ? filterCompanyId._id 
       // : savedHospitalId,
       companyId: filterCompanyId?._id ?? savedHospitalId,
-      nalId: filterNalId._id,
+      nalId: filterNalId?._id,
       // companyId: filterCompanyId._id,
-      physicianId: filterPhysicianId._id,
-      lcodeId: filterLcodeId._id,
-      insuranceId: filterInsuranceId._id,
+      physicianId: filterPhysicianId?._id,
+      lcodeId: filterLcodeId?._id,
+      insuranceId: filterInsuranceId?._id,
       skip: limit * (page - 1),
     };
     console.log(payload)

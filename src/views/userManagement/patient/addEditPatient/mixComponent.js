@@ -27,6 +27,8 @@ const MixComponent = ({
   errors,
   touched,
 }) => {
+  const savedHospitalId = localStorage.getItem("selectedHospitalId");
+
   const loadSelectOption = (inputValue, resolve) => {
     if (field.name === "state") {
       getApi(APIS.GET_CODE, { type: 4, search: inputValue }).then((result) => {
@@ -53,7 +55,7 @@ const MixComponent = ({
       });
     }
     if (field.apiType === "insurance") {
-      getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.INSURANCES, search: inputValue }).then((result) => {
+      getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.INSURANCES, search: inputValue, companyId:savedHospitalId }).then((result) => {
         const filter = result?.data?.data.map((item) => {
           let option = {
             label: item?.name,
