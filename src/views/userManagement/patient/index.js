@@ -113,7 +113,7 @@ const FILTER_CONSTANT = [
 
 const PatientManagement = () => {
   const savedHospitalId = localStorage.getItem("selectedHospitalId");
-
+  const [filterCompanyId, setFilterCompanyId] = useState("");
   const [loading, setLoading] = useState(true);
   const [tags, setData] = useState([]);
   const [search, setSearch] = useState("");
@@ -163,7 +163,7 @@ const PatientManagement = () => {
       type: LIST_DATA_API_TYPE.PATIENTS,
       limit,
       search,
-      companyId:savedHospitalId,
+      companyId: filterCompanyId?._id ?? savedHospitalId,
       status: filterValue?.status ? filterValue?.status?.value : null,
       patientDob: filterValue?.dob ? dayjs(filterValue.dob).format("MM/DD/YYYY") : null,
       mobile: filterValue?.mobile ? filterValue.mobile : null,  
@@ -174,7 +174,7 @@ const PatientManagement = () => {
         setTotalCount(res?.data?.count);
       })
       .finally(() => setLoading(false));
-  }, [savedHospitalId,search, page, limit, refresh, filterValue]);
+  }, [savedHospitalId,search, page, limit, refresh, filterValue, filterCompanyId]);
   
 
   const onActionHandle = (e, key, row) => {
@@ -340,6 +340,8 @@ const PatientManagement = () => {
             : BUTTON_CONSTANT.slice(0, BUTTON_CONSTANT.length - 1)
         }
         FilterMenu={FILTER_CONSTANT}
+        setFilterCompanyId={setFilterCompanyId}
+        filterCompanyId={filterCompanyId}
         setSearch={setSearch}
         buttonClick={onHeaderButtonClick}
         setFilterValue={setFilterValue}

@@ -1,14 +1,14 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Select, DatePicker } from "components/ui";
 import TableSearchBar from "components/ui/TableSearchBar";
 import { GrPowerReset } from "react-icons/gr";
 import { getApi } from "services/CommonService";
 import { Input } from "components/ui";
-
-import { APIS } from "constants/api.constant";
+import { APIS, LIST_DATA_API_TYPE } from "constants/api.constant";
 import { debounce } from "lodash";
 import AsyncSelect from "react-select/async";
 import { DATE_FORMAT } from "constants/app.constant";
+import { useSelector } from "react-redux";
 
 const ButtonSection = ({ buttonMenu, buttonClick }) => {
   return (
@@ -37,7 +37,39 @@ const FilterSection = ({
   filterValue,
   asyncApiType,
   searchPlaceholder,
+  setFilterCompanyId={setFilterCompanyId},
+  filterCompanyId={filterCompanyId}
 }) => {
+
+   const user = useSelector((state) => state.auth.user);
+   const savedHospitalId = localStorage.getItem("selectedHospitalId");
+   const [companyOptions, setCompanyOptions] = useState([]);
+  
+   useEffect(() => {
+      const fetchCompanies = async () => {
+        try {
+          let response;
+         
+          if (user?.companyId) {
+            response = await getApi(APIS.LIST_DATA, {
+              companyIds: JSON.stringify(user.companyId),
+              type: LIST_DATA_API_TYPE.COMPANY,
+            });
+          } else {
+            response = await getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.COMPANIES });
+          }
+   
+          console.log(response?.data);
+          setCompanyOptions(response?.data?.data || []);
+          console.log(companyOptions)
+        } catch (error) {
+          console.error("Error loading company list:", error);
+        }
+      };
+   
+      fetchCompanies();
+    }, [user]);
+
   const loadStaysOption = (inputValue, resolve) => {
     getApi(asyncApiType === 1 ? APIS.GET_USERS : APIS.GET_CATEGORIES, {
       search: inputValue,
@@ -56,6 +88,29 @@ const FilterSection = ({
       {FilterMenu?.map((filter, i) => {
         return (
           <React.Fragment key={i}>
+             {filter.component === "select" && (
+              <Select
+                      autoComplete="off"
+                      placeholder="Company"
+                      defaultOptions
+                      cacheOptions
+                      size="sm"
+                      className="mb-2"
+                      value={filterCompanyId}
+                      options={companyOptions}
+                      getOptionLabel={(v) => `${v?.name || ""}`}
+                      getOptionValue={(v) => v?._id}
+                      onChange={(selectedCompany) => {
+                        setFilterCompanyId(selectedCompany);
+                        // setFilterPatientId(null);
+                        // setFilterInsuranceId(null);
+                        // setFilterNalId(null);
+                        // setFilterPhysicianId(null);
+                        // setFilterLcodeId(null);
+                        setFilterValue("");
+                      }}
+                    />
+            )}
             {filter.component === "select" && (
               <Select
                 autoComplete="off"
@@ -78,6 +133,7 @@ const FilterSection = ({
                 className={filter.className}
                 onClick={() => {
                   setFilterValue(filter?.filterKey);
+                  setFilterCompanyId(null)
                   setSearch("");
                 }}
                 icon={<GrPowerReset />}
@@ -159,6 +215,8 @@ const Header = ({
   filterValue,
   asyncApiType,
   searchPlaceholder,
+  setFilterCompanyId={setFilterCompanyId},
+  filterCompanyId={filterCompanyId}
 }) => {
   return (
     <>
@@ -173,6 +231,8 @@ const Header = ({
           setFilterValue={setFilterValue}
           filterValue={filterValue}
           asyncApiType={asyncApiType}
+          setFilterCompanyId={setFilterCompanyId}
+          filterCompanyId={filterCompanyId}
         />
       </div>
     </>
