@@ -37,8 +37,8 @@ const FilterSection = ({
   filterValue,
   asyncApiType,
   searchPlaceholder,
-  setFilterCompanyId={setFilterCompanyId},
-  filterCompanyId={filterCompanyId}
+  setFilterCompanyId,
+  filterCompanyId
 }) => {
 
    const user = useSelector((state) => state.auth.user);
@@ -56,7 +56,7 @@ const FilterSection = ({
               type: LIST_DATA_API_TYPE.COMPANY,
             });
           } else {
-            response = await getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.COMPANIES });
+            response = await getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.COMPANY });
           }
    
           console.log(response?.data);
@@ -215,8 +215,8 @@ const Header = ({
   filterValue,
   asyncApiType,
   searchPlaceholder,
-  setFilterCompanyId={setFilterCompanyId},
-  filterCompanyId={filterCompanyId}
+  setFilterCompanyId,
+  filterCompanyId,
 }) => {
   return (
     <>

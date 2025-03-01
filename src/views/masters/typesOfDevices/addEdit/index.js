@@ -51,59 +51,60 @@ const initialValues = {
 };
 
 const AddEditDeviceType = ({ editData, show, onClose, refreshPage }) => {
+  const savedHospitalId = localStorage.getItem("selectedHospitalId");
   const [companyOptions, setCompanyOptionos] = useState([]);
   const user = useSelector((state) => state.auth.user);
   const formRef = useRef();
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (user?.companyId) {
-      getApi(APIS.LIST_DATA, {
-        companyIds: JSON.stringify(user.companyId),
-        type: LIST_DATA_API_TYPE.COMPANY,
-      })
-        .then((res) => {
-          const response = res?.data?.data;
+  // useEffect(() => {
+  //   if (user?.companyId) {
+  //     getApi(APIS.LIST_DATA, {
+  //       companyIds: JSON.stringify(user.companyId),
+  //       type: LIST_DATA_API_TYPE.COMPANY,
+  //     })
+  //       .then((res) => {
+  //         const response = res?.data?.data;
 
-          if (Array.isArray(response)) {
-            const companyOptions = response.map((company) => ({
-              label: company.name,
-              value: company._id,
-            }));
-            setCompanyOptionos(companyOptions);
-          }
-        })
-        .catch((error) => {
-          // Handle any errors from the additional API call
-          console.error("Error calling additional API:", error);
-        });
-    } else {
-      getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.COMPANY })
-        .then((res) => {
-          if (res && res.data && Array.isArray(res.data.data)) {
-            const locations = res.data.data.map((location) => ({
-              label: location.name,
-              value: location._id,
-            }));
-            setCompanyOptionos(locations);
-          } else {
-            toast.push(<Notification type="error">No Companies found!</Notification>);
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching Companies:", error);
-          toast.push(<Notification type="error">Failed to load Companies</Notification>);
-        });
-    }
+  //         if (Array.isArray(response)) {
+  //           const companyOptions = response.map((company) => ({
+  //             label: company.name,
+  //             value: company._id,
+  //           }));
+  //           setCompanyOptionos(companyOptions);
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         // Handle any errors from the additional API call
+  //         console.error("Error calling additional API:", error);
+  //       });
+  //   } else {
+  //     getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.COMPANY })
+  //       .then((res) => {
+  //         if (res && res.data && Array.isArray(res.data.data)) {
+  //           const locations = res.data.data.map((location) => ({
+  //             label: location.name,
+  //             value: location._id,
+  //           }));
+  //           setCompanyOptionos(locations);
+  //         } else {
+  //           toast.push(<Notification type="error">No Companies found!</Notification>);
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error fetching Companies:", error);
+  //         toast.push(<Notification type="error">Failed to load Companies</Notification>);
+  //       });
+  //   }
 
-  }, []);
+  // }, []);
 
   const onSubmit = ({ name, id, companyId }) => {
     setLoading(true);
     const payload = {
       name,
       modelType: LIST_DATA_API_TYPE.DEVICE_TYPES,
-      companyId: companyId,
+      companyId: savedHospitalId,
 
     };
 
@@ -150,7 +151,7 @@ const AddEditDeviceType = ({ editData, show, onClose, refreshPage }) => {
           {({ errors, touched, setFieldValue, values }) => (
             <Form className="p-5">
               <FormContainer>
-                <FormItem
+                {/* <FormItem
                   label="Company"
                   invalid={errors.companyId && touched.companyId}
                   errorMessage={errors.companyId}
@@ -171,7 +172,7 @@ const AddEditDeviceType = ({ editData, show, onClose, refreshPage }) => {
                       />
                     )}
                   </Field>
-                </FormItem>
+                </FormItem> */}
                 <FormItem
                   label="Device Type"
                   invalid={errors?.name && touched?.name}

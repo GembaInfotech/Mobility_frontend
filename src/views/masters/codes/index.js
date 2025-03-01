@@ -101,6 +101,7 @@ const FIELD_CONFIRMATION_CONSTANT = {
 
 const Codes = () => {
   const savedHospitalId = localStorage.getItem("selectedHospitalId");
+  const [filterCompanyId,setFilterCompanyId] = useState([])
   const [codes, setCodes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
@@ -126,7 +127,7 @@ const Codes = () => {
     const payload = {
       type: LIST_DATA_API_TYPE.CODES,
       limit,
-      companyId:savedHospitalId,
+      companyId: filterCompanyId?._id ?? savedHospitalId,
       search,
       skip: limit * (page - 1),
     };
@@ -146,7 +147,7 @@ const Codes = () => {
       })
       .finally(() => setLoading(false));
       console.log('ressssppp',Codes);
-  }, [search, page, limit, refresh, filterValue]);
+  }, [search, page, limit, refresh, filterValue, filterCompanyId]);
 
   const onActionHandle = (e, key, row) => {
     if (key === TABLE_ACTION_KEYS.EDIT) {
@@ -295,6 +296,8 @@ const Codes = () => {
             : BUTTON_CONSTANT.slice(0, BUTTON_CONSTANT.length - 1)
         }
         FilterMenu={FILTER_CONSTANT}
+        setFilterCompanyId={setFilterCompanyId}
+        filterCompanyId={filterCompanyId}
         setSearch={setSearch}
         buttonClick={onHeaderButtonClick}
         setFilterValue={setFilterValue}

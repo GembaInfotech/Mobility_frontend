@@ -55,7 +55,7 @@ const FilterSection = ({
             type: LIST_DATA_API_TYPE.COMPANY,
           });
         } else {
-          response = await getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.COMPANIES });
+          response = await getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.COMPANY});
         }
  
         console.log(response?.data);

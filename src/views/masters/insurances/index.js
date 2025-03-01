@@ -33,6 +33,7 @@ const ACTION_CONSTANT = [
 
 const Insurances = () => {
   const savedHospitalId = localStorage.getItem("selectedHospitalId");
+  const [filterCompanyId, setFilterCompanyId] = useState([]);
   const [tabledata, setTableData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -51,7 +52,7 @@ const Insurances = () => {
       type : LIST_DATA_API_TYPE.INSURANCES,
       limit,
       search,
-      companyId:savedHospitalId,
+      companyId: filterCompanyId?._id ?? savedHospitalId,
       skip: limit * (page - 1),
     })
       .then((res) => {
@@ -59,7 +60,7 @@ const Insurances = () => {
         setTotalCount(res?.data?.count);
       })
       .finally(() => setLoading(false));
-  }, [search, page, limit, refresh]);
+  }, [search, page, limit, refresh, filterCompanyId]);
 
   const onActionHandle = (event, key, row) => {
     setSelectedRow(row);
@@ -195,7 +196,11 @@ const Insurances = () => {
         <AddEditInsurance closeAddEdit={closeAddEdit} selectedRow={selectedRow} />
       ) : (
         <>
-          <Header setSearch={setSearch} addButtonClick={() => setIsAddEdit(true)} />
+          <Header 
+          setSearch={setSearch}
+          setFilterCompanyId={setFilterCompanyId}
+          filterCompanyId={filterCompanyId}
+          addButtonClick={() => setIsAddEdit(true)} />
           <AdaptableCard className="h-full" bodyClass="h-full">
             <DataTable
               columns={newColumn(columns, MODULE.INSURANCES, 1)}

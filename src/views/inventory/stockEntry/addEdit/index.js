@@ -48,44 +48,44 @@ const AddEditStock = ({ onClose, refreshPage }) => {
 
   // Fetch data for materials and locations
   useEffect(() => {
-    if (user?.companyId) {
-      getApi(APIS.LIST_DATA, {
-        companyIds: JSON.stringify(user.companyId),
-        type: LIST_DATA_API_TYPE.COMPANY,
-      })
-        .then((res) => {
-          const response = res?.data?.data;
+    // if (user?.companyId) {
+    //   getApi(APIS.LIST_DATA, {
+    //     companyIds: JSON.stringify(user.companyId),
+    //     type: LIST_DATA_API_TYPE.COMPANY,
+    //   })
+    //     .then((res) => {
+    //       const response = res?.data?.data;
 
-          if (Array.isArray(response)) {
-            const companyOptions = response.map((company) => ({
-              label: company.name,
-              value: company._id,
-            }));
-            setCompanyOptionos(companyOptions);
-          }
-        })
-        .catch((error) => {
-          // Handle any errors from the additional API call
-          console.error("Error calling additional API:", error);
-        });
-    } else {
-      getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.COMPANY })
-        .then((res) => {
-          if (res && res.data && Array.isArray(res.data.data)) {
-            const locations = res.data.data.map((location) => ({
-              label: location.name,
-              value: location._id,
-            }));
-            setCompanyOptionos(locations);
-          } else {
-            toast.push(<Notification type="error">No Companies found!</Notification>);
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching Companies:", error);
-          toast.push(<Notification type="error">Failed to load Companies</Notification>);
-        });
-    }
+    //       if (Array.isArray(response)) {
+    //         const companyOptions = response.map((company) => ({
+    //           label: company.name,
+    //           value: company._id,
+    //         }));
+    //         setCompanyOptionos(companyOptions);
+    //       }
+    //     })
+    //     .catch((error) => {
+    //       // Handle any errors from the additional API call
+    //       console.error("Error calling additional API:", error);
+    //     });
+    // } else {
+    //   getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.COMPANY })
+    //     .then((res) => {
+    //       if (res && res.data && Array.isArray(res.data.data)) {
+    //         const locations = res.data.data.map((location) => ({
+    //           label: location.name,
+    //           value: location._id,
+    //         }));
+    //         setCompanyOptionos(locations);
+    //       } else {
+    //         toast.push(<Notification type="error">No Companies found!</Notification>);
+    //       }
+    //     })
+    //     .catch((error) => {
+    //       console.error("Error fetching Companies:", error);
+    //       toast.push(<Notification type="error">Failed to load Companies</Notification>);
+    //     });
+    // }
     getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.CODES, companyId: savedHospitalId, })
       .then((res) => {
         if (res && res.data && Array.isArray(res.data.data)) {
@@ -152,7 +152,8 @@ const AddEditStock = ({ onClose, refreshPage }) => {
       transferLocation: values.transferLocation, // Include transfer location
       transferQuantity: values.transferQuantity, // Include transfer quantity
       modelType: LIST_DATA_API_TYPE.STOCK_ENTRY,
-      companyId: values.companyId,
+      // companyId: values.companyId,
+      companyId: savedHospitalId
     };
     if (id) {
       payload.id = id;
@@ -192,7 +193,7 @@ const AddEditStock = ({ onClose, refreshPage }) => {
           </div>
           <Card className="mt-2.5 w-3/4">
             <FormContainer className="md:w-full lg:w-1/2">
-              <FormItem
+              {/* <FormItem
                 label="Company"
                 invalid={errors.companyId && touched.companyId}
                 errorMessage={errors.companyId}
@@ -213,7 +214,7 @@ const AddEditStock = ({ onClose, refreshPage }) => {
                     />
                   )}
                 </Field>
-              </FormItem>
+              </FormItem> */}
               <FormItem label="Stock Entry Type" invalid={errors.stockType && touched.stockType} errorMessage={errors.stockType}>
                 <Select
                   name="stockType"
