@@ -8,5 +8,4 @@ const appConfig = {
   enableMock: true,
 };
 
-
 export default appConfig;
