@@ -1,5 +1,13 @@
 import { Input } from "components/ui";
 
+
+const savedHospitalId = localStorage.getItem("selectedHospitalId");
+const label = savedHospitalId === "67c3ec77851f03d96270ca85"
+  ? "NASPAC Case No."
+  : savedHospitalId === "67c3fb8308a4d79e36ebf939"
+  ? "PPS Case No."
+  : "Case No.";
+
 export const PATIENT_FIELD_CONSTANT = [
   {
     name: "firstName",
@@ -32,11 +40,11 @@ export const PATIENT_FIELD_CONSTANT = [
   },
   {
     name: "naspacNo",
-    label: "NASPAC Case No.",
+    label: `${label}`,
     type: "text",
     component: Input,
     isBasic: true,
-    placeholder: "Enter NASPAC No.",
+    placeholder: `${label}`,
   },
 ];
 

@@ -209,6 +209,12 @@ const PatientManagement = () => {
     }
   };
  
+  const Caselabel = savedHospitalId === "67c3ec77851f03d96270ca85"
+  ? "NASPAC Case No."
+  : savedHospitalId === "67c3fb8308a4d79e36ebf939"
+  ? "PPS Case No."
+  : "Case No.";
+  
   const columns = [
     {
       Header: "Patient ID",
@@ -258,7 +264,7 @@ const PatientManagement = () => {
     },
 
     {
-      Header: "NASPAC Case No.",
+      Header: `${Caselabel}`,
       Cell: (props) => {
         const row = props.row.original;
         return (
