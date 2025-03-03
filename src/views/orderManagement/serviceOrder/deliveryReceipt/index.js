@@ -97,10 +97,11 @@ const DeliveryReceipt = () => {
   const [editData, setEditData] = useState();
   const navigate = useNavigate();
   const canEdit = hasPermisson(MODULE.SERVICEORDER, ACCESS.WRITE);
+  const savedHospitalId = localStorage.getItem("selectedHospitalId");
 
   useEffect(() => {
     if (id) {
-      getApi(APIS.GET_SERVICE_ORDER, { id }).then((result) => {
+      getApi(APIS.GET_SERVICE_ORDER, { id, companyId: savedHospitalId }).then((result) => {
         const { patientId, physicianId, prescriptions, renderingPhysicianId } =
           result?.data?.data;
         const obj = {};
@@ -143,6 +144,7 @@ const DeliveryReceipt = () => {
     enableReinitialize: true,
     // validationSchema: schema,
     onSubmit: (payload) => {
+      payload.companyId = savedHospitalId
       postApi(APIS.GENERATE_PDF, { data: payload, type: 2 })
         .then((res) => {
           if (res?.data?.path) {
