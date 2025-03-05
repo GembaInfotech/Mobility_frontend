@@ -87,8 +87,12 @@ const AddEditAdmins = () => {
     payload.append('email', email);
     payload.append('superAdmin', superAdmin);
     
-    if (!superAdmin && company?.length > 0) {
-      company.forEach((compId) => payload.append('companyId',compId )); // Send multiple company IDs
+    if (!superAdmin) {
+      if (company.length === 1) {
+        payload.companyId = company
+      } else {
+        company.forEach((compId) => payload.append('companyId', compId));
+      }
     }
     
     payload.append('roles', JSON.stringify(mergedRoles));
