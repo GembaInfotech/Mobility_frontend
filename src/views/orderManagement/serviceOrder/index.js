@@ -152,6 +152,7 @@ const ServiceOrder = () => {
       companyId: filterCompanyId?._id ?? savedHospitalId,
       nalId: filterNalId?._id,
       // companyId: filterCompanyId._id,
+      patientId:filterPatientId?._id,
       physicianId: filterPhysicianId?._id,
       lcodeId: filterLcodeId?._id,
       insuranceId: filterInsuranceId?._id,
