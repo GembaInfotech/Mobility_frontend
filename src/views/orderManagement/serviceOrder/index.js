@@ -529,7 +529,7 @@ const ServiceOrder = () => {
         filterPatientId={filterPatientId}
         filterPhysicianId={filterPhysicianId}
         filterLcodeId={filterLcodeId}
-        // filterInsuranceId = {filterInsuranceId}
+        filterInsuranceId = {filterInsuranceId}
         filterNalId={filterNalId}
         filterCompanyId={filterCompanyId}
 
