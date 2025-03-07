@@ -150,7 +150,7 @@ const AddEditSeriveOrder = () => {
     //     }
     if (id) {
       getApi(APIS.GET_SERVICE_ORDER, {
-        id
+        id, companyId:savedHospitalId
       })
         .then((res) => {
           const data = res?.data?.data;
