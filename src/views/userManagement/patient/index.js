@@ -2,11 +2,13 @@ import { AdaptableCard } from "components/shared";
 import React, { useEffect, useState } from "react";
 import { DataTable } from "components/shared";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 import { getApi, postApi } from "services/CommonService";
 import { APIS, LIST_DATA_API_TYPE } from "constants/api.constant";
 import { toast, Notification, Avatar } from "components/ui";
 import ActionColumn from "components/custom/actionColumn";
-import { AiFillDelete} from "react-icons/ai";
+import { AiFillDelete } from "react-icons/ai";
 import ConfirmationContent from "components/custom/ConfirmationContent";
 import Header from "components/custom/header";
 import { HiOutlinePlusCircle } from "react-icons/hi";
@@ -130,6 +132,8 @@ const PatientManagement = () => {
   const [filterValue, setFilterValue] = useState({
     status: "",
   });
+  dayjs.extend(utc);
+  dayjs.extend(timezone);
 
   const NameColumn = ({ row }) => {
     return (
@@ -147,13 +151,11 @@ const PatientManagement = () => {
           </Avatar>
         )}
 
-        <div className="w-32">{`${
-          row?.firstName || row?.lastName
-            ? `${
-                row?.lastName ? row?.lastName : ""
-              }, ${row?.firstName ? row?.firstName : ""} `
+        <div className="w-32">{`${row?.firstName || row?.lastName
+            ? `${row?.lastName ? row?.lastName : ""
+            }, ${row?.firstName ? row?.firstName : ""} `
             : "-"
-        }`}</div>
+          }`}</div>
       </div>
     );
   };
@@ -166,7 +168,7 @@ const PatientManagement = () => {
       companyId: filterCompanyId?._id ?? savedHospitalId,
       status: filterValue?.status ? filterValue?.status?.value : null,
       patientDob: filterValue?.dob ? dayjs(filterValue.dob).format("MM/DD/YYYY") : null,
-      mobile: filterValue?.mobile ? filterValue.mobile : null,  
+      mobile: filterValue?.mobile ? filterValue.mobile : null,
       skip: limit * (page - 1),
     })
       .then((res) => {
@@ -174,8 +176,8 @@ const PatientManagement = () => {
         setTotalCount(res?.data?.count);
       })
       .finally(() => setLoading(false));
-  }, [savedHospitalId,search, page, limit, refresh, filterValue, filterCompanyId]);
-  
+  }, [savedHospitalId, search, page, limit, refresh, filterValue, filterCompanyId]);
+
 
   const onActionHandle = (e, key, row) => {
     if (key === TABLE_ACTION_KEYS.DELETE) {
@@ -208,13 +210,13 @@ const PatientManagement = () => {
       setOpenExportModal(true);
     }
   };
- 
+
   const Caselabel = savedHospitalId === "67c3ec77851f03d96270ca85"
-  ? "NASPAC Case No."
-  : savedHospitalId === "67c3fb8308a4d79e36ebf939"
-  ? "PPS Case No."
-  : "Case No.";
-  
+    ? "NASPAC Case No."
+    : savedHospitalId === "67c3fb8308a4d79e36ebf939"
+      ? "PPS Case No."
+      : "Case No.";
+
   const columns = [
     {
       Header: "Patient ID",
@@ -250,16 +252,14 @@ const PatientManagement = () => {
         );
       },
     },
-    
+
     {
       Header: "DOB",
       Cell: (props) => {
         const row = props.row.original;
-        return (
-          <div className="flex items-center ">
-            {dayjs(row?.dob).format("MM/DD/YYYY")}
-          </div>
-        );
+        return `${dayjs.utc(row?.dob)
+          .tz("America/New_York")
+          .format("MM/DD/YYYY") || "-"}`;
       },
     },
 
@@ -281,12 +281,12 @@ const PatientManagement = () => {
         const row = props.row.original;
         return (
           <div className="flex items-center ">
-            {dayjs(row?.createdAt).format(DATE_TIME_FORMAT)}
+            {dayjs.utc(row?.createdAt).tz("America/New_York").format(DATE_TIME_FORMAT)}
           </div>
         );
       },
     },
-  
+
     {
       Header: "Active",
       Cell: (props) => {
@@ -324,7 +324,7 @@ const PatientManagement = () => {
     if (activeConfirm) {
       toastMessage = UPDATE_TOAST;
       payload.status = +selectedData?.action;
-    
+
     } else {
       toastMessage = DELETE_TOAST;
       payload.status = 0

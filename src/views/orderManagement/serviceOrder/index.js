@@ -15,6 +15,8 @@ import {
   SERVICE_ORDER_STATUS,
 } from "./serviceConstant";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 import { FaPen, FaDownload, FaEye } from "react-icons/fa";
 // import { Tooltip } from "components/ui";
 import {
@@ -120,10 +122,14 @@ const ServiceOrder = () => {
   const [selectedFile, setSelectedFile] = useState(null); // State to store the selected file
   const navigate = useNavigate();
 
+  dayjs.extend(utc);
+  dayjs.extend(timezone);
+
   useEffect(() => {
     if (id) {
+      console.log("getting id from params ", id);
 
-      getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.PATIENTS, id }).then(
+      getApi(APIS.LIST_DATA, { type: LIST_DATA_API_TYPE.PATIENTS, id, companyId:savedHospitalId }).then(
         (result) => {
           console.log("get order status", result)
           setFilterPatientId(result?.data?.data);
@@ -336,7 +342,7 @@ const ServiceOrder = () => {
         const row = props.row.original;
         return (
           <div className="flex items-center w-35">
-            {dayjs(row?.createdAt).format(DATE_TIME_FORMAT)}
+            {dayjs.utc(row?.createdAt).tz("America/New_York").format(DATE_TIME_FORMAT)}
           </div>
         );
       },
@@ -372,7 +378,9 @@ const ServiceOrder = () => {
       Header: "NAD",
       Cell: (props) => {
         const row = props.row.original;
-        return `${dayjs(row?.nextAppointmentDate).format(DATE_FORMAT) || "-"}`;
+        return `${dayjs.utc(row?.nextAppointmentDate)
+          .tz("America/New_York")
+          .format(DATE_FORMAT) || "-"}`;
       },
     },
 

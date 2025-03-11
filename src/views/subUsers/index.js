@@ -21,6 +21,8 @@ import {
 } from 'constants/app.constant';
 import ActiveInActiveCheckbox from 'components/custom/activeCheckbox';
 import hasPermisson, { ACCESS, MODULE, newColumn } from 'utils/hasPermission';
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 
 const ACTION_CONSTANT = [
   { label: 'Edit', key: TABLE_ACTION_KEYS.EDIT , show: ()=> hasPermisson(MODULE.SUBUSERS, ACCESS.WRITE)},
@@ -74,6 +76,8 @@ const Admins = () => {
   const [openModal, setOpenModal] = useState(false);
   const [activeConfirm, setActiveConfirm] = useState(false);
   const navigate = useNavigate();
+  dayjs.extend(utc);
+  dayjs.extend(timezone);
   ////// GET LIST ADMINS FROM API///////////
 
   useEffect(() => {
@@ -140,7 +144,7 @@ const Admins = () => {
       Cell: (props) => {
         const row = props.row.original;
         return (
-          <div className="flex items-center">{dayjs(row?.createdAt).format(DATE_TIME_FORMAT)}</div>
+          <div className="flex items-center">{dayjs.utc(row?.createdAt).tz("America/New_York").format(DATE_TIME_FORMAT)}</div>
         );
       },
     },

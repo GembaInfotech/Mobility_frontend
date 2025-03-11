@@ -3,6 +3,8 @@ import { Form, Field, useFormik, FormikProvider } from "formik";
 import { Button, Input, Notification, toast } from "components/ui";
 import { ExportPdf } from "assets/svg";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 import { DATE_FORMAT } from "constants/app.constant";
 import { APIS } from "constants/api.constant";
 import { getApi, postApi } from "services/CommonService";
@@ -98,6 +100,8 @@ const DeliveryReceipt = () => {
   const navigate = useNavigate();
   const canEdit = hasPermisson(MODULE.SERVICEORDER, ACCESS.WRITE);
   const savedHospitalId = localStorage.getItem("selectedHospitalId");
+  dayjs.extend(utc);
+  dayjs.extend(timezone);
 
   useEffect(() => {
     if (id) {
@@ -108,19 +112,21 @@ const DeliveryReceipt = () => {
         obj.orderNo = `${result?.data?.data?.orderNo || ""}`;
         obj.patientName = `${patientId?.lastName} ${patientId?.firstName}`;
         obj.patientId = `${patientId?.patientNo || ""}`;
-        obj.patientDob = `${dayjs(patientId?.dob).format(DATE_FORMAT) || ""}`;
-        obj.startDate = `${
-          dayjs(result?.data?.data?.createdAt).format(DATE_FORMAT) || ""
-        }`;
+        obj.patientDob = `${dayjs.utc(patientId?.dob)
+          .tz("America/New_York")
+          .format(DATE_FORMAT) || " "}`;
+        obj.startDate = `${dayjs.utc(result?.data?.data?.createdAt)
+          .tz("America/New_York")
+          .format(DATE_FORMAT) || " "}`;
+
         obj.primaryDeviceType = `${prescriptions?.[0]?.deviceType?.name || ""}`;
 
         obj.insuranceInfo = `${patientId?.primaryInsurance?.name || ""}`;
         obj.prescriberName = `${physicianId?.name || ""}`;
         obj.prescriberNpi = `${physicianId?.npiNo || ""}`;
         obj.prescriberAddress = `${physicianId?.address || ""}`;
-        obj.prescriberWorkPhone = `${physicianId?.countryCode || ""}-${
-          physicianId?.phoneNumber || ""
-        }`;
+        obj.prescriberWorkPhone = `${physicianId?.countryCode || ""}-${physicianId?.phoneNumber || ""
+          }`;
         obj.monthlyFrequency = "Daily";
         obj.lengthOfNeed = "Life Time";
 
@@ -231,11 +237,10 @@ const DeliveryReceipt = () => {
                       {patientInformation.map((it, index) => (
                         <div
                           key={index}
-                          className={`flex flex-col ${
-                            index !== patientInformation?.length - 1
+                          className={`flex flex-col ${index !== patientInformation?.length - 1
                               ? "border-r border-black"
                               : ""
-                          } `}
+                            } `}
                         >
                           <label className="p-2 text-black font-medium border-b border-black">
                             {it.label}
@@ -347,17 +352,14 @@ const DeliveryReceipt = () => {
                       {prescription.map((field, index) => (
                         <div
                           key={index}
-                          className={`${
-                            [3, 4, 5, 8, 9].includes(index)
+                          className={`${[3, 4, 5, 8, 9].includes(index)
                               ? "border-y border-black"
                               : ""
-                          } ${
-                            [0, 1, 3, 4, 6, 8].includes(index)
+                            } ${[0, 1, 3, 4, 6, 8].includes(index)
                               ? "border-r border-black"
                               : ""
-                          } flex flex-col ${
-                            index === 7 || index === 8 ? "col-span-2" : ""
-                          }`}
+                            } flex flex-col ${index === 7 || index === 8 ? "col-span-2" : ""
+                            }`}
                         >
                           <label className="text-black font-medium border-b border-black p-2">
                             {field.label}

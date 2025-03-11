@@ -4,6 +4,8 @@ import { Avatar, toast, Notification } from 'components/ui';
 import useThemeClass from 'utils/hooks/useThemeClass';
 import { Link, useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 import { getApi, postApi } from 'services/CommonService';
 import { APIS, LIST_DATA_API_TYPE } from 'constants/api.constant';
 import { HiOutlinePlusCircle } from 'react-icons/hi';
@@ -11,6 +13,7 @@ import ActionColumn from 'components/custom/actionColumn';
 import ConfirmationContent from 'components/custom/ConfirmationContent';
 import { AiFillDelete } from 'react-icons/ai';
 import Header from 'components/custom/header';
+
 import {
   TABLE_ACTION_KEYS,
   CONFIRMATION_OBJ,
@@ -74,6 +77,9 @@ const Admins = () => {
   const [openModal, setOpenModal] = useState(false);
   const [activeConfirm, setActiveConfirm] = useState(false);
   const navigate = useNavigate();
+
+  dayjs.extend(utc);
+  dayjs.extend(timezone);
   ////// GET LIST ADMINS FROM API///////////
 
   useEffect(() => {
@@ -139,7 +145,7 @@ const Admins = () => {
       Cell: (props) => {
         const row = props.row.original;
         return (
-          <div className="flex items-center">{dayjs(row?.createdAt).format(DATE_TIME_FORMAT)}</div>
+          <div className="flex items-center">{dayjs.utc(row?.createdAt).tz("America/New_York").format(DATE_TIME_FORMAT)}</div>
         );
       },
     },

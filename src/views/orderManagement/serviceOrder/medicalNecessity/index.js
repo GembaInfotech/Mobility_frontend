@@ -3,6 +3,8 @@ import { Form, Field, useFormik, FormikProvider } from "formik";
 import { Button, Input, Notification, toast } from "components/ui";
 import { ExportPdf } from "assets/svg";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 import { DATE_FORMAT } from "constants/app.constant";
 import { APIS } from "constants/api.constant";
 import { getApi, postApi } from "services/CommonService";
@@ -107,6 +109,8 @@ const MedicalNecessity = () => {
   const navigate = useNavigate();
   const canEdit = hasPermisson(MODULE.SERVICEORDER, ACCESS.WRITE);
   const savedHospitalId = localStorage.getItem("selectedHospitalId");
+  dayjs.extend(utc);
+  dayjs.extend(timezone);
 
   useEffect(() => {
     if (id) {
@@ -117,10 +121,13 @@ const MedicalNecessity = () => {
         obj.orderNo = `${result?.data?.data?.orderNo || ""}`;
         obj.patientName = `${patientId?.lastName} ${patientId?.firstName}`;
         obj.patientId = `${patientId?.patientNo || ""}`;
-        obj.patientDob = `${dayjs(patientId?.dob).format(DATE_FORMAT) || ""}`;
-        obj.startDate = `${
-          dayjs(result?.data?.data?.createdAt).format(DATE_FORMAT) || ""
-        }`;
+        
+        obj.patientDob = `${dayjs.utc(patientId?.dob)
+          .tz("America/New_York")
+          .format(DATE_FORMAT) || " "}`;
+        obj.startDate = `${dayjs.utc(result?.data?.data?.createdAt)
+                  .tz("America/New_York")
+                  .format(DATE_FORMAT) || " "}`;
         obj.primaryDeviceType = `${prescriptions?.[0]?.deviceType?.name || ""}`;
 
         obj.insuranceInfo = `${patientId?.primaryInsurance?.name || ""}`;
