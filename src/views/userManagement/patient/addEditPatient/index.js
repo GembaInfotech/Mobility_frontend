@@ -106,6 +106,7 @@ const AddEditPatient = () => {
     if (id) {
       getApi(APIS.LIST_DATA, {
         type: LIST_DATA_API_TYPE.PATIENTS,
+        companyId:savedHospitalId,
         id,
       })
         .then((res) => {

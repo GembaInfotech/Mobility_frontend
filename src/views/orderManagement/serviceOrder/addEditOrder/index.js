@@ -274,6 +274,7 @@ const AddEditSeriveOrder = () => {
       formData.append('primaryInsuranceNo', payload?.primaryInsuranceNo);
     
     if (payload.secondaryInsuranceNo) 
+      
       formData.append('secondaryInsuranceNo', payload?.secondaryInsuranceNo);
 
     if (payload.patientId) {
@@ -316,9 +317,10 @@ const AddEditSeriveOrder = () => {
           {id ? UPDATE_TOAST : ADDED_TOAST}
         </Notification>
       );
-      if (!id) {
-        navigate('/app/service-order/edit/' + res?.data?._id);
-      }
+      navigate(-1)
+      // if (!id) {
+      //   navigate('/app/service-order/edit/' + res?.data?._id);
+      // }
     }).catch((err) => {
       toast.push(
         <Notification type="error">{err}</Notification>
@@ -334,7 +336,7 @@ const AddEditSeriveOrder = () => {
       if (event?.data?.primaryInsurance) {
         setFieldValue('primaryInsurance', { label: event?.data?.primaryInsurance?.name, value: event?.data?.primaryInsurance?._id });
       }
-      else setFieldValue('primaryInsurance', null);
+      else setFieldValue('primaryInsurance', '');
 
       if (event?.data?.primaryInsuranceNo) {
         setFieldValue('primaryInsuranceNo', event?.data?.primaryInsuranceNo);
@@ -344,7 +346,7 @@ const AddEditSeriveOrder = () => {
       if (event?.data?.secondaryInsurance) {
         setFieldValue('secondaryInsurance', { label: event?.data?.secondaryInsurance?.name, value: event?.data?.secondaryInsurance?._id });
       }
-      else setFieldValue('secondaryInsurance', null);
+      else setFieldValue('secondaryInsurance', '');
 
       if (event?.data?.secondaryInsuranceNo) {
         setFieldValue('secondaryInsuranceNo', event?.data?.secondaryInsuranceNo);
