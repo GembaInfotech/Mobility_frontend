@@ -112,12 +112,8 @@ const DeliveryReceipt = () => {
         obj.orderNo = `${result?.data?.data?.orderNo || ""}`;
         obj.patientName = `${patientId?.lastName} ${patientId?.firstName}`;
         obj.patientId = `${patientId?.patientNo || ""}`;
-        obj.patientDob = `${dayjs.utc(patientId?.dob)
-          .tz("America/New_York")
-          .format(DATE_FORMAT) || " "}`;
-        obj.startDate = `${dayjs.utc(result?.data?.data?.createdAt)
-          .tz("America/New_York")
-          .format(DATE_FORMAT) || " "}`;
+        obj.patientDob = `${dayjs(patientId?.dob).format(DATE_FORMAT) || ""}`;
+        obj.startDate = `${dayjs(result?.data?.data?.createdAt).format(DATE_FORMAT) || " "}`;
 
         obj.primaryDeviceType = `${prescriptions?.[0]?.deviceType?.name || ""}`;
 

@@ -378,9 +378,7 @@ const ServiceOrder = () => {
       Header: "NAD",
       Cell: (props) => {
         const row = props.row.original;
-        return `${dayjs.utc(row?.nextAppointmentDate)
-          .tz("America/New_York")
-          .format(DATE_FORMAT) || "-"}`;
+        return `${dayjs(row?.nextAppointmentDate).format(DATE_FORMAT) || "-"}`;
       },
     },
 

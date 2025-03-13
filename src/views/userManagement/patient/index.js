@@ -257,9 +257,7 @@ const PatientManagement = () => {
       Header: "DOB",
       Cell: (props) => {
         const row = props.row.original;
-        return `${dayjs.utc(row?.dob)
-          .tz("America/New_York")
-          .format("MM/DD/YYYY") || "-"}`;
+        return `${dayjs(row?.dob).format("MM/DD/YYYY") || '-'}`;
       },
     },
 
