@@ -75,7 +75,7 @@ const AddEditAdmins = () => {
 
 
 
-  const onSubmit = ({ name, email, roles, superAdmin, company }) => {
+  const onSubmit = ({ name, email, roles, superAdmin, company }, {setSubmitting}) => {
     const mergedRoles = PERMISSIONS.map((permission) => {
       const existingRole = roles?.find((role) => role.name === permission.name);
       return existingRole || permission;
@@ -104,6 +104,9 @@ const AddEditAdmins = () => {
       .then(() => {
         navigate(-1);
         toast.push(<Notification type="success">Sub admin saved!</Notification>);
+      })
+      .catch(()=>{
+        setSubmitting(false)
       })
       .finally(() => setLoading(false));
   };

@@ -45,7 +45,7 @@ const AddEditAdmins = () => {
     }
   }, [id]);
 
-  const onSubmit = ({ name }) => {
+  const onSubmit = ({ name }, {setSubmitting}) => {
     console.log("Submitted Name:", name);
 
     setLoading(true);
@@ -63,6 +63,7 @@ const AddEditAdmins = () => {
         toast.push(<Notification type="success">Company saved!</Notification>);
       })
       .catch((error) => {
+        setSubmitting(false); 
         console.error("Error saving company:", error);
       })
       .finally(() => setLoading(false));

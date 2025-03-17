@@ -18,6 +18,8 @@ import { useSelector } from "react-redux";
 import { APIS, LIST_DATA_API_TYPE } from "constants/api.constant";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/bootstrap.css";
+import { useNavigate} from 'react-router-dom';
+
 
 
 const FORM_FIELDS = [
@@ -78,6 +80,8 @@ const AddEditInsurance = ({ closeAddEdit, selectedRow }) => {
   const savedHospitalId = localStorage.getItem("selectedHospitalId");
   // const [companyOptions, setCompanyOptionos] = useState([]);
   const user = useSelector((state) => state.auth.user);
+  const navigate = useNavigate();
+  
 
 
   // useEffect(() => {
@@ -154,12 +158,15 @@ const AddEditInsurance = ({ closeAddEdit, selectedRow }) => {
 
     postApi(APIS.ADD_EDIT_INSURANCE, dataToSend)
       .then((res) => {
+        navigate(-1);
         toast.push(
           <Notification type="success">Saved successfully</Notification>
         );
+      }).catch(()=>{
+        setSubmitting(false)
       })
       .finally(() => {
-        closeAddEdit();
+        // closeAddEdit();
         setSubmitting(false);
       });
   };

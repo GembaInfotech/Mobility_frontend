@@ -132,7 +132,7 @@ const AddEditPatient = () => {
     }
   }, [id]);
 
-  const onSubmit = (payload) => {
+  const onSubmit = (payload, {setSubmitting}) => {
     if (id) {
       payload.id = id;
     }
@@ -174,6 +174,8 @@ const AddEditPatient = () => {
         </Notification>
       );
       navigate(-1);
+    }).catch(()=>{
+      setSubmitting(false)
     });
   };
 

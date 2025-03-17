@@ -99,7 +99,7 @@ const AddEditDeviceType = ({ editData, show, onClose, refreshPage }) => {
 
   // }, []);
 
-  const onSubmit = ({ name, id, companyId }) => {
+  const onSubmit = ({ name, id, companyId }, {setSubmitting}) => {
     setLoading(true);
     const payload = {
       name,
@@ -119,6 +119,8 @@ const AddEditDeviceType = ({ editData, show, onClose, refreshPage }) => {
         toast.push(
           <Notification type="success">Device Type saved!</Notification>
         );
+      }).catch(()=>{
+        setSubmitting(false)
       })
       .finally(() => setLoading(false));
   };

@@ -164,7 +164,7 @@ const AddEditStock = ({ onClose, refreshPage }) => {
         navigate("/app/inventory/stockEntry");
       })
       .catch((err) => {
-        toast.push(<Notification type="error">{err}</Notification>);
+        setSubmitting(false)
       })
       .finally(() => {
         setSubmitting(false);

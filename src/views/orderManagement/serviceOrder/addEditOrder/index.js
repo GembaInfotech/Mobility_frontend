@@ -322,9 +322,10 @@ const AddEditSeriveOrder = () => {
       //   navigate('/app/service-order/edit/' + res?.data?._id);
       // }
     }).catch((err) => {
-      toast.push(
-        <Notification type="error">{err}</Notification>
-      );
+      // toast.push(
+      //   <Notification type="error">{err}</Notification>
+      // );
+      setSubmitting(false);
     }).finally(() => {
       setSubmitting(false);
     });

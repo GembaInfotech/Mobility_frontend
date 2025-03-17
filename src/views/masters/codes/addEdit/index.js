@@ -107,7 +107,7 @@ const AddEditCodes = ({ editData, show, onClose, refreshPage }) => {
   
   //   }, []);
 
-  const onSubmit = ({ code, id, description, type, companyId }) => {
+  const onSubmit = ({ code, id, description, type, companyId }, {setSubmitting}) => {
     setLoading(true);
     let payload = {
       code,
@@ -126,6 +126,9 @@ const AddEditCodes = ({ editData, show, onClose, refreshPage }) => {
         onClose();
         refreshPage();
         toast.push(<Notification type="success">Code saved!</Notification>);
+      })
+      .catch(()=>{
+        setSubmitting(false);
       })
       .finally(() => setLoading(false));
   };

@@ -163,12 +163,15 @@ const AddEditPhysician = ({ closeAddEdit, selectedRow }) => {
 
     postApi(APIS.ADD_EDIT_PHYSICIANS, dataToSend)
       .then((res) => {
+        closeAddEdit();
         toast.push(
           <Notification type="success">Saved successfully</Notification>
         );
       })
+      .catch(()=>{
+        setSubmitting(false);
+      })
       .finally(() => {
-        closeAddEdit();
         setSubmitting(false);
       });
   };
