@@ -13,6 +13,7 @@ import Confirmation from "./confirmation";
 import {
   PAGE_KEY,
   SERVICE_ORDER_STATUS,
+  SEGMENT_CONSTANT,
 } from "./serviceConstant";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -229,7 +230,6 @@ const ServiceOrder = () => {
     const valueobj = SERVICE_ORDER_STATUS.find(
       (option) => option?.value === status
     );
-
     return (
       <div
         className="flex justify-center"
@@ -406,6 +406,26 @@ const ServiceOrder = () => {
       },
     },
 
+    {
+      Header: "Orientation",
+      accessor: "",
+      Cell: (props) => {
+        const row = props.row.original;
+    
+        return (
+          row?.prescriptions?.map((item, index) => {
+            const segmentLabel = SEGMENT_CONSTANT.find(seg => seg.value === item?.segment)?.label || "-";
+    
+            return (
+              <div className="w-40" key={index}>
+                {segmentLabel}
+              </div>
+            );
+          })
+        );
+      },
+    },
+    
     {
       Header: "Referring Physician",
       Cell: (props) => {
