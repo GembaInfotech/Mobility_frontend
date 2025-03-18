@@ -30,7 +30,7 @@ const Confirmation = ({ selectedKey, selectedData, closeDialog }) => {
 
       formData.append("id", selectedData?._id);
       formData.append("orderStatus", payload?.orderStatus);
-      formData.append("NALId", selectedData.appointmentLocationId._id)
+      formData.append("NALId", selectedData?.appointmentLocationId?._id)
       formData.append("addComment", payload?.name);
       postApi(APIS.ADD_EDIT_PRESCRIPTION, formData).then((res) => {
         toast.push(<Notification type="success">{UPDATE_TOAST}</Notification>);
