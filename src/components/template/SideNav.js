@@ -58,7 +58,7 @@ const SideNav = () => {
   useEffect(() => {
     const savedHospitalId = localStorage.getItem("selectedHospitalId");
 
-    if (user?.companyId) {
+    if (user?.companyId && user?.companyId.length != 0) {
       getApi(APIS.LIST_DATA, {
         companyIds: JSON.stringify(user.companyId),
         type: LIST_DATA_API_TYPE.COMPANY,
