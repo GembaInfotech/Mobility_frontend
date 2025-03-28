@@ -89,7 +89,7 @@ const AddEditAdmins = () => {
     
     if (!superAdmin) {
       if (company.length === 1) {
-        payload.companyId = company
+        payload.append('companyIds', JSON.stringify(company));
       } else {
         company.forEach((compId) => payload.append('companyId', compId));
       }
