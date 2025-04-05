@@ -1,7 +1,7 @@
 const appConfig = {
-  apiBaseUrl: "https://103.171.96.154/api/",
+  apiBaseUrl: "https://admin.bracetekk.com/api/",
   apiPrefix: "/api",
-  imageBaseUrl: "https://103.171.96.154/api/bucket/",
+  imageBaseUrl: "https://admin.bracetekk.com/api/bucket/",
   authenticatedEntryPath: "/app/dashboard",
   unAuthenticatedEntryPath: "/sign-in",
   tourPath: "/app/account/kyc-form",
