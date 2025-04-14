@@ -57,7 +57,7 @@ const AddEditAdmins = () => {
       formData.append('image', selectedImage); // Ensure your backend expects "image"
     }
 
-    postApi(APIS.ADD_EDIT_DATA, formData, {
+    postApi(APIS.ADD_EDIT_COMPANY, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

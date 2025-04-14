@@ -28,6 +28,7 @@ export const APIS = {
   DELETE_IMAGE: 'api/deleteImageBucket',
   CHANGE_PASSWORD: 'admin/changePassword',
   LIST_DATA: 'admin/listData',
+  ADD_EDIT_COMPANY: 'admin/addEditCompany',
   ADD_EDIT_DATA: 'admin/addEditData',
   ADD_EDIT_CODE: 'admin/addEditCodes',
   GET_SERVICE_ORDER: 'admin/prescriptions',
