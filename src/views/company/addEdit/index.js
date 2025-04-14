@@ -28,6 +28,7 @@ const AddEditAdmins = () => {
   const formRef = useRef();
   const [loading, setLoading] = useState(false);
   const [editData, setEditData] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -45,17 +46,20 @@ const AddEditAdmins = () => {
     }
   }, [id]);
 
-  const onSubmit = ({ name }, {setSubmitting}) => {
-    console.log("Submitted Name:", name);
-
+  const onSubmit = ({ name }, { setSubmitting }) => {
     setLoading(true);
+    const formData = new FormData();
+    formData.append('name', name);
+    if (id) formData.append('id', id);
+    formData.append('modelType', LIST_DATA_API_TYPE.COMPANY);
 
-    // Using JSON instead of FormData
-    const payload = { name, id: id || undefined };
-          payload.modelType = LIST_DATA_API_TYPE.COMPANY
-    postApi(APIS.ADD_EDIT_DATA, payload, {
+    if (selectedImage) {
+      formData.append('image', selectedImage); // Ensure your backend expects "image"
+    }
+
+    postApi(APIS.ADD_EDIT_DATA, formData, {
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'multipart/form-data',
       },
     })
       .then(() => {
@@ -63,8 +67,8 @@ const AddEditAdmins = () => {
         toast.push(<Notification type="success">Company saved!</Notification>);
       })
       .catch((error) => {
-        setSubmitting(false); 
-        console.error("Error saving company:", error);
+        setSubmitting(false);
+        console.error('Error saving company:', error);
       })
       .finally(() => setLoading(false));
   };
@@ -115,6 +119,22 @@ const AddEditAdmins = () => {
                       component={Input}
                     />
                   </FormItem>
+
+                  <FormItem label="Upload Image">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => setSelectedImage(e.target.files[0])}
+                    />
+                  </FormItem>
+
+                  {selectedImage && (
+                    <img
+                      src={URL.createObjectURL(selectedImage)}
+                      alt="Selected"
+                      className="w-24 h-24 object-cover rounded border mt-2"
+                    />
+                  )}
                 </FormContainer>
               </Card>
             )}
