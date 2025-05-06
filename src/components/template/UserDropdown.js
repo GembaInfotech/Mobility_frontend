@@ -6,7 +6,9 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 import { HiOutlineUser, HiOutlineCog, HiOutlineLogout } from 'react-icons/hi';
-import { AiOutlineCaretDown } from 'react-icons/ai';
+import { AiOutlineCaretDown,AiOutlineUnlock } from 'react-icons/ai';
+
+
 
 const dropdownItemList = [
   // {
@@ -14,6 +16,11 @@ const dropdownItemList = [
   //   path: "/app/account/settings/profile",
   //   icon: <HiOutlineUser />,
   // },
+  {
+    label: 'Reset Password',
+    path: '/app/account/settings/password',
+    icon: <AiOutlineUnlock />
+  },
   {
     label: 'Account Settings',
     path: '/app/account/settings/profile',

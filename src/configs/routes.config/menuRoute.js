@@ -2,6 +2,7 @@ import React from "react";
 import { APP_PREFIX_PATH } from "constants/route.constant";
 import { ADMIN, USER } from "constants/roles.constant";
 import hasPermisson, { ACCESS, MODULE } from "utils/hasPermission";
+import Admins from "views/subUsers";
 
 const menuRoute = [
   {
@@ -237,6 +238,26 @@ const menuRoute = [
       header: "Provider Management",
     },
   },
+  {
+    key: "apps.ResetPassword",
+    path: `${APP_PREFIX_PATH}/account/settings/password`,
+    component: React.lazy(()=> import("views/account/Settings/components/Password")),
+    authority: [ADMIN, USER],
+    show: () => hasPermisson(MODULE.PROVIDER, ACCESS.READ),
+    meta: {
+      header: "Password Reset",
+    },
+  },
+  {
+    key: "apps.AccountSettings",
+    path: `${APP_PREFIX_PATH}/account/settings/profile`,
+    component: React.lazy(()=> import("views/account/Settings/components/Profile")),
+    authority: [ADMIN, USER],
+    show: () => hasPermisson(MODULE.PROVIDER, ACCESS.READ),
+    meta: {
+      header: "Account Settings",
+    },
+  }
 ];
 
 export default menuRoute;
