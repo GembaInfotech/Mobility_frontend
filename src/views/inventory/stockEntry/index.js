@@ -57,13 +57,17 @@ const Codes = () => {
   const [filtervalue, setFilterValue] = useState("");
   const [filterLocationId, setFilterLocationId] = useState("");
   const [filterCompanyId, setFilterCompanyId] = useState("");
+  const [filterLCodes, setFilterLCodes] = useState("");
+  const [LCodes, setLCodes] = useState([]);
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
 
   console.log("filterCompanyId", filterCompanyId);
+  console.log("filterLCodes", filterLCodes);
   
   // Fetching data when component mounts or any dependency changes
   let companyId = savedHospitalId
+  
   useEffect(() => {
     setLoading(true);
     if(filterCompanyId){
@@ -74,6 +78,7 @@ const Codes = () => {
       type: LIST_DATA_API_TYPE.STOCK_ENTRY,
       locationId: filterLocationId || "",
       companyId: companyId,
+      lcodeId: filterLCodes || "",
       limit,
       // companyId:savedHospitalId,
       skip: limit * (page - 1),
@@ -83,8 +88,9 @@ const Codes = () => {
         setTotalCount(res?.data?.count);
       })
       .finally(() => setLoading(false));
-  }, [page, limit, refresh, filtervalue, filterLocationId, filterCompanyId]);
+  }, [page, limit, refresh, filtervalue, filterLocationId, filterCompanyId,filterLCodes]);
 
+     console.log("checking",codes);
   const onActionHandle = (e, key, row) => {
     e.preventDefault();
     if (key === PAGE_KEY.VIEW) {
@@ -192,9 +198,12 @@ const Codes = () => {
         filtervalue={filtervalue}
         setFilterValue={setFilterValue}
         setFilterLocationId={setFilterLocationId}
-        setFilterCompanyId = {setFilterCompanyId}
+        setFilterCompanyId={setFilterCompanyId}
         filterLocationId={filterLocationId}
-        filterCompanyId = {filterCompanyId}
+        filterCompanyId={filterCompanyId}
+        filterLCodes={filterLCodes}
+        setFilterLCodes={setFilterLCodes}
+        LCodes={LCodes}
       />
       <AdaptableCard className="h-full" bodyClass="h-full">
         <DataTable

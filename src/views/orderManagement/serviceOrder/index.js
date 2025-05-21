@@ -7,7 +7,7 @@ import { AdaptableCard, DataTable } from "components/shared";
 
 import { getApi, postApi } from "services/CommonService";
 import { APIS, LIST_DATA_API_TYPE } from "constants/api.constant";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { Dialog, Tag, toast } from "components/ui";
 import Confirmation from "./confirmation";
 import {
@@ -54,6 +54,7 @@ const ACTION_CONSTANT = [
     isImage: true,
     toolTip: "Delivery Receipt",
     show: () => hasPermisson(MODULE.SERVICEORDER, ACCESS.READ),
+    
   },
   {
     label: <AiFillDelete style={{ fontSize: "1rem" }} />,
@@ -90,9 +91,11 @@ const BUTTON_CONSTANT = [
 
 const ServiceOrder = () => {
   const savedHospitalId = localStorage.getItem("selectedHospitalId");
+  const location = useLocation();
 
   const { id } = useParams();
   const [tabledata, setTableData] = useState([]);
+  //const [filterParams, setFilterParams] = useState(initialFilters);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
@@ -122,9 +125,20 @@ const ServiceOrder = () => {
   const [openImportModal, setOpenImportModal] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null); // State to store the selected file
   const navigate = useNavigate();
+  
 
   dayjs.extend(utc);
   dayjs.extend(timezone);
+  
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+
+    setFilterPatientDob(params.get("patientDob") || "");
+    setFilterPhysicianId(params.get("physicianId") || "");
+    setFilterLcodeId(params.get("lcodeId") || "");
+    setFilterInsuranceId(params.get("insuranceId") || "");
+    setFilterCompanyId(params.get("companyId") || "");
+  }, [location.search]);
 
   useEffect(() => {
     if (id) {
@@ -167,7 +181,7 @@ const ServiceOrder = () => {
     };
     console.log(payload)
     setPayload(payload);
-
+    
     if (filterPatientDob && filterPatientDob !== "") payload.patientDob = filterPatientDob
 
     if (filtervalue && filtervalue?.value) payload.status = filtervalue?.value;
@@ -206,11 +220,19 @@ const ServiceOrder = () => {
   const onActionHandle = (e, value, row) => {
     e.preventDefault();
     if (value === PAGE_KEY.VIEW) {
-      navigate(`/app/service-order/edit/${row?._id}`);
+      const queryParams = new URLSearchParams({
+        patientDob: filterPatientDob || "",
+        physicianId: filterPhysicianId?._id || "",
+        lcodeId: filterLcodeId?._id || "",
+        insuranceId: filterInsuranceId?._id || "",
+        companyId: filterCompanyId?._id || "",
+      }).toString();      
+      navigate(`/app/service-order/edit/${row?._id}?${queryParams}`);
+      console.log(window.location.search);
     } else if (value === PAGE_KEY.DELIVERY_RECEIPT) {
-      navigate(`/app/orderManagement/delivery-receipt/${row?._id}`);
+       window.open(`/app/orderManagement/delivery-receipt/${row?._id}`, '_blank', 'noopener,noreferrer');
     } else if (value === PAGE_KEY.MEDICAL_NECESSITY) {
-      navigate(`/app/orderManagement/medical-necessity/${row?._id}`);
+      window.open(`/app/orderManagement/medical-necessity/${row?._id}`,'_blank','noopener,noreferrer');
     } else {
       setOpenModal(true);
       setSelectedKey(value);

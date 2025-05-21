@@ -106,9 +106,11 @@ const DeliveryReceipt = () => {
   useEffect(() => {
     if (id) {
       getApi(APIS.GET_SERVICE_ORDER, { id, companyId: savedHospitalId }).then((result) => {
+        console.log("API RESPONSE",result);
         const { patientId, physicianId, prescriptions, renderingPhysicianId } =
           result?.data?.data;
         const obj = {};
+        obj.company = `${result?.data?.data?.company || "NASPAC"}`
         obj.orderNo = `${result?.data?.data?.orderNo || ""}`;
         obj.patientName = `${patientId?.lastName} ${patientId?.firstName}`;
         obj.patientId = `${patientId?.patientNo || ""}`;
@@ -116,7 +118,7 @@ const DeliveryReceipt = () => {
         obj.startDate = `${dayjs(result?.data?.data?.createdAt).format(DATE_FORMAT) || " "}`;
 
         obj.primaryDeviceType = `${prescriptions?.[0]?.deviceType?.name || ""}`;
-
+        
         obj.insuranceInfo = `${patientId?.primaryInsurance?.name || ""}`;
         obj.prescriberName = `${physicianId?.name || ""}`;
         obj.prescriberNpi = `${physicianId?.npiNo || ""}`;
@@ -174,7 +176,7 @@ const DeliveryReceipt = () => {
 
   const { values, handleSubmit, setFieldValue, isSubmitting, setSubmitting } =
     formik;
-
+    
   return (
     <FormikProvider value={formik}>
       <Form
@@ -211,10 +213,9 @@ const DeliveryReceipt = () => {
 
         <div className="border border-black">
           <div className="p-8">
-            <div className="text-[20px]">
-              <div className="text-black">North American</div>
-              <div className="uppercase text-[#A4D3F9]">Spine & pain</div>
-            </div>
+          <div className="text-[20px]">
+            <div className="text-black">{values?.company || "Company Name"}</div>
+          </div>
             <div className="max-w-4xl mx-auto">
               <h2 className="text-center text-xl font-bold mb-4">
                 DME Delivery Receipt

@@ -46,6 +46,7 @@ const Switcher = forwardRef((props, ref) => {
 		if(defaultChecked) {
 			checked.defaultChecked = defaultChecked
 		}
+		console.log(checked);
 		return checked
 	}
 

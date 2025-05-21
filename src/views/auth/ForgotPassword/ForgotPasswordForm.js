@@ -12,7 +12,7 @@ import { ActionLink } from "components/shared";
 import useTimeOutMessage from "utils/hooks/useTimeOutMessage";
 import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
-import { postApi } from "services/CommonService";
+import { postApi,getApi } from "services/CommonService";
 import { APIS } from "constants/api.constant";
 
 const validationSchema = Yup.object().shape({
@@ -42,13 +42,23 @@ const ForgotPasswordForm = (props) => {
       });
   };
 
+  const onVerifyOTP = () =>{
+    getApi(APIS.FORGET_PASSWORD)
+     .then((res) => {
+        toast.push(
+          <Notification type="success">OTP Verified Successfully</Notification>
+        )
+     })
+  }
+
   return (
     <div className={className}>
       <div className="mb-6">
         {emailSent ? (
           <>
-            <h3 className="mb-1">Check your email</h3>
-            <p>We have sent a password recovery instruction to your email</p>
+            <h3 className="mb-1">OTP Verification</h3>
+            <Input/>
+            <button onsubmit={onVerifyOTP}>Verify OTP</button>
           </>
         ) : (
           <>

@@ -7,9 +7,11 @@ import { debounce } from "lodash";
 import AsyncSelect from "react-select/async";
 import { useNavigate } from "react-router-dom";
 
-const FilterSection = ({ setFilterLocationId, filterLocationId, filterCompanyId, setFilterCompanyId }) => {
+const FilterSection = ({ setFilterLocationId, filterLocationId, filterCompanyId, setFilterCompanyId, setFilterLCodes, filterLCodes }) => {
   const [locations, setLocations] = useState([]); // Store locations fetched from API
   const [companies, setCompanies] = useState([]);
+  const [selectedLCodes, setSelectedLCodes] = useState(null); 
+  const [LCodes, setLCodes] = useState([]);
   // Fetch location options
   const savedHospitalId = localStorage.getItem("selectedHospitalId");
 
@@ -36,11 +38,26 @@ const FilterSection = ({ setFilterLocationId, filterLocationId, filterCompanyId,
     });
   };
 
+  const loadLCodesOption = (inputValue, resolve) => {
+    
+    getApi(APIS.LIST_DATA, {
+      type: LIST_DATA_API_TYPE.CODES,
+      companyId: savedHospitalId,
+      search: inputValue,
+    }).then((res) => {
+      resolve(res?.data?.data);
+      setLCodes(res?.data?.data); // Save the fetched locations to state
+    });
+  };
+  console.log("Locations",locations);
+  console.log("codes",LCodes);
 
   const loadLocation = debounce(loadLocationOption, 300);
   const loadCompany = debounce(loadCompanyOption, 300);
+  const loadLCodes = debounce(loadLCodesOption,300);
   const navigate = useNavigate();
 
+  console.log("Codes",loadLCodes);
   
   // Find the selected location based on the filterLocationId
   const selectedLocation = locations.find(
@@ -51,6 +68,12 @@ const FilterSection = ({ setFilterLocationId, filterLocationId, filterCompanyId,
     (company) => company._id === filterCompanyId
   );
 
+  useEffect(() => {
+    const selected = LCodes.find((LCodes) => LCodes.id === filterLCodes);
+    setSelectedLCodes(selected || null); // If not found, set to null
+  }, [filterLCodes]);
+
+  console.log("LCodes",selectedLCodes);
   return (
     <div className="grid grid-cols-3 gap-4 mb-5">
       {/* AsyncSelect to display filtered location */}
@@ -87,6 +110,22 @@ const FilterSection = ({ setFilterLocationId, filterLocationId, filterCompanyId,
           setFilterCompanyId(selectedOption?._id); // Update the parent state with selected location ID
         }}
       />
+ <AsyncSelect
+        autoComplete="off"
+        placeholder="Filter by LCodes"
+        defaultOptions
+        cacheOptions
+        size="sm"
+        className="mb-4"
+        value={selectedLCodes || null} // Set selected LCodes as value
+        loadOptions={loadLCodes}
+        getOptionLabel={(v) => `${v?.code || ""}`}
+        getOptionValue={(v) => v?._id}
+        onChange={(selectedOption) => {
+          console.log("Selected Location: ", selectedOption);
+          setFilterLCodes(selectedOption?._id); // Update the parent state with selected location ID
+        }}
+      />
       {/* Reset button */}
       <Button
         size="sm"
@@ -113,6 +152,8 @@ const Header = ({
   filterCompanyId,
   setFilterLocationId,
   setFilterCompanyId,
+  filterLCodes,
+  setFilterLCodes,
 }) => {
   const ButtonSection = ({ buttonClick, buttonMenu }) => {
     return (
@@ -147,6 +188,8 @@ const Header = ({
           setFilterLocationId={setFilterLocationId}
           setFilterCompanyId = {setFilterCompanyId}
           filterLocationId={filterLocationId} // Passing the filter location ID to the FilterSection
+          filterLCodes={filterLCodes}
+          setFilterLCodes={setFilterLCodes}
         />
       </div>
     </>

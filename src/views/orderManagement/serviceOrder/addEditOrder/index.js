@@ -79,6 +79,7 @@ const AddEditSeriveOrder = () => {
   const [editdata, setEditData] = useState({});
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation();
   const stateNavigateData = useLocation();
 
   if (stateNavigateData.state) {
@@ -388,7 +389,7 @@ const AddEditSeriveOrder = () => {
             <Button
               size="sm"
               variant="solid"
-              onClick={() => navigate(-1)}
+              onClick={() => navigate(`/app/orderManagement/service-order?${location.search}`)}
               type="button"
               className="flex items-center"
             >

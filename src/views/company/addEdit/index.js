@@ -9,6 +9,7 @@ import {
   Notification,
   Card,
   Spinner,
+  Switcher
 } from 'components/ui';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
@@ -29,6 +30,7 @@ const AddEditAdmins = () => {
   const [loading, setLoading] = useState(false);
   const [editData, setEditData] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [dataDuplicate, setDataDuplicate] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -52,6 +54,7 @@ const AddEditAdmins = () => {
     formData.append('name', name);
     if (id) formData.append('id', id);
     formData.append('modelType', LIST_DATA_API_TYPE.COMPANY);
+    formData.append('DataDuplicate',dataDuplicate);
 
     if (selectedImage) {
       formData.append('image', selectedImage); // Ensure your backend expects "image"
@@ -60,6 +63,7 @@ const AddEditAdmins = () => {
     postApi(APIS.ADD_EDIT_COMPANY, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
+         
       },
     })
       .then(() => {
@@ -136,6 +140,10 @@ const AddEditAdmins = () => {
                     />
                   )}
                 </FormContainer>
+                {id && <div className="flex">
+                   <p className="mr-5">Do you want to duplicate the data (Insurance, Codes, Device types)?</p>
+                   <Switcher checked={dataDuplicate} onChange={()=> setDataDuplicate(!dataDuplicate)}/>
+                </div>}
               </Card>
             )}
           </Form>
