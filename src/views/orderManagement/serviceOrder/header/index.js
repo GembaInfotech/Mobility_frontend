@@ -34,7 +34,6 @@ const FilterSection = ({
 }) => {
 
   const savedHospitalId = localStorage.getItem("selectedHospitalId");
-
   const loadPatientsOption = (inputValue, resolve) => {
     getApi(APIS.LIST_DATA, {
       type: LIST_DATA_API_TYPE.PATIENTS,

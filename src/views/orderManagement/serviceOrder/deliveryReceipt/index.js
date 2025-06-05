@@ -214,7 +214,7 @@ const DeliveryReceipt = () => {
         <div className="border border-black">
           <div className="p-8">
           <div className="text-[20px]">
-            <div className="text-black">{values?.company || "Company Name"}</div>
+            <div className="text-black">Company Name</div>
           </div>
             <div className="max-w-4xl mx-auto">
               <h2 className="text-center text-xl font-bold mb-4">

@@ -132,14 +132,26 @@ const ServiceOrder = () => {
   
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-
-    setFilterPatientDob(params.get("patientDob") || "");
-    setFilterPhysicianId(params.get("physicianId") || "");
-    setFilterLcodeId(params.get("lcodeId") || "");
-    setFilterInsuranceId(params.get("insuranceId") || "");
-    setFilterCompanyId(params.get("companyId") || "");
+    console.log("params",window.location.search);
+    const physicianId = JSON.parse(params.get("physicianId"));
+    const insuranceId = JSON.parse(params.get("insuranceId"));
+    const lcodeId = JSON.parse(params.get("lcodeId"));
+    const patientDob = params.get("patientDob");
+    const nal = JSON.parse(params.get("nal"));
+    const orderStatus = JSON.parse(params.get("orderStatus"));
+    const nad = params.get("nad");
+    const PatientId = JSON.parse(params.get("PatientId"));
+    console.log(orderStatus);
+    setFilterPhysicianId(physicianId);
+    setFilterPatientDob(patientDob);
+    setFilterLcodeId(lcodeId);
+    setFilterInsuranceId(insuranceId);
+    setFilterNalId(nal);
+    setFilterValue(orderStatus);
+    setFilterNad(nad);
+    setFilterPatientId(PatientId);
   }, [location.search]);
-
+  console.log("filterPatientId",filterPatientId);
   useEffect(() => {
     if (id) {
       console.log("getting id from params ", id);
@@ -152,7 +164,6 @@ const ServiceOrder = () => {
       );
     }
   }, []);
-
   // useEffect(() => {
   //   var companyId;
   //   if (filterCompanyId && filterCompanyId._id) {
@@ -162,7 +173,6 @@ const ServiceOrder = () => {
   //   }
   // },[filterCompanyId])
 
-  console.log("filterCompanyId", filterCompanyId)
   useEffect(() => {
     const payload = {
       limit,
@@ -217,18 +227,21 @@ const ServiceOrder = () => {
     filterNad
   ]);
 
+  console.log("SelectedDate",selectedDate);
   const onActionHandle = (e, value, row) => {
     e.preventDefault();
     if (value === PAGE_KEY.VIEW) {
       const queryParams = new URLSearchParams({
+        physicianId: JSON.stringify(filterPhysicianId) || "",
         patientDob: filterPatientDob || "",
-        physicianId: filterPhysicianId?._id || "",
-        lcodeId: filterLcodeId?._id || "",
-        insuranceId: filterInsuranceId?._id || "",
-        companyId: filterCompanyId?._id || "",
-      }).toString();      
+        lcodeId: JSON.stringify(filterLcodeId) || "",
+        insuranceId: JSON.stringify(filterInsuranceId) || "",
+        nal: JSON.stringify(filterNalId) || "",
+        orderStatus: JSON.stringify(filtervalue) || "",
+        nad: filterNad || "",   
+        PatientId: JSON.stringify(filterPatientId) || ""  
+      }).toString();
       navigate(`/app/service-order/edit/${row?._id}?${queryParams}`);
-      console.log(window.location.search);
     } else if (value === PAGE_KEY.DELIVERY_RECEIPT) {
        window.open(`/app/orderManagement/delivery-receipt/${row?._id}`, '_blank', 'noopener,noreferrer');
     } else if (value === PAGE_KEY.MEDICAL_NECESSITY) {
@@ -620,18 +633,32 @@ const ServiceOrder = () => {
           onRequestClose={onDialogClose}
           contentClassName="py-10 pl-20 pr-40 mt-60 min-w-36"
         >
-          <div>
-            {selectedData && (
-              <>
-                <p className="font-bold text-md mb-2">
-                  <span className="text-blue-900">Comment:</span> {selectedData.addComment || "No comments available"}
-                </p>
-                <p className="font-bold text-md">
-                  <span className="text-blue-900">Added By:</span> {selectedData.commentAddedBy?.email || "Not provided"}
-                </p>
-              </>
-            )}
-          </div>
+        <div>
+         {tabledata && (
+        <>
+          <p className="font-bold text-md mb-2 text-blue-900">Comments:</p>
+          {Array.isArray(tabledata[0]?.comments) && tabledata[0].comments.length > 0 ? (
+            tabledata[0].comments.map((comment, index) => (
+              <p key={index} className="ml-4 mb-1">
+                {typeof comment === "string"
+                  ? comment
+                  : <>
+                      {comment.comment || JSON.stringify(comment)}
+                      {comment.commentAddedBy?.email && (
+                        <span style={{ color: "#2563eb", marginLeft: 8, fontSize: "0.9em" }}>
+                          ({comment.commentAddedBy.email})
+                        </span>
+                      )}
+                    </>
+                }
+              </p>
+            ))
+          ) : (
+            <p className="ml-4">No comments available</p>
+          )}
+        </>
+      )}
+    </div>
         </Dialog>
 
       )}
