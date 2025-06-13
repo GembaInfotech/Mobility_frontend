@@ -172,7 +172,8 @@ export const SERVICE_ORDER_STATUS = [
   { label: "RNR", value: 10 ,color : "orange" },
   { label: "Denied", value: 11 ,color : "red" },
   { label: "High Deductible", value: 14 ,color : "emerald" },
-  {label:  "LMN signed", value: 16, color: "purple"}
+  {label:  "LMN signed", value: 16, color: "purple"},
+  {label:  "Get LMN", value: 17, color: "blue"}
 
   // { label: "Pending", value: 1, color: "red" },
   // { label: "In-Process", value: 2, color: "indigo" },
@@ -369,3 +370,5 @@ export const SEGMENT_CONSTANT = [
   { label: "Spine", value: 3 },
   { label: "Bilateral", value: 4 },
 ];
+
+export { loadLocations };

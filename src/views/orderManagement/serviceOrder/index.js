@@ -514,6 +514,7 @@ const ServiceOrder = () => {
       accessor: "",
       Cell: (props) => {
         const row = props.row.original;
+        console.log("ROW",row.orderStatus);
         return (
           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
             <TagSection status={row?.orderStatus} selectedRow={row} />
@@ -540,6 +541,32 @@ const ServiceOrder = () => {
       ),
     },
   ];
+
+  // Define the Location column
+  const locationColumn = {
+    Header: "Location",
+    Cell: (props) => {
+      const row = props.row.original;
+      return row.locationId?.name || "-";
+    },
+  };
+
+  // Find if any row has Dropship in Process status (orderStatus === 12)
+  const hasDropshipInProcess = tabledata.some(row => row.orderStatus === 12);
+
+  // Find the index of the NAL column
+  const nalIndex = columns.findIndex(col => col.Header === "NAL");
+
+  // Conditionally insert the Location column after NAL
+  let displayColumns = columns;
+  if (hasDropshipInProcess && nalIndex !== -1) {
+    displayColumns = [
+      ...columns.slice(0, nalIndex + 1),
+      locationColumn,
+      ...columns.slice(nalIndex + 1)
+    ];
+  }
+
   const ImportModal = ({ isOpen, onClose }) => {
     const handleClose = () => {
       setSelectedFile(null);
@@ -604,7 +631,7 @@ const ServiceOrder = () => {
       <AdaptableCard className="h-full" bodyClass="h-full">
         <DataTable
           isCursor={false}
-          columns={columns}
+          columns={displayColumns}
           data={tabledata}
           loading={loading}
           skeletonAvatarColumns={[0]}

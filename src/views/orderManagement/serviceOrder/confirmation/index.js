@@ -13,6 +13,7 @@ const Confirmation = ({ selectedKey, selectedData, closeDialog }) => {
   const [dialogHeader, setDialogHeader] = useState();
   const onSubmit = (payload) => {
     if (selectedKey === PAGE_KEY.STATUS_CHANGE) {
+      console.log("Payload checkiinggg",payload)
       payload.orderStatus = payload?.orderStatus?.value;
 
       const formData = new FormData();
@@ -61,6 +62,8 @@ const Confirmation = ({ selectedKey, selectedData, closeDialog }) => {
   useEffect(() => {
     setDialogHeader(MODAL_HEADER[selectedKey]);
   }, [selectedKey]);
+
+  
 
   return (
 
